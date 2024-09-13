@@ -27,8 +27,23 @@ class TextResource extends Resource
 
         return $form
             ->schema([
-                Forms\Components\TextInput::make('key')->label('Kalit so\'z')->required(),
-                Forms\Components\Textarea::make('value')->label('Matn')->required(),
+                Forms\Components\TextInput::make('key')
+                ->label('Kalit so\'z')
+                ->required(),
+                Forms\Components\RichEditor::make('value')
+                ->label('Matn')
+                ->required()
+                ->toolbarButtons([
+                    'blockquote',
+                    'bold',
+                    'codeBlock',
+                    'italic',
+                    'link',
+                    'redo',
+                    'strike',
+                    'underline',
+                    'undo',
+                ]),
             ]);
     }
 
