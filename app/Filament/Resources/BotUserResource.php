@@ -28,22 +28,35 @@ class BotUserResource extends Resource
     {
         return $form
             ->schema([
-                    Forms\Components\TextInput::make('id')
-                        ->label('Foydalanuvchi tartib raqami')
-                        ->numeric(),
-                    Forms\Components\TextInput::make('user_id')
-                        ->label('Foydalanuvchi ID raqami')
-                        ->numeric(),
-                    Forms\Components\TextInput::make('name')
-                        ->label('Ismi'),
-
-                    Forms\Components\TextInput::make('username')
-                        ->label("Username"),
-
-                    Forms\Components\Toggle::make('status')
-                    ->label("Aktivmi?"),
-
-                    Forms\Components\DateTimePicker::make('created_at')
+                Forms\Components\TextInput::make('user_id')
+                    ->label('Foydalanuvchi ID raqami')
+                    ->disabled(),
+                Forms\Components\TextInput::make('name')
+                    ->label('Ismi'),
+                Forms\Components\TextInput::make('username')
+                    ->label('Username'),
+                Forms\Components\TextInput::make('phone_number')
+                    ->label('Telefon raqami'),
+                Forms\Components\Toggle::make('status')
+                    ->label('Aktivmi?'),
+                Forms\Components\TextInput::make('balance')
+                    ->numeric()
+                    ->label('Balansi'),
+                Forms\Components\TextInput::make('referrer_id')
+                    ->numeric()
+                    ->label('Taklif qilgan ID raqami'),
+                Forms\Components\Checkbox::make('is_premium')
+                    ->label('Premiummi?'),
+                Forms\Components\Checkbox::make('daily_bonus_status')
+                    ->label('Kunlik bonus olganmi?'),
+                Forms\Components\Toggle::make('status')
+                    ->label('Aktivmi?'),
+                Forms\Components\DateTimePicker::make('created_at')
+                    ->label('Ro\'yhatdan o\'tgan vaqti')
+                    ->disabled(),
+                Forms\Components\DateTimePicker::make('updated_at')
+                    ->label('O\'zgartirilgan vaqti')
+                    ->disabled(),
             ]);
     }
 
@@ -51,22 +64,35 @@ class BotUserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                        ->label('Tartib raqami'),
                 Tables\Columns\TextColumn::make('user_id')
+                    ->searchable()
                     ->label('Foydalanuvchi ID raqami'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Ismi'),
-
                 Tables\Columns\TextColumn::make('username')
-                    ->label("Username")
-                    ->url(fn($record) => "https://t.me/{$record->username}")
-                    ->prefix('@'),
+                    ->label('Username')->url(fn($record) => "https://t.me/{$record->username}")
+                    ->prefix('@')
+                    ->badge()
+                    ->searchable()
+                    ->color('primary'),
+                Tables\Columns\TextColumn::make('phone_number')
+                    ->label('Telefon raqami')
+                    ->searchable(),
+                Tables\Columns\TextInputColumn::make('balance')
+                    ->label('Balansi'),
+                Tables\Columns\TextColumn::make('referrer_id')
+                    ->label('Taklif qilgan ID raqami')
+                    ->searchable(),
+                Tables\Columns\CheckboxColumn::make('is_premium')
+                    ->label('Premiummi?'),
+                Tables\Columns\CheckboxColumn::make('daily_bonus_status')
+                    ->label('Kunlik bonus olganmi?'),
                 Tables\Columns\ToggleColumn::make('status')
-                ->label("Aktivmi?"),
-
+                    ->label('Aktivmi?'),
                 Tables\Columns\TextColumn::make('created_at')
-                ->label("Ro'yhatdan o'tgan vaqti")
+                    ->label('Ro\'yhatdan o\'tgan vaqti'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('O\'zgartirilgan vaqti')
             ])
             ->filters([
                 //

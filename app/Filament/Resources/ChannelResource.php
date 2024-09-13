@@ -24,7 +24,6 @@ class ChannelResource extends Resource
     {
         return $form
             ->schema([
-                //'channel_id', 'username', 'name', 'url', 'status'
                 Forms\Components\TextInput::make('channel_id')->placeholder('-100')->required()->label('Kanal id raqami'),
                 Forms\Components\TextInput::make('username')->required()->placeholder('Kanal useri oddiy xolatda')->label('Kanal foydalanuvchi nomi'),
                 Forms\Components\TextInput::make('name')->placeholder('Kanal nomi')->required()->label('Kanal nomi'),
@@ -37,10 +36,10 @@ class ChannelResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('channel_id')->label('Kanal idsi'),
-                Tables\Columns\TextColumn::make('username')->label('Kanal useri'),
-                Tables\Columns\TextColumn::make('name')->label('Kanal nomi'),
-                Tables\Columns\TextColumn::make('invite_link')->label('Kanal linki')->url(fn($record) => $record->invite_link),
+                Tables\Columns\TextColumn::make('channel_id')->label('Kanal ID raqami')->searchable(),
+                Tables\Columns\TextColumn::make('username')->label('Kanal useri')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label('Kanal nomi')->searchable(),
+                Tables\Columns\TextColumn::make('invite_link')->label('Kanal linki')->url(fn($record) => $record->invite_link)->searchable(),
                 Tables\Columns\ToggleColumn::make('status')->label('Xolati')
             ])
             ->filters([
@@ -58,7 +57,8 @@ class ChannelResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
                 // ]),
             ])
-            ->defaultSort('id', 'desc');
+            ->defaultSort('id', 'desc')
+            ->heading('Kanallar');
 
     }
 

@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('channel_id');
-            $table->decimal('bonus', 10, 2, true)->default(0)->nullable();
-
+            $table->decimal('bonus_each_boost', 10, 2, true)->default(0)->nullable();
+            $table->decimal('daily_bonus_each_boost', 10, 2, true)->default(0)->nullable();
+            $table->decimal('daily_bonus', 10, 2, true)->default(0)->nullable();
+            $table->enum('daily_bonus_type', ['simple', 'bonus_each_boost'])->default('simple');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->bigInteger('price_in_uzs');
-            $table->bigInteger('price_in_stars');
-            $table->bigInteger('count');
+            $table->bigInteger('price');
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

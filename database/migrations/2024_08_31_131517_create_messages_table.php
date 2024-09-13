@@ -13,11 +13,11 @@ return new class extends Migration {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('text', 10000);
+            $table->text('text');
             $table->string('type')->default('text');
-            $table->string('buttons', 15000)->default(null)->nullable();
-            $table->json('reply_markup')->default(null)->nullable();
-            $table->string('file_id')->default(null)->nullable();
+            $table->text('buttons')->nullable();
+            $table->json('reply_markup')->nullable();
+            $table->string('file_id', 1000)->nullable();
             $table->timestamps();
         });
     }

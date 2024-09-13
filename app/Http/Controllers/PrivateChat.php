@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TextController as Text;
 
-use Illuminate\Support\Facades\Log;
 use App\Models\BotUser;
 use App\Models\Button;
 use App\Models\Channel;
 use App\Models\JoinRequest;
 use App\Models\Message;
 use App\Models\PremiumCategory;
+use App\Models\BoostChannel;
+use App\Models\PromoCode;
+
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Number;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PrivateChat extends Controller
 {
@@ -71,12 +72,9 @@ class PrivateChat extends Controller
         $keyboard = [];
         if ($settings->giveaway_status) {
             $button = Button::where(['slug' => 'giveaway_button'])->first();
-            $keyboard[] = [['text' => $button->name]];
+            $keyboard[] = [['text' => $button->name], ['text' => Text::get('top_referrers_button_label')]];
         }
-        if ($settings->premium_store_status) {
-            $button = Text::get('premium_store_button_label');
-            $keyboard[] = [['text' => $button]];
-        }
+
         $keyboard[] = [['text' => Button::where(['slug' => 'premium_prices_button'])->first()->name], ['text' => Text::get('my_balance_button_label')]];
         if ($settings->bonus_menu_status) {
             $keyboard[] = [['text' => Text::get('bonus_menu_button_label')]];
@@ -126,13 +124,12 @@ class PrivateChat extends Controller
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
+        //cached settings for 1 day
+        $settings = Cache::remember('bot_settings', 60 * 60 * 24, function () {
+            return \App\Models\Setting::first();
+        });
 
         if (!is_null($text)) {
-            //cached settings for 1 day
-            $settings = Cache::remember('bot_settings', 60 * 60 * 24, function () {
-                return \App\Models\Setting::first();
-            });
-
             // user model
             $user = BotUser::where('user_id', $chat_id)->first();
 
@@ -170,38 +167,87 @@ class PrivateChat extends Controller
             // get step from cache
             $step = Cache::get($chat_id . '.step');
 
-            if (!is_null($step) and $step == 'start') {
-                if (!is_null($user->refferrer_id) and $settings->referral_status) {
-                    if ($bot->isPremiumUser() and $settings->premium_referral_status) {
-                        $bonus = $settings->premium_referral_bonus;
-                    } else {
-                        $bonus = $settings->referral_bonus;
+            if (!is_null($step)) {
+                if ($step == 'start') {
+                    if (!is_null($user->refferrer_id) and $settings->referral_status) {
+                        if ($bot->isPremiumUser() and $settings->premium_referral_status) {
+                            $bonus = $settings->premium_referral_bonus;
+                        } else {
+                            $bonus = $settings->referral_bonus;
+                        }
+                        $refferrer = BotUser::where('user_id', $user->refferrer_id)->first();
+                        if ($refferrer) {
+                            $refferrer->balance += $bonus;
+                            $refferrer->save();
+                        }
+                        $bot->sendMessage([
+                            'chat_id' => $user->refferrer_id,
+                            'text' => $this->replacePlaceholders(Text::get('referral_bonus_message'), [
+                                '{first_name}' => $bot->FirstName(),
+                                '{last_name}' => $bot->LastName(),
+                                '{username}' => $bot->Username(),
+                                '{user_id}' => $chat_id,
+                                '{bonus}' => $bonus
+                            ]),
+                            'parse_mode' => 'HTML'
+                        ]);
                     }
-                    $refferrer = BotUser::where('user_id', $user->refferrer_id)->first();
-                    if ($refferrer) {
-                        $refferrer->balance += $bonus;
-                        $refferrer->save();
-                    }
-                    $bot->sendMessage([
-                        'chat_id' => $user->refferrer_id,
-                        'text' => $this->replacePlaceholders(Text::get('referral_bonus_message'), [
-                            '{first_name}' => $bot->FirstName(),
-                            '{last_name}' => $bot->LastName(),
-                            '{username}' => $bot->Username(),
-                            '{user_id}' => $chat_id,
-                            '{bonus}' => $bonus
-                        ]),
-                        'parse_mode' => 'HTML'
-                    ]);
-                }
-                $user->balance = 0;
-                $user->save();
-                Cache::forget($chat_id . '.step');
-            }
+                    $user->balance = 0;
+                    $user->save();
+                    Cache::forget($chat_id . '.step');
+                } else {
+                    if (stripos('reject_promo_code_', $step) !== false and $chat_id == $settings->admin_id) {
+                        $promo_code_id = explode('_', $step)[3];
+                        $promo_code = PromoCode::find($promo_code_id);
+                        if ($promo_code) {
+                            $promo_code->status = 'rejected';
+                            $promo_code->reject_reason = $text;
+                            $promo_code->save();
 
+                            $promo_code_rejected_proof_message = $this->replacePlaceholders(Text::get('promo_code_rejected_proof_message'), [
+                                '{promo_code}' => $promo_code->code,
+                                '{category_name}' => $promo_code->category->name,
+                                '{price}' => $promo_code->price,
+                                '{user_id}' => $promo_code->user_id,
+                                '{now}' => now()->format('Y-m-d H:i:s'),
+                                '{reject_reason}' => $text
+                            ]);
+                            $bot->sendMessage([
+                                'chat_id' => $promo_code->user_id,
+                                'text' => $promo_code_rejected_proof_message
+                            ]);
+
+                            $bot->sendMessage([
+                                'chat_id' => $settings->admin_id,
+                                'text' => "Promo code rad etildi:\n\nPromo code: {$promo_code->code}\nRad etilish sababi: $text"
+                            ]);
+                            Cache::forget($chat_id . '.step');
+                        } else {
+                            $bot->sendMessage([
+                                'chat_id' => $chat_id,
+                                'text' => 'Promo code bazadan topilmadi!',
+                                'reply_markup' => $this->getMainButtons($settings, $bot)
+                            ]);
+                            Cache::forget($chat_id . '.step');
+                        }
+                        return response()->json(['ok' => true], 200);
+                    }
+                }
+            }
             if (empty($user->phone_number)) {
                 if ($update_type == 'contact') {
-                    $user->phone_number = $bot->ContactPhoneNumber();
+                    $phone_number = preg_replace('/\D/', '', $bot->Text());
+                    if (!preg_match("/^\+?998\d{9}$/", $phone_number)) {
+                        $bot->sendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => Text::get('phone_number_invalid'),
+                            'reply_markup' => $bot->buildReplyKeyBoard([
+                                [['text' => Text::get('send_phone_number'), 'request_contact' => true]]
+                            ])
+                        ]);
+                        return response()->json(['ok' => true], 200);
+                    }
+                    $user->phone_number = $phone_number;
                     $user->save();
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
@@ -233,45 +279,6 @@ class PrivateChat extends Controller
                         'chat_id' => $chat_id,
                         'text' => $start_message,
                         'reply_markup' => $this->getMainButtons($settings, $bot)
-                    ]);
-                    return response()->json(['ok' => true], 200);
-                } elseif ($text == Text::get('premium_store_button_label')) {
-                    if (!$settings->premium_store_status) {
-                        $replacements = [
-                            '{first_name}' => $bot->FirstName(),
-                            '{last_name}' => $bot->LastName(),
-                            '{username}' => $bot->Username(),
-                            '{user_id}' => $chat_id
-                        ];
-                        $bot->sendMessage([
-                            'chat_id' => $chat_id,
-                            'text' => $this->replacePlaceholders(Text::get('premium_store_not_available'), $replacements),
-                            'reply_markup' => $this->getMainButtons($settings, $bot)
-                        ]);
-                        return response()->json(['ok' => true], 200);
-                    }
-                    $store_message = Text::get('premium_store_message');
-                    $premium_categoires = PremiumCategory::where(['status' => 1])->get();
-                    $available_premiums_info = '';
-                    foreach ($premium_categoires as $category) {
-                        $available_premiums_info .= "\n\n<b>" . $category->name . "</b>\nNarxi: " . Number::format($category->price_in_uzs) . " so'm yoki " . Number::format($category->price_in_stars) . " yulduz\nMavjud premiumlar soni: " . $category->count . " ta";
-                    }
-                    $replacements = [
-                        '{first_name}' => $bot->FirstName(),
-                        '{last_name}' => $bot->LastName(),
-                        '{username}' => $bot->Username(),
-                        '{user_id}' => $chat_id,
-                        '{available_premiums_info}' => $available_premiums_info
-                    ];
-                    $store_message = $this->replacePlaceholders($store_message, $replacements);
-                    $premium_category_buttons = [];
-                    foreach ($premium_categoires as $category) {
-                        $premium_category_buttons[] = [['text' => $category->name, 'callback_data' => 'premium_category_' . $category->id]];
-                    }
-                    $bot->sendMessage([
-                        'chat_id' => $chat_id,
-                        'text' => $store_message,
-                        'reply_markup' => $bot->buildInlineKeyBoard($premium_category_buttons)
                     ]);
                     return response()->json(['ok' => true], 200);
                 } elseif ($text == Text::get('my_balance_button_label')) {
@@ -318,6 +325,42 @@ class PrivateChat extends Controller
                         'reply_markup' => $bot->buildInlineKeyBoard($bonus_menu_buttons)
                     ]);
                     return response()->json(['ok' => true], 200);
+                } elseif ($text == Text::get('top_referrers_button_label')) {
+                    if (!$settings->referral_status) {
+                        $referral_system_is_not_active_message = Text::get('referral_system_is_not_active');
+                        $replacements = [
+                            '{first_name}' => $bot->FirstName(),
+                            '{last_name}' => $bot->LastName(),
+                            '{username}' => $bot->Username(),
+                            '{user_id}' => $chat_id
+                        ];
+                        $bot->sendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => $this->replacePlaceholders($referral_system_is_not_active_message, $replacements),
+                            'reply_markup' => $this->getMainButtons($settings, $bot)
+                        ]);
+                        return response()->json(['ok' => true], 200);
+                    }
+                    //get top $settings->top_users_count by balance
+                    $top_users = BotUser::orderBy('balance', 'desc')->limit($settings->top_users_count)->get();
+                    $top_users_message = Text::get('top_users_message');
+                    $top_users_list = '';
+                    foreach ($top_users as $key => $user) {
+                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' - ' . $user->balance . ' so\'m' . PHP_EOL;
+                    }
+                    $replacements = [
+                        '{first_name}' => $bot->FirstName(),
+                        '{last_name}' => $bot->LastName(),
+                        '{username}' => $bot->Username(),
+                        '{user_id}' => $chat_id,
+                        '{top_users_list}' => $top_users_list
+                    ];
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => $this->replacePlaceholders($top_users_message, $replacements),
+                        'reply_markup' => $this->getMainButtons($settings, $bot)
+                    ]);
+                    return response()->json(['ok' => true], 200);
                 } elseif ($text == '/dev') {
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
@@ -336,21 +379,13 @@ class PrivateChat extends Controller
                         'text' => "Quyidagi ssilka orqali panelga kirishingiz mumkin:\n\n$admin_dashboard_url",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [
-                                [['text' => 'Panelga kirish', 'url' => $admin_dashboard_url]],
-                                [
-                                    [
-                                        'text' => 'Panelga web app orqali kirish',
-                                        'web_app' => [
-                                            'url' => $admin_dashboard_url
-                                        ]
-                                    ],
-                                ]
+                                [['text' => 'Panelga kirish', 'url' => $admin_dashboard_url]]
                             ]
                         ])
                     ]);
                     return response()->json(['ok' => true], 200);
                 } else {
-                    $findButton = Button::where(['name' => $text])->first();
+                    $findButton = Button::where(['name' => $text, 'status' => true])->first();
                     if ($findButton) {
                         $messages = $findButton->messages;
                         $replacements = [
@@ -376,44 +411,336 @@ class PrivateChat extends Controller
             } elseif ($update_type == 'callback_query') {
                 $callback_data = $bot->Callback_Data();
                 if ($callback_data == 'boost_channels') {
-
+                    if (!$settings->bonus_menu_status) {
+                        $bot->answerCallbackQuery([
+                            'callback_query_id' => $bot->Callback_ID(),
+                            'text' => Text::get('bonus_menu_not_available')
+                        ]);
+                        return response()->json(['ok' => true], 200);
+                    }
+                    $boost_channels = BoostChannel::where(['status' => true])->get();
+                    $boost_channels_buttons = [];
+                    $boost_price_info_message = '';
+                    foreach ($boost_channels as $channel) {
+                        $boost_price_info_message .= $this->replacePlaceholders(Text::get('boost_price_info_message'), [
+                            '{price}' => $channel->bonus_each_boost,
+                            '{name}' => $channel->name
+                        ]);
+                        $boost_channels_buttons[] = [['text' => $channel->name, 'url' => $channel->boost_link]];
+                    }
+                    $boost_channels_message = $this->replacePlaceholders(Text::get('boost_channels_message'), [
+                        '{boost_price_info}' => $boost_price_info_message
+                    ]);
+                    $bot->editMessageText([
+                        'chat_id' => $chat_id,
+                        'message_id' => $bot->MessageID(),
+                        'text' => $boost_channels_message,
+                        'reply_markup' => $bot->buildInlineKeyboard($boost_channels_buttons)
+                    ]);
+                    return response()->json(['ok' => true], 200);
                 } elseif ($callback_data == 'daily_bonus') {
-                    if($settings->daily_bonus_status){
-                        if($user->daily_bonus_status){
+                    if ($settings->daily_bonus_status) {
+                        if ($user->daily_bonus_status) {
                             $bot->answerCallbackQuery([
                                 'callback_query_id' => $bot->Callback_ID(),
                                 'text' => Text::get('daily_bonus_already_received')
                             ]);
-                        } else{
-                            $user->daily_bonus_status = true;
-                            $user->balance += $settings->daily_bonus_amount;
-                            $user->save();
-                            $bot->answerCallbackQuery([
-                                'callback_query_id' => $bot->Callback_ID(),
-                                'text' => Text::get('daily_bonus_received')
-                            ]);
-                            $bot->sendMessage([
-                                'chat_id' => $chat_id,
-                                'text' => Text::get('daily_bonus_received_message'),
-                                'reply_markup' => $this->getMainButtons($settings, $bot)
-                            ]);
+                        } else {
+                            $boost_channels = BoostChannel::where(['status' => true])->get();
+                            $boosts_message_text = Text::get('boosts_message');
+                            $total_bonus = 0;
+                            $boosted = false;
+                            foreach ($boost_channels as $channel) {
+                                $boosts = $bot->getUserChatBoosts([
+                                    'chat_id' => $channel->channel_id,
+                                    'user_id' => $chat_id
+                                ]);
+                                $boost_count = $boosts['result']['boosts'] ?? 0;
+                                if ($boost_count > 0) {
+                                    $boosted = true;
+                                    if ($channel->daily_bonus_type == 'simple') {
+                                        $user->balance += $channel->daily_bonus;
+                                        $boosts_message_text .= $this->replacePlaceholders(Text::get('boosts_message_each'), [
+                                            '{channel_name}' => $channel->name,
+                                            '{boosts_count}' => $boost_count,
+                                            '{bonus}' => $channel->daily_bonus
+                                        ]) . PHP_EOL;
+                                        $total_bonus += $channel->daily_bonus;
+                                    } else {
+                                        $user->balance += $boost_count * $channel->daily_bonus_each_boost;
+                                        $boosts_message_text .= $this->replacePlaceholders(Text::get('boosts_message_each'), [
+                                            '{channel_name}' => $channel->name,
+                                            '{boosts_count}' => $boost_count,
+                                            '{bonus}' => $boost_count * $channel->daily_bonus_each_boost
+                                        ]) . PHP_EOL;
+                                        $total_bonus += $boost_count * $channel->daily_bonus_each_boost;
+                                    }
+                                }
+                                if ($settings->bonus_type == 'only_first_channel') {
+                                    break;
+                                }
+                            }
+                            if (!$boosted) {
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => Text::get('daily_bonus_not_received')
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            } else {
+                                $user->daily_bonus_status = true;
+                                $user->save();
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => Text::get('daily_bonus_received')
+                                ]);
+                                $bot->deleteThisMessage();
+                                $replacements = [
+                                    '{first_name}' => $bot->FirstName(),
+                                    '{last_name}' => $bot->LastName(),
+                                    '{username}' => $bot->Username(),
+                                    '{user_id}' => $chat_id,
+                                    '{boosts_message}' => $boosts_message_text,
+                                    '{total_bonus}' => $total_bonus
+                                ];
+                                $info_message = $this->replacePlaceholders(Text::get('daily_bonus_received_info'), $replacements);
+                                $bot->sendMessage([
+                                    'chat_id' => $chat_id,
+                                    'text' => $info_message,
+                                    'reply_markup' => $this->getMainButtons($settings, $bot)
+                                ]);
+                            }
                         }
-                    } else{
+                        return response()->json(['ok' => true], 200);
+                    } else {
                         $bot->answerCallbackQuery([
                             'callback_query_id' => $bot->Callback_ID(),
                             'text' => Text::get('daily_bonus_not_available')
                         ]);
                     }
                 } elseif ($callback_data == 'withdraw_request') {
-
-                } else{
-                    if(stripos($callback_data, 'premium_category_') !== false){
+                    $minimum_withdraw_amount = PremiumCategory::where(['status' => true])->min('price');
+                    if ($user->balance < $minimum_withdraw_amount) {
+                        $bot->answerCallbackQuery([
+                            'callback_query_id' => $bot->Callback_ID(),
+                            'text' => $this->replacePlaceholders(Text::get('minimum_withdraw_amount'), [
+                                '{amount}' => $minimum_withdraw_amount
+                            ])
+                        ]);
+                        return response()->json(['ok' => true], 200);
+                    } else {
+                        $premium_categories = PremiumCategory::where(['status' => true])->get();
+                        $premium_categories_buttons = [];
+                        $premium_categories_message = '';
+                        foreach ($premium_categories as $category) {
+                            $premium_categories_buttons[] = [
+                                [
+                                    'text' => $category->name . " - " . $category->price . " so'm " . ($minimum_withdraw_amount > $category->price ? "❌" : "✅"),
+                                    'callback_data' => 'premium_category_' . $category->id
+                                ]
+                            ];
+                            $premium_categories_message .= $this->replacePlaceholders(Text::get('premium_categories_message'), [
+                                '{price}' => $category->price,
+                                '{name}' => $category->name
+                            ]) . PHP_EOL;
+                        }
+                        $info_message = $this->replacePlaceholders(Text::get(key: 'withdraw_request_info'), [
+                            '{balance}' => $user->balance,
+                            '{minimum_withdraw_amount}' => $minimum_withdraw_amount,
+                            '{premium_categories}' => $premium_categories_message
+                        ]);
+                        $bot->editMessageText([
+                            'chat_id' => $chat_id,
+                            'message_id' => $bot->MessageID(),
+                            'text' => $info_message,
+                            'reply_markup' => $bot->buildInlineKeyBoard($premium_categories_buttons)
+                        ]);
+                        return response()->json(['ok' => true], 200);
+                    }
+                } else {
+                    if (stripos($callback_data, 'premium_category_') !== false) {
                         $category_id = explode('_', $callback_data)[2];
                         $category = PremiumCategory::find($category_id);
+                        if ($category) {
+                            if ($user->balance < $category->price) {
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => $this->replacePlaceholders(Text::get('not_enough_balance'), [
+                                        '{balance}' => $user->balance,
+                                        '{price}' => $category->price
+                                    ])
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            } else {
+                                $user->balance -= $category->price;
+                                $user->save();
+                                $promo_code = Str::random(8);
+                                $expire_date = ($settings->promo_code_expire_days > 0) ? now()->addDays($settings->promo_code_expire_days) : null;
+                                $promo_code = PromoCode::create([
+                                    'code' => $promo_code,
+                                    'user_id' => $chat_id,
+                                    'premium_category_id' => $category->id,
+                                    'price' => $category->price,
+                                    'expired_at' => $expire_date
+                                ]);
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => $this->replacePlaceholders(Text::get('withdraw_request_success'), [
+                                        '{balance}' => $user->balance,
+                                        '{price}' => $category->price,
+                                        '{category_name}' => $category->name,
+                                        '{promo_code}' => $promo_code->code
+                                    ]),
+                                    'show_alert' => true
+                                ]);
+                                $bot->sendMessage([
+                                    'chat_id' => $chat_id,
+                                    'text' => $this->replacePlaceholders(Text::get('withdraw_request_success_message'), [
+                                        '{balance}' => $user->balance,
+                                        '{price}' => $category->price,
+                                        '{category_name}' => $category->name,
+                                        '{promo_code}' => $promo_code->code
+                                    ]),
+                                    'reply_markup' => $this->getMainButtons($settings, $bot)
+                                ]);
+                                $bot->deleteThisMessage();
+                                $bot->sendMessage([
+                                    'chat_id' => $settings->admin_id,
+                                    'text' => "Yangi promo code ro'yhatdan o'tdi:\n\nPromo code: {$promo_code->code}\nYaroqlilik muddati: " . (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s')) . "\nKategoriya: " . $category->name . "\nNarxi: " . $category->price . " so'm",
+                                    'reply_markup' => $bot->buildInlineKeyboard([
+                                        [['text' => "Tasdiqlash ✅", 'callback_data' => 'promo_code_accepted_' . $promo_code->id]],
+                                        [['text' => "Rad etish ❌", 'callback_data' => 'promo_code_rejected_' . $promo_code->id]]
+                                    ])
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            }
+                        }
+                    }
 
+                    if ($chat_id == $settings->admin_id) {
+                        if (stripos($callback_data, 'promo_code_accepted_') !== false) {
+                            $promo_code_id = explode('_', $callback_data)[3];
+                            $promo_code = PromoCode::find($promo_code_id);
+                            if ($promo_code) {
+                                $promo_code->status = 'completed';
+                                $promo_code->save();
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => 'Promo code tasdiqlandi va kanalga isbot yuborildi ✅',
+                                    'show_alert' => true
+                                ]);
+                                $bot->editMessageReplyMarkup([
+                                    'chat_id' => $chat_id,
+                                    'message_id' => $bot->MessageID(),
+                                    'reply_markup' => $bot->buildInlineKeyboard([
+                                        [['text' => '✅ Tasdiqlangan', 'callback_data' => 'accepted_' . $promo_code->id]]
+                                    ])
+                                ]);
+                                $proof_message = $this->replacePlaceholders(Text::get('proof_message'), [
+                                    '{promo_code}' => $promo_code->code,
+                                    '{category_name}' => $promo_code->category->name,
+                                    '{price}' => $promo_code->price,
+                                    '{user_id}' => $promo_code->user_id,
+                                    '{first_name}' => $bot->FirstName(),
+                                    '{last_name}' => $bot->LastName(),
+                                    '{username}' => $bot->Username(),
+                                    '{chat_id}' => $chat_id,
+                                    '{now}' => now()->format('Y-m-d H:i:s')
+                                ]);
+                                $bot->sendMessage([
+                                    'chat_id' => $settings->proof_channel_id,
+                                    'text' => $proof_message
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            } else {
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => 'Bu promo code bazadan topilmadi!',
+                                    'show_alert' => true
+                                ]);
+                                $bot->editMessageReplyMarkup([
+                                    'chat_id' => $chat_id,
+                                    'message_id' => $bot->MessageID(),
+                                    'reply_markup' => $bot->buildInlineKeyboard([
+                                        [['text' => 'Bazadan topilmagan 🔍', 'callback_data' => 'notfound_' . $promo_code->id]]
+                                    ])
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            }
+                        } elseif (stripos($callback_data, 'promo_code_rejected_') !== false) {
+                            $promo_code_id = explode('_', $callback_data)[3];
+                            $promo_code = PromoCode::find($promo_code_id);
+                            if ($promo_code) {
+                                // set step with promo id and chat_id and ask for rejecting reason
+                                Cache::set($chat_id . '.step', 'reject_promo_code_' . $promo_code_id);
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => $promo_code->code . ' promo code rad etildi. Rad etish sababini kiriting:',
+                                    'show_alert' => true
+                                ]);
+                                $bot->editMessageText([
+                                    'chat_id' => $chat_id,
+                                    'message_id' => $bot->MessageID(),
+                                    'text' => 'Rad etish sababini kiriting:'
+                                ]);
+                                return response()->json(['ok' => true], 200);
+                            }
+                        }
                     }
                 }
             }
+        }
+        if ($update_type == 'chat_boost') {
+            if ($settings->bonus_menu_status) {
+                $chat_id = $bot->ChatID();
+                $boost_channel = BoostChannel::where(['channel_id' => $chat_id, 'status' => true])->first();
+                if ($boost_channel) {
+                    $user_id = $bot->UserID();
+                    $user = BotUser::where('user_id', $user_id)->first();
+                    if ($user) {
+                        $user->balance += $boost_channel->bonus_each_boost;
+                        $user->save();
+                        $bot->getUserChatBoosts([
+                            'chat_id' => $chat_id,
+                            'user_id' => $user_id,
+                        ]);
+                        $boosts_count = count($boosts['result']['boosts'] ?? []);
+                        $bot->sendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => $this->replacePlaceholders(Text::get('boost_received'), [
+                                '{bonus}' => $boost_channel->bonus_each_boost,
+                                '{channel_name}' => $boost_channel->name,
+                                '{boosts_count}' => $boosts_count
+                            ])
+                        ]);
+                    }
+                }
+            }
+            return response()->json(['ok' => true], 200);
+        } elseif ($update_type == 'removed_chat_boost') {
+            if (!$settings->bonus_menu_status) {
+                return response()->json(['ok' => true], 200);
+            }
+            $chat_id = $bot->ChatID();
+            $boost_channel = BoostChannel::where(['channel_id' => $chat_id, 'status' => true])->first();
+            if ($boost_channel) {
+                $user_id = $bot->UserID();
+                $user = BotUser::where('user_id', $user_id)->first();
+                if ($user) {
+                    $boosts = $bot->getUserChatBoosts([
+                        'chat_id' => $chat_id,
+                        'user_id' => $user_id
+                    ]);
+                    $boosts_count = count($boosts['result']['boosts'] ?? []);
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => $this->replacePlaceholders(Text::get('boost_removed'), [
+                            '{channel_name}' => $boost_channel->name,
+                            '{boosts_count}' => $boosts_count
+                        ])
+                    ]);
+                }
+            }
+            return response()->json(['ok' => true], 200);
         }
     }
 }

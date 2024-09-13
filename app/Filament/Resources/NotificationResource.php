@@ -7,7 +7,6 @@ use App\Filament\Resources\NotificationResource\RelationManagers;
 use Filament\Notifications\Notification as FilamentNotification;
 use App\Models\Notification;
 use App\Models\NotificationStatus;
-use App\Models\Lang;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,7 +26,6 @@ class NotificationResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $langs = ['*' => "Barcha foydalanuvchilarga"] + Lang::pluck('name', 'short_code')->toArray();
         return $form
             ->schema([
                 Forms\Components\TextInput::make('admin_chat_id')
@@ -77,12 +75,6 @@ class NotificationResource extends Resource
                                 }
                             })
                     ),
-                Forms\Components\Select::make('filter_by_language')
-                    ->label("Til bo'yicha filter")
-                    ->helperText(new HtmlString("Agar O'zbek tili tanlansa faqat O'zbek tilini tanlagan faol foydalanuvchilarga jo'natiladi agar boshqa til tanlansa o'sha tilni tanlagan foydalanuvchilarga yuboriladi.<br>Odatiy holatda barcha foydalanuvchilarga jo'natiladi."))
-                    ->options($langs)
-                    ->default('*')
-                    ->required(),
                 Forms\Components\Select::make('sending_type')
                     ->label("Xabarni jo'natish turi")
                     ->helperText(new HtmlString("Oddiy xolatda jo'natish tanlansa xabar bot nomida jo'natiladi.<br>Forward xolatda jo'natish tanlansa xabar reklama joylangan kanaldan forward qilinadi, bu xolatda jo'natish sekinroq bo'ladi<br><b>Oddiy ko'rinishda jo'natish tavsiya etiladi</b>"))
@@ -97,7 +89,6 @@ class NotificationResource extends Resource
 
     public static function table(Table $table): Table
     {
-        define('LANGS', ['*' => "Barcha foydalanuvchilarga"] + Lang::pluck('name', 'short_code')->toArray());
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('status')
@@ -123,11 +114,6 @@ class NotificationResource extends Resource
                             'forwardmessage' => "Forward xolatda jo'natish"
                         ];
                         return $types[$record->sending_type];
-                    }),
-                Tables\Columns\TextColumn::make('filter_by_language')
-                    ->label("Kimlarga yuborilgan")
-                    ->formatStateUsing(function ($record) {
-                        return LANGS[$record->filter_by_language];
                     }),
                 Tables\Columns\TextColumn::make('sending_end_time')
                     ->label('Yuborish yakunlangan vaqt')

@@ -23,7 +23,22 @@ class MessageResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Nomi')
+                    ->required(),
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'text' => 'Matn',
+                        'photo' => 'Rasm',
+                        'video' => 'Video'
+                    ])
+                    ->label('Turi'),
+                Forms\Components\Textarea::make('text')
+                    ->label('Matn'),
+                Forms\Components\TextInput::make('buttons')
+                    ->label('Tugmalar'),
+                Forms\Components\TextInput::make('file_id')
+                    ->label('Fayl ID raqami')->nullable()
             ]);
     }
 
@@ -31,7 +46,22 @@ class MessageResource extends Resource
     {
         return $table
             ->columns([
-                //
+                //table
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nomi')
+                    ->searchable(),
+                Tables\Columns\SelectColumn::make('type')
+                    ->label('Turi')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('text')
+                    ->label('Matn')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('buttons')
+                    ->label('Tugmalar')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('file_id')
+                    ->label('Fayl ID raqami')
+                    ->searchable()
             ])
             ->filters([
                 //
@@ -43,7 +73,9 @@ class MessageResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('id', 'desc') 
+            ->heading('Xabarlar');
     }
 
     public static function getRelations(): array

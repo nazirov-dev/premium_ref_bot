@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BoostChannel extends Model
+class PromoCode extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
     protected $fillable = [
-        'name',
-        'channel_id',
-        'bonus_each_boost',
-        'daily_bonus_each_boost',
-        'daily_bonus',
-        'daily_bonus_type',
+        'code',
+        'user_id',
+        'premium_category_id',
+        'price',
+        'expired_at',
         'status'
     ];
     protected $casts = [
         'status' => 'boolean'
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(BotUser::class, 'user_id');
+    }   
 }

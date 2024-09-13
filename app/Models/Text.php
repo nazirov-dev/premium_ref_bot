@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Text extends Model
 {
     use HasFactory;
-
+    protected $guarded = ['id'];
     protected $fillable = [
-        'key', 'value', 'lang_code', 'created_at', 'updated_at'
+        'key',
+        'value'
     ];
+    
 }

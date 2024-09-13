@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ButtonResource\Pages;
-use App\Filament\Resources\ButtonResource\RelationManagers;
-use App\Models\Button;
-use App\Models\Message;
+use App\Filament\Resources\PremiumCategoryResource\Pages;
+use App\Filament\Resources\PremiumCategoryResource\RelationManagers;
+use App\Models\PremiumCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,12 +13,19 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ButtonResource extends Resource
+class PremiumCategoryResource extends Resource
 {
-    protected static ?string $model = Button::class;
+    protected static ?string $model = PremiumCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Tugmalar';
+
+        /*table structure
+            $table->id();
+            $table->string('name');
+            $table->string('slug');
+            $table->bigInteger('price');
+            $table->boolean('status')->default(true);
+            $table->timestamps(); */
     public static function form(Form $form): Form
     {
         return $form
@@ -28,13 +34,12 @@ class ButtonResource extends Resource
                     ->label('Nomi'),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug'),
-                Forms\Components\Select::make('messages')
-                    ->multiple()
-                    ->options(
-                        Message::where('status', true)->get()->pluck('name', 'id')->toArray()
-                    )
-                    ->searchable()
-                    ->label('Xabarlar'),
+                Forms\Components\TextInput::make('price')
+                    ->label('Narxi')
+                    ->numeric()
+                    ->suffix('so\'m'),
+                Forms\Components\Toggle::make('status')
+                    ->label('Aktivmi?'),
             ]);
     }
 
@@ -48,11 +53,14 @@ class ButtonResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('messages')
-                    ->label('Xabarlar')
-                    ->listWithLineBreaks(),
+                Tables\Columns\TextColumn::make('price')
+                    ->label('Narxi')
+                    ->suffix('So\'m')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('status')
+                    ->label('Aktivmi?')
+                    ->searchable(),
             ])
-            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])
@@ -64,8 +72,8 @@ class ButtonResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->heading('Tugmalar')
-            ->defaultSort('id', 'desc');
+            ->defaultSort('id', 'desc')
+            ->heading('Premium kategoriyalar');
     }
 
     public static function getRelations(): array
@@ -78,9 +86,9 @@ class ButtonResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListButtons::route('/'),
-            'create' => Pages\CreateButton::route('/create'),
-            'edit' => Pages\EditButton::route('/{record}/edit'),
+            'index' => Pages\ListPremiumCategories::route('/'),
+            'create' => Pages\CreatePremiumCategory::route('/create'),
+            'edit' => Pages\EditPremiumCategory::route('/{record}/edit'),
         ];
     }
 }

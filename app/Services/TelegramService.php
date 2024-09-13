@@ -24,6 +24,8 @@ class TelegramService
     public const ANIMATION = 'animation';
     public const STICKER = 'sticker';
     public const DOCUMENT = 'document';
+    public const CHAT_BOOST = 'chat_boost';
+    public const REMOVED_CHAT_BOOST = 'removed_chat_boost';
 
     private $bot_token = '';
     private $data = [];
@@ -287,10 +289,9 @@ class TelegramService
         if ($type == self::CONTACT) {
             return @$this->data['message']['contact']['user_id'];
         } else {
-            return  null;
+            return null;
         }
     }
-
 
     public function getPhotoFileId()
     {
@@ -321,6 +322,10 @@ class TelegramService
             return @$this->data['edited_message']['chat']['id'];
         } elseif ($type == self::INLINE_QUERY) {
             return @$this->data['inline_query']['from']['id'];
+        } elseif ($type == self::CHAT_BOOST) {
+            return $this->data['chat_boost']['chat']['id'];
+        } elseif ($type == self::REMOVED_CHAT_BOOST) {
+            return $this->data['removed_chat_boost']['chat']['id'];
         } else {
             return $this->data['message']['chat']['id'];
         }
@@ -340,11 +345,12 @@ class TelegramService
         }
     }
 
-    public function isPremiumUser(){
+    public function isPremiumUser()
+    {
         $type = $this->getUpdateType();
         if ($type == self::MESSAGE) {
             return @$this->data['message']['from']['is_premium'] ?? false;
-        }else{
+        } else {
             return @$this->data[$type]['message']['from']['is_premium'] ?? false;
         }
     }
@@ -460,6 +466,12 @@ class TelegramService
             return $this->data['channel_post']['from']['id'];
         } elseif ($type == self::EDITED_MESSAGE) {
             return @$this->data['edited_message']['from']['id'];
+        } elseif ($type == self::INLINE_QUERY) {
+            return $this->data['inline_query']['from']['id'];
+        } elseif ($type == self::CHAT_BOOST) {
+            return $this->data['chat_boost']['boost']['source']['user']['id'];
+        } elseif ($type == self::REMOVED_CHAT_BOOST) {
+            return $this->data['removed_chat_boost']['source']['user']['id'];
         } else {
             return $this->data['message']['from']['id'];
         }
@@ -496,10 +508,10 @@ class TelegramService
     public function buildKeyBoard(array $options, $onetime = false, $resize = false, $selective = true)
     {
         $replyMarkup = [
-            'keyboard'          => $options,
+            'keyboard' => $options,
             'one_time_keyboard' => $onetime,
-            'resize_keyboard'   => $resize,
-            'selective'         => $selective,
+            'resize_keyboard' => $resize,
+            'selective' => $selective,
         ];
         $encodedMarkup = json_encode($replyMarkup, true);
         return $encodedMarkup;
@@ -546,8 +558,8 @@ class TelegramService
     public function buildKeyboardButton($text, $request_contact = false, $request_location = false)
     {
         $replyMarkup = [
-            'text'             => $text,
-            'request_contact'  => $request_contact,
+            'text' => $text,
+            'request_contact' => $request_contact,
             'request_location' => $request_location,
         ];
 
@@ -558,7 +570,7 @@ class TelegramService
     {
         $replyMarkup = [
             'remove_keyboard' => true,
-            'selective'       => $selective,
+            'selective' => $selective,
         ];
         $encodedMarkup = json_encode($replyMarkup, true);
 
@@ -569,7 +581,7 @@ class TelegramService
     {
         $replyMarkup = [
             'force_reply' => true,
-            'selective'   => $selective,
+            'selective' => $selective,
         ];
         $encodedMarkup = json_encode($replyMarkup, true);
 
@@ -687,6 +699,12 @@ class TelegramService
             'message_id' => $this->MessageID(),
         ]);
     }
+
+    public function getUserChatBoosts($data)
+    {
+        return $this->endpoint('getUserChatBoosts', $data);
+    }
+
     public function serveUpdate($update)
     {
         $this->data = $this->updates['result'][$update];
@@ -725,6 +743,10 @@ class TelegramService
             return self::DOCUMENT;
         } elseif (isset($update['channel_post'])) {
             return self::CHANNEL_POST;
+        } elseif (isset($update['message']['chat_boost'])) {
+            return self::CHAT_BOOST;
+        } elseif (isset($update['message']['REMOVED_CHAT_BOOST'])) {
+            return self::REMOVED_CHAT_BOOST;
         } else {
             return false;
         }
@@ -738,7 +760,7 @@ class TelegramService
                 unset($content['chat_id']);
             }
             $content['parse_mode'] = 'html';
-            if(array_key_exists('has_video_attachment', $content)) {
+            if (array_key_exists('has_video_attachment', $content)) {
                 $video_url = $content['video'];
                 unset($content['video']);
                 unset($content['has_video_attachment']);

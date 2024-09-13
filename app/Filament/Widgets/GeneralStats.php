@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use Illuminate\Support\Facades\DB;
 use App\Models\BotUser;
 use App\Models\Channel;
-use App\Models\Lang;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
@@ -24,13 +23,7 @@ class GeneralStats extends BaseWidget
                 ->chart($this->getUsersPerDay()['usersPerDay']),
             Stat::make("Jami faol foydalanuvchilar soni", BotUser::where('status', true)->count() . ' ta'),
             Stat::make("Jami kanallar soni", Channel::count() . ' ta'),
-            Stat::make("Jami tillar soni", Lang::count() . ' ta')
         ];
-        $langs = Lang::pluck('name', 'short_code')->toArray();
-        $languageCounts = BotUser::select('lang_code', DB::raw('count(*) as total'))->groupBy('lang_code')->get();
-        foreach ($languageCounts as $lang) {
-            $stats[] = Stat::make(($langs[$lang['lang_code']] ?? $lang['lang_code']) . "ni tanlagan foydalanuvchilar soni", $lang['total'] . ' ta');
-        }
         return $stats;
     }
     private function getUsersPerDay(): array
