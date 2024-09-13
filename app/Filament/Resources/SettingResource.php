@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -18,7 +19,7 @@ class SettingResource extends Resource
     protected static ?string $model = Setting::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static bool $canCreateAnother = false;
 
     public static function canCreate(): bool
     {
@@ -29,16 +30,16 @@ class SettingResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Toggle::make('giveaway_status')->required()->default(0)->label('Giveaway status'),
-                Forms\Components\TextInput::make('referral_bonus')->required()->default(0)->label('Referral bonus'),
-                Forms\Components\TextInput::make('premium_referral_bonus')->required()->default(0)->label('Premium referral bonus'),
-                Forms\Components\Toggle::make('bonus_menu_status')->required()->default(false)->label('Bonus menu status'),
-                Forms\Components\Toggle::make('referral_status')->required()->default(false)->label('Referral status'),
-                Forms\Components\Toggle::make('premium_referral_status')->required()->default(false)->label('Premium referral status'),
-                Forms\Components\TextInput::make('top_users_count')->required()->default(10)->label('Top users count'),
+                Forms\Components\Toggle::make('referral_status')->required()->default(false)->label('Referral status')->live(true),
+                Forms\Components\TextInput::make('referral_bonus')->required()->default(0)->label('Referral bonus')->visible(fn(Get $get): bool => $get('referral_status')),
+                Forms\Components\Toggle::make('premium_referral_status')->required()->default(false)->label('Premium referral status')->visible(fn(Get $get): bool => $get('referral_status')),
+                Forms\Components\TextInput::make('premium_referral_bonus')->required()->default(0)->label('Premium referral bonus')->visible(fn(Get $get): bool => $get('premium_referral_status')),
+                Forms\Components\Toggle::make('bonus_menu_status')->required()->default(false)->label('Bonus menu status')->live(true),
                 Forms\Components\Select::make('bonus_type')->options([
                     'every_channel' => 'Hamma kanal uchun',
                     'only_first_channel' => 'Faqat bitta kanal'
-                ])->required()->default('every_channel')->label('Bonus turi'),
+                ])->required()->default('every_channel')->label('Bonus turi')->visible(fn(Get $get): bool => $get('bonus_menu_status')),
+                Forms\Components\TextInput::make('top_users_count')->required()->default(10)->label('Top users count'),
                 Forms\Components\TextInput::make('promo_code_expire_days')->required()->default(30)->label('Promo code expire days'),
                 Forms\Components\TextInput::make('admin_id')->required()->default(1996292437)->label('Admin id'),
             ]);
