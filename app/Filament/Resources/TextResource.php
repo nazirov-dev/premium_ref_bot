@@ -29,7 +29,8 @@ class TextResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('key')
                 ->label('Kalit so\'z')
-                ->required(),
+                ->required()
+                ->columnSpanFull(),
                 Forms\Components\RichEditor::make('value')
                 ->label('Matn')
                 ->required()
