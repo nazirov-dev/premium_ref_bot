@@ -12,13 +12,7 @@ class CreateSetting extends CreateRecord
 {
     protected static string $resource = SettingResource::class;
     protected function mutateFormDataBeforeCreate(array $data): array{
-        // cache the Setting record 
-        // cache()->put('settings', $data);
-        $settings = new Setting();
-        foreach($data as $key => $value){
-            $settings->$key = $value;
-        }
-        Cache::put('settings', $settings);
+        Cache::put('settings', json_encode($data));
         return $data;
     }
 }

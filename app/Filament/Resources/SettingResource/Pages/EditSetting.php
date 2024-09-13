@@ -14,11 +14,7 @@ class EditSetting extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $settings = new Setting();
-        foreach($data as $key => $value){
-            $settings->$key = $value;
-        }
-        Cache::put('settings', $settings);
+        Cache::put('settings', json_encode($data));
         return $data;
     }
 

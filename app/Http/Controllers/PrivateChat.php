@@ -126,9 +126,9 @@ class PrivateChat extends Controller
         $update_type = $bot->getUpdateType();
         //cached settings for 1 day
         $settings = Cache::remember('bot_settings', 60 * 60 * 24, function () {
-            return \App\Models\Setting::first();
+            return json_encode(\App\Models\Setting::first()->toArray());
         });
-
+        $settings = json_decode($settings);
         if (!is_null($text)) {
             // user model
             $user = BotUser::where('user_id', $chat_id)->first();
