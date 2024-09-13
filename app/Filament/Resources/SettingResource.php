@@ -31,9 +31,13 @@ class SettingResource extends Resource
             ->schema([
                 Forms\Components\Toggle::make('giveaway_status')->required()->default(0)->label('Giveaway status'),
                 Forms\Components\Toggle::make('referral_status')->required()->default(false)->label('Referral status')->live(true),
-                Forms\Components\TextInput::make('referral_bonus')->required()->default(0)->label('Referral bonus')->visible(fn(Get $get): bool => $get('referral_status')),
+                Forms\Components\TextInput::make('referral_bonus')->required()->default(0)->label('Referral bonus')->visible(fn(Get $get): bool => $get('referral_status'))->afterStateUpdated(function ($state, callable $set) {
+                    if (!$state) {
+                        $set('premium_referral_status', false);
+                    }
+                }),
                 Forms\Components\Toggle::make('premium_referral_status')->required()->default(false)->label('Premium referral status')->visible(fn(Get $get): bool => $get('referral_status'))->live(true),
-                Forms\Components\TextInput::make('premium_referral_bonus')->required()->default(0)->label('Premium referral bonus')->visible(fn(Get $get): bool => $get('premium_referral_status')),
+                Forms\Components\TextInput::make('premium_referral_bonus')->required()->default(0)->label('Premium referral bonus')->visible(fn(Get $get): bool => $get('premium_referral_status')) ,
                 Forms\Components\Toggle::make('bonus_menu_status')->required()->default(false)->label('Bonus menu status')->live(true),
                 Forms\Components\Select::make('bonus_type')->options([
                     'every_channel' => 'Hamma kanal uchun',
