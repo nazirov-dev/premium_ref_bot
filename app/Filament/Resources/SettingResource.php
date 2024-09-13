@@ -33,12 +33,12 @@ class SettingResource extends Resource
                     ->required()
                     ->default(0)
                     ->label('Konkurs holati')
-                    ->description('Konkurs holatini yoqish yoki o\'chirish')
+                    ->helperText('Konkurs holatini yoqish yoki o\'chirish')
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('referral_status')
                     ->required()->default(false)
                     ->label('Referral tizim holati')
-                    ->description('Referral tizimini yoqish yoki o\'chirish')
+                    ->helperText('Referral tizimini yoqish yoki o\'chirish')
                     ->live(true)
                     ->afterStateUpdated(function ($state, callable $set) {
                         if (!$state) {
@@ -48,28 +48,28 @@ class SettingResource extends Resource
                 Forms\Components\TextInput::make('referral_bonus')
                     ->required()->default(0)
                     ->label('Referral bonus')
-                    ->description('Referral bonus summasi oddiy referral uchun')
+                    ->helperText('Referral bonus summasi oddiy referral uchun')
                     ->numeric()
                     ->visible(fn(Get $get): bool => $get('referral_status')),
                 Forms\Components\Toggle::make('premium_referral_status')
                     ->required()
                     ->default(false)
                     ->label('Premium referral tizim holati')
-                    ->description('Premium referral tizimini yoqish yoki o\'chirish')
+                    ->helperText('Premium referral tizimini yoqish yoki o\'chirish')
                     ->visible(fn(Get $get): bool => $get('referral_status'))
                     ->live(true),
                 Forms\Components\TextInput::make('premium_referral_bonus')
                     ->required()
                     ->default(0)
                     ->label('Premium referral bonus')
-                    ->description('Premium referral bonus summasi premium referral uchun')
+                    ->helperText('Premium referral bonus summasi premium referral uchun')
                     ->numeric()
                     ->visible(fn(Get $get): bool => $get('premium_referral_status')),
                 Forms\Components\Toggle::make('bonus_menu_status')
                     ->required()
                     ->default(false)
                     ->label('Bonus menyu holati')
-                    ->description('Bonus menyuni yoqish yoki o\'chirish')
+                    ->helperText('Bonus menyuni yoqish yoki o\'chirish')
                     ->live(true),
                 Forms\Components\Select::make('bonus_type')->options([
                     'every_channel' => 'Hamma kanal uchun',
@@ -78,25 +78,25 @@ class SettingResource extends Resource
                     ->required()
                     ->default('every_channel')
                     ->label('Bonus turi')
-                    ->description('Boost uchun bonus turi')
+                    ->helperText('Boost uchun bonus turi')
                     ->visible(fn(Get $get): bool => $get('bonus_menu_status')),
                 Forms\Components\TextInput::make('top_users_count')
                     ->required()
                     ->default(10)
                     ->label('Top foydalanuvchilar')
-                    ->description('Top foydalanuvchilar bo\'limida ko\'rsatiladigan foydalanuvchilar soni'),
+                    ->helperText('Top foydalanuvchilar bo\'limida ko\'rsatiladigan foydalanuvchilar soni'),
                 Forms\Components\TextInput::make('promo_code_expire_days')
                     ->required()
                     ->default(30)
                     ->label('Promo code amal qilish muddati')
-                    ->description('Promo kod amal qilish muddati kunlar hissobida, agarda limit qo\'yishni xohlamasangiz 0 qo\'ying')
+                    ->helperText('Promo kod amal qilish muddati kunlar hissobida, agarda limit qo\'yishni xohlamasangiz 0 qo\'ying')
                     ->numeric()
                     ->default(0),
                 Forms\Components\TextInput::make('admin_id')
                     ->required()
                     ->default(1996292437)
                     ->label('Admin id')
-                    ->description('Admin id raqami'),
+                    ->helperText('Admin id raqami'),
             ]);
     }
 
