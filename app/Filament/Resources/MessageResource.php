@@ -55,7 +55,7 @@ class MessageResource extends Resource
                         'undo',
                     ])
                     ->visible(fn(Get $get) => $get('type') === 'text'),
-                Forms\Components\TextInput::make('buttons')
+                Forms\Components\TextArea::make('buttons')
                     ->label('Tugmalar')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('file_id')
