@@ -45,7 +45,7 @@ class MessageResource extends Resource
                         }
 
                     })
-                    ->live(true),
+                    ->live(),
                 Forms\Components\RichEditor::make('text')
                     ->label('Matn')
                     ->columnSpanFull()
