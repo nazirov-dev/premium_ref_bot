@@ -18,7 +18,7 @@ class ButtonResource extends Resource
 {
     protected static ?string $model = Button::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-c-cursor-arrow-ripple';
     protected static ?string $navigationLabel = 'Tugmalar';
     public static function form(Form $form): Form
     {
