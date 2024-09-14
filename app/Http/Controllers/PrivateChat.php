@@ -372,7 +372,7 @@ class PrivateChat extends Controller
                         ])
                     ]);
                     return response()->json(['ok' => true], 200);
-                } elseif ($text == '/panel' and in_array($chat_id, [config('env.ADMIN_ID'), config('env.DEV_ID')])) {
+                } elseif ($text == '/panel' and in_array($chat_id, [$settings->admin_id, config('env.DEV_ID')])) {
                     $admin_dashboard_url = config('app.url') . "/admin";
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
@@ -688,6 +688,18 @@ class PrivateChat extends Controller
                     }
                 }
             }
+        }
+        if (in_array($update_type, ['photo', 'video']) and in_array($chat_id, [$settings->admin_id, config('env.DEV_ID')])) {
+            if ($update_type === 'photo') {
+                $file_id = $bot->getPhotoFileId();
+            } else {
+                $file_id = $bot->getData()['message']['video']['file_id'];
+            }
+            $bot->sendMessage([
+                'chat_id' => $chat_id,
+                'text' => "File ID: <code>$file_id</code>"
+            ]);
+            return response()->json(['ok' => true], 200);
         }
         if ($update_type == 'chat_boost') {
             if ($settings->bonus_menu_status) {
