@@ -27,7 +27,7 @@ class PremiumCategoryResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('Nomi')
                     ->live(true)
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),,
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug'),
                 Forms\Components\TextInput::make('price')
