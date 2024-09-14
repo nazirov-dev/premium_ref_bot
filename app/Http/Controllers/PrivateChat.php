@@ -743,6 +743,8 @@ class PrivateChat extends Controller
                 $user_id = $bot->UserID();
                 $user = BotUser::where('user_id', $user_id)->first();
                 if ($user) {
+                    $user->balance -= $boost_channel->bonus_each_boost;
+                    $user->save();
                     $boosts = $bot->getUserChatBoosts([
                         'chat_id' => $chat_id,
                         'user_id' => $user_id
@@ -752,7 +754,9 @@ class PrivateChat extends Controller
                         'chat_id' => $chat_id,
                         'text' => $this->replacePlaceholders(Text::get('boost_removed'), [
                             '{channel_name}' => $boost_channel->name,
-                            '{boosts_count}' => $boosts_count
+                            '{boosts_count}' => $boosts_count,
+                            '{balance}' => $user->balance,
+                            '{minus}' => $boost_channel->bonus_each_boost
                         ])
                     ]);
                 }
