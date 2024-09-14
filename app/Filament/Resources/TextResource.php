@@ -20,7 +20,15 @@ class TextResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
     protected static ?string $navigationLabel = 'Textlar';
+    protected static ?string $recordTitleAttribute = 'key';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'key',
+            'value'
+        ];
+    }
 
     public static function form(Form $form): Form
     {

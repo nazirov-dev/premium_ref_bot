@@ -19,6 +19,16 @@ class BoostChannelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
     protected static ?string $navigationLabel = 'Boost qilish uchun kanallar';
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'channel_id'
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form

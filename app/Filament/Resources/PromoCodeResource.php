@@ -19,6 +19,18 @@ class PromoCodeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
     protected static ?string $navigationLabel = 'Promo kodlar';
+    protected static ?string $recordTitleAttribute = 'code';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'code',
+            'user_id',
+            'premium_category_id',
+            'price',
+            'expired_at'
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form

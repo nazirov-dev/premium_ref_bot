@@ -20,6 +20,17 @@ class PremiumCategoryResource extends Resource
     protected static ?string $model = PremiumCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Premium kategoriyalar';
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'slug',
+            'price'
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -49,7 +60,7 @@ class PremiumCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable()
-                    ,
+                ,
                 Tables\Columns\TextColumn::make('price')
                     ->label('Narxi')
                     ->suffix(' so\'m')

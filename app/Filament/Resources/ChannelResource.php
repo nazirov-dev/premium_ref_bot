@@ -19,7 +19,17 @@ class ChannelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-at-symbol';
     protected static ?string $navigationLabel = 'Kanallar';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'channel_id',
+            'name',
+            'invite_link',
+            'username'
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form

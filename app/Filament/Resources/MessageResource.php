@@ -22,7 +22,18 @@ class MessageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-chat-bubble-oval-left-ellipsis';
     protected static ?string $navigationLabel = 'Xabarlar';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'type',
+            'file_id',
+            'text',
+            'buttons'
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form

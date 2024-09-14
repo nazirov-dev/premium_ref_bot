@@ -19,7 +19,18 @@ class BotUserResource extends Resource
     protected static ?string $model = BotUser::class;
     protected static ?string $navigationIcon = 'heroicon-m-user-group';
     protected static ?string $navigationLabel = 'Foydalanuvchilar';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'user_id',
+            'name',
+            'username',
+            'phone_number',
+            'referrer_id'
+        ];
+    }
     public static function canCreate(): bool
     {
         return false;
