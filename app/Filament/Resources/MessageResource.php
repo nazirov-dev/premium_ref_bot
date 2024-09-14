@@ -116,7 +116,7 @@ class MessageResource extends Resource
                     ->nullable()
                     ->visible(fn(Get $get) => in_array($get('type'), ['photo', 'video']))
                     ->rules([
-                        fn(): Closure => function (string $attribute, $value, Closure $fail, Get $get) {
+                        fn(Get $Get): Closure => function (string $attribute, $value, Closure $fail) use ($get)  {
                             if (empty($value))
                                 return true;
                             $bot = new TelegramService();
