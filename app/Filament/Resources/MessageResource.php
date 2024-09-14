@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MessageResource\Pages;
 use App\Filament\Resources\MessageResource\RelationManagers;
 use App\Models\Message;
+use App\Services\TelegramService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -62,59 +63,51 @@ class MessageResource extends Resource
                     ->columnSpanFull()
                     ->rules([
                         fn(): Closure => function (string $attribute, $value, Closure $fail) {
-                            // Normalize whitespace
-                            $text = preg_replace('/\s+/', ' ', $value);
+                            function convertToTelegramInlineKeyboard($text, $limitPerRow = 5)
+                            {
+                                $keyboard = [];
+                                $key = [];
 
-                            // Step 1: Check if brackets are balanced
-                            if (substr_count($text, '[') !== substr_count($text, ']')) {
-                                $fail("Tugmalar ochilib yopilishida xatolik bor.");
-                                return;
-                            }
+                                // Split the input into rows based on newlines
+                                $rows = explode("\n", $text);
 
-                            // Step 2: Match all button patterns
-                            $pattern = '/\[(.*?)-(https?:\/\/[^\s\]]+)\]/';
-                            preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
+                                foreach ($rows as $row) {
+                                    // Match [text-url] pattern
+                                    preg_match_all('/\[(.*?)\-(.*?)\]/', $row, $matches, PREG_SET_ORDER);
 
-                            if (empty($matches)) {
-                                $fail("Birorta ham to'g'ri formatda tugma topilmadi. Tugma formati quyidagi formatda bo'lishi shart: [Text-URL].");
-                                return;
-                            }
+                                    foreach ($matches as $match) {
+                                        $text = $match[1];
+                                        $url = $match[2];
 
-                            $buttons = [];
-                            $rows = explode("\n", $text);
+                                        // Add button to current row
+                                        $key[] = ["text" => $text, "url" => $url];
 
-                            foreach ($rows as $row) {
-                                preg_match_all($pattern, $row, $matches, PREG_SET_ORDER);
-
-                                if (empty($matches)) {
-                                    $fail("$row qatorda xato formatdagi tugma bor");
-                                    return;
-                                }
-
-                                foreach ($matches as $match) {
-                                    $buttonText = trim($match[1]);
-                                    $url = trim($match[2]);
-
-                                    // Check for empty text or URL
-                                    if (empty($buttonText) || empty($url)) {
-                                        $fail("Tugma matni yoki URL bo'sh bo'lishi mumkin emas.");
-                                        return;
+                                        // If row reaches limit, add to keyboard and start a new row
+                                        if (count($key) >= $limitPerRow) {
+                                            $keyboard[] = $key;
+                                            $key = [];
+                                        }
                                     }
 
-                                    // Check for valid URL format
-                                    if (!filter_var($url, FILTER_VALIDATE_URL)) {
-                                        $fail("Url formati xato: " . $url);
-                                        return;
+                                    // Add remaining buttons in the row
+                                    if (!empty($key)) {
+                                        $keyboard[] = $key;
+                                        $key = [];
                                     }
-
-                                    $buttons[] = ["text" => $buttonText, "url" => $url];
                                 }
 
-                                // Check for button count per row
-                                if (count($buttons) > 5) {
-                                    $fail("Bir qatorda 5 tadan ko'p tugma qo'yib bo'lmaydi!");
-                                    return;
-                                }
+                                return $keyboard;
+                            }
+                            $bot = new TelegramService();
+                            $result = $bot->sendMessage([
+                                'chat_id' => env('DEV_ID'),
+                                'text' => 'Keyboard syntax checking bro )',
+                                'reply_markup' => $bot->buildInlineKeyboard(convertToTelegramInlineKeyboard($value))
+                            ]);
+                            if ($result['ok']) {
+                                return true;
+                            } else {
+                                $fail('Tugmalar xato yozilgan');
                             }
                         },
                     ]),
