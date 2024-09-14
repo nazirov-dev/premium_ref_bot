@@ -393,7 +393,7 @@ class PrivateChat extends Controller
                     ]);
                     return response()->json(['ok' => true], 200);
                 } else {
-                    $findButton = Button::with('messages')->where(['name' => $text, 'status' => true])->first();
+                    $findButton = Button::where(['name' => $text, 'status' => true])->first();
                     if ($findButton) {
                         $messages = $findButton->getMessages();
                         $replacements = [
