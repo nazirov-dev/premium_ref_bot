@@ -59,33 +59,37 @@ class MessageResource extends Resource
                     ->label('Tugmalar')
                     ->columnSpanFull()
                     ->rules([
-                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
-                            // Define the function for validating Telegram Inline Keyboard input
-                                $text = $value;
-                                $limitPerRow = 5;
-                                $key = [];
-                                $rows = explode("\n", $text);
-                                $validPatternFound = false;
-                
-                                foreach ($rows as $row) {
-                                    preg_match_all('/\[(.*?)\-(.*?)\]/', $row, $matches, PREG_SET_ORDER);
-                
-                                    if (!empty($matches)) {
-                                        $validPatternFound = true;
-                                    }
-                
-                                    foreach ($matches as $match) {
-                                        $key[] = ["text" => $match[1], "url" => $match[2]];
-                
-                                        // If row exceeds the limit, it's still valid as long as patterns match
-                                        if (count($key) >= $limitPerRow) {
-                                            $key = [];  // Reset for the next row
-                                        }
+                        fn(): Closure => function (string $attribute, $value, Closure $fail) {
+                            $text = $value;
+                            $limitPerRow = 5;
+                            $key = [];
+                            $rows = explode("\n", $text);
+                            $validPatternFound = false;
+                            $isValid = true;
+
+                            foreach ($rows as $row) {
+                                // Match the correct pattern [text - url]
+                                preg_match_all('/\[(.*?)\-(https?:\/\/.*?)\]/', $row, $matches, PREG_SET_ORDER);
+
+                                if (empty($matches)) {
+                                    $isValid = false;  // No valid match found in this row
+                                    break;  // Exit as soon as an invalid row is found
+                                }
+
+                                foreach ($matches as $match) {
+                                    $key[] = ["text" => $match[1], "url" => $match[2]];
+
+                                    // If row exceeds the limit, it's still valid as long as patterns match
+                                    if (count($key) >= $limitPerRow) {
+                                        $key = [];  // Reset for the next row
                                     }
                                 }
-                
-                            // Validate the value using the function
-                            if (!$validPatternFound) {
+
+                                $validPatternFound = true;  // Set this to true if at least one valid match is found
+                            }
+
+                            // If no valid pattern was found or an invalid row exists, trigger the validation error
+                            if (!$validPatternFound || !$isValid) {
                                 $fail("Tugmalar noto'g'ri formatda yozilgan. Misol: [Tugma matni - https://tugma.url]");
                             }
                         },
