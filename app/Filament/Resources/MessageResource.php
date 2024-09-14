@@ -40,7 +40,7 @@ class MessageResource extends Resource
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, ?string $old) {
                         // $set('file_id', null);
-                        if ($state['type'] === 'text') {
+                        if ($state === 'text') {
                             $set('file_id', null);
                         }
 
