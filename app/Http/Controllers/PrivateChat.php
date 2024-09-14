@@ -187,7 +187,8 @@ class PrivateChat extends Controller
                                 '{last_name}' => $bot->LastName(),
                                 '{username}' => $bot->Username(),
                                 '{user_id}' => $chat_id,
-                                '{bonus}' => $bonus
+                                '{bonus}' => $bonus,
+                                '{new_balance}' => $refferrer->balance
                             ]),
                             'parse_mode' => 'HTML'
                         ]);
