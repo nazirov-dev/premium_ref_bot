@@ -626,7 +626,7 @@ class PrivateChat extends Controller
                     if ($chat_id == $settings->admin_id) {
                         if (stripos($callback_data, 'promo_code_accepted_') !== false) {
                             $promo_code_id = explode('_', $callback_data)[3];
-                            $promo_code = PromoCode::find($promo_code_id);
+                            $promo_code = PromoCode::with('user')->find($promo_code_id);
                             if ($promo_code) {
                                 $promo_code->status = 'completed';
                                 $promo_code->save();
@@ -647,10 +647,8 @@ class PrivateChat extends Controller
                                     '{category_name}' => $promo_code->category->name,
                                     '{price}' => $promo_code->price,
                                     '{user_id}' => $promo_code->user_id,
-                                    '{first_name}' => $bot->FirstName(),
-                                    '{last_name}' => $bot->LastName(),
-                                    '{username}' => $bot->Username(),
-                                    '{chat_id}' => $chat_id,
+                                    '{first_name}' => $promo_code->user->name,
+                                    '{username}' => $promo_code->user->username,
                                     '{now}' => now()->format('Y-m-d H:i:s')
                                 ]);
                                 $bot->sendMessage([
@@ -668,7 +666,7 @@ class PrivateChat extends Controller
                                     'chat_id' => $chat_id,
                                     'message_id' => $bot->MessageID(),
                                     'reply_markup' => $bot->buildInlineKeyboard([
-                                        [['text' => 'Bazadan topilmagan 🔍', 'callback_data' => 'notfound_' . $promo_code->id]]
+                                        [['text' => 'Bazadan topilmadi 🔍', 'callback_data' => 'notfound_' . $promo_code_id]]
                                     ])
                                 ]);
                                 return response()->json(['ok' => true], 200);
