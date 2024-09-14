@@ -45,6 +45,7 @@ class MessageResource extends Resource
                         }
 
                     })
+                    ->required()
                     ->live(),
                 Forms\Components\RichEditor::make('text')
                     ->label('Matn')
