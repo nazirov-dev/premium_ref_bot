@@ -71,6 +71,7 @@ class TextController extends Controller
     {
         // Step 1: Replace non-breaking spaces (&nbsp;) with regular spaces
         $html = str_replace('&nbsp;', ' ', $html);
+        $html = str_replace('</p>', "</p>\n", $html);
 
         // Step 2: Replace supported tags or remove unsupported ones
         $html = preg_replace([
