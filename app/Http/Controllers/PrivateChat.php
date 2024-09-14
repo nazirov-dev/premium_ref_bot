@@ -81,7 +81,7 @@ class PrivateChat extends Controller
         }
         $keyboard[] = [['text' => Button::where(['slug' => 'instructions_button'])->first()->name], ['text' => Button::where(['slug' => 'administrator_button'])->first()->name]];
 
-        return $bot->buildKeyBoard($keyboard, resize_keyboard: true);
+        return $bot->buildKeyBoard($keyboard, resize: true);
     }
     public function sendMessage($bot, Message $message, $chat_id, $replacements = [])
     {
