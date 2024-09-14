@@ -35,6 +35,8 @@ class ButtonResource extends Resource
                     )
                     ->searchable()
                     ->label('Xabarlar'),
+                Forms\Components\Toggle::make('status')
+                    ->label('Holati'),
             ]);
     }
 
@@ -51,6 +53,8 @@ class ButtonResource extends Resource
                 Tables\Columns\TextColumn::make('messages')
                     ->label('Xabarlar')
                     ->listWithLineBreaks(),
+                Tables\Columns\ToggleColumn::make('status')
+                    ->label('Holati'),
             ])
             ->defaultSort('id', 'desc')
             ->filters([
