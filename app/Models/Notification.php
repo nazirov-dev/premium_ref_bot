@@ -12,7 +12,6 @@ class Notification extends Model
         'status',
         'admin_chat_id', //
         'message_id', //
-        'filter_by_language', //
         'keyboard',
         'admin_info_message_id',
         'sent',
