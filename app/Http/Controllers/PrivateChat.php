@@ -243,7 +243,7 @@ class PrivateChat extends Controller
                         $bot->sendMessage([
                             'chat_id' => $chat_id,
                             'text' => Text::get('phone_number_invalid'),
-                            'reply_markup' => $bot->buildReplyKeyBoard([
+                            'reply_markup' => $bot->buildKeyBoard([
                                 [['text' => Text::get('send_phone_number'), 'request_contact' => true]]
                             ])
                         ]);
@@ -260,7 +260,7 @@ class PrivateChat extends Controller
                 $bot->sendMessage([
                     'chat_id' => $chat_id,
                     'text' => Text::get('phone_number_request'),
-                    'reply_markup' => $bot->buildReplyKeyBoard([
+                    'reply_markup' => $bot->buildKeyBoard([
                         [['text' => Text::get('send_phone_number'), 'request_contact' => true]]
                     ])
                 ]);
