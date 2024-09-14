@@ -41,13 +41,14 @@ class MessageResource extends Resource
                     })
                     ->live(true),
                 Forms\Components\Textarea::make('text')
-                    ->label('Matn'),
+                    ->label('Matn')
+                    ->visible(fn(Get $get) => $get('type') === 'text'),
                 Forms\Components\TextInput::make('buttons')
                     ->label('Tugmalar'),
                 Forms\Components\TextInput::make('file_id')
                     ->label('Fayl ID raqami')
                     ->nullable()
-                    ->visible(fn(Get $get) => $get('type') !== 'text')
+                    ->visible(fn(Get $get) => in_array($get('type'), ['photo', 'video'])),
             ]);
     }
 
