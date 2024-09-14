@@ -527,7 +527,8 @@ class PrivateChat extends Controller
                             'callback_query_id' => $bot->Callback_ID(),
                             'text' => $this->replacePlaceholders(Text::get('minimum_withdraw_amount'), [
                                 '{amount}' => $minimum_withdraw_amount
-                            ])
+                            ]),
+                            'show_alert' => true
                         ]);
                         return response()->json(['ok' => true], 200);
                     } else {
