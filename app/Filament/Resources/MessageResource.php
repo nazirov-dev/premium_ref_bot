@@ -71,7 +71,7 @@ class MessageResource extends Resource
                             }
 
                             // Step 2: Match all button patterns
-                            $pattern = '/\[(.*?) - (https?:\/\/[^\s\]]+)\]/';
+                            $pattern = '/\[(.*?)-(https?:\/\/[^\s\]]+)\]/';
                             preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
 
                             if (empty($matches)) {
