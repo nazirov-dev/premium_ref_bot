@@ -65,6 +65,7 @@ class MessageResource extends Resource
                 Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
                     ->columnSpanFull()
+                    ->visible(fn(Get $get) => in_array($get('type'), ['text', 'photo', 'video']))
                     ->rules([
                         fn(): Closure => function (string $attribute, $value, Closure $fail) {
                             function convertToTelegramInlineKeyboard($text, $limitPerRow = 5)
@@ -120,7 +121,7 @@ class MessageResource extends Resource
                     ->nullable()
                     ->visible(fn(Get $get) => in_array($get('type'), ['photo', 'video']))
                     ->rules([
-                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get)  {
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                             if (empty($value))
                                 return true;
                             $bot = new TelegramService();
