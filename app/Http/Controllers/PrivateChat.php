@@ -593,7 +593,8 @@ class PrivateChat extends Controller
                                         '{balance}' => $user->balance,
                                         '{price}' => $category->price,
                                         '{category_name}' => $category->name,
-                                        '{promo_code}' => $promo_code->code
+                                        '{promo_code}' => $promo_code->code,
+                                        '{expired_at}' => (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s'))
                                     ]),
                                     'show_alert' => true
                                 ]);
@@ -603,7 +604,8 @@ class PrivateChat extends Controller
                                         '{balance}' => $user->balance,
                                         '{price}' => $category->price,
                                         '{category_name}' => $category->name,
-                                        '{promo_code}' => $promo_code->code
+                                        '{promo_code}' => $promo_code->code,
+                                        '{expired_at}' => (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s'))
                                     ]),
                                     'reply_markup' => $this->getMainButtons($settings, $bot)
                                 ]);
