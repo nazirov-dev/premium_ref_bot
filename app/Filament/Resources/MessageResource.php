@@ -55,45 +55,57 @@ class MessageResource extends Resource
                         'undo',
                     ])
                     ->visible(fn(Get $get) => $get('type') === 'text'),
-                Forms\Components\Textarea::make('buttons')
+                    Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
-                    ->columnSpanFull()
+                    ->columnSpanFull()  
                     ->rules([
-                        fn(): Closure => function (string $attribute, $value, Closure $fail) {
+                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
                             $text = $value;
                             $limitPerRow = 5;
-                            $key = [];
-                            $rows = explode("\n", $text);
-                            $validPatternFound = false;
+                            $validPatternFound = true;
                             $isValid = true;
-
+                
+                            // Split the text into rows
+                            $rows = explode("\n", $text);
+                
                             foreach ($rows as $row) {
-                                // Match the correct pattern [text - url]
-                                preg_match_all('/\[(.*?)\-(https?:\/\/.*?)\]/', $row, $matches, PREG_SET_ORDER);
-
+                                // Match correctly formatted [text - url] with optional whitespace
+                                preg_match_all('/\[(.*?)\-(https?:\/\/[^\s\]]+)\]/', $row, $matches, PREG_SET_ORDER);
+                
+                                // Check if there is a match and validate the pattern
                                 if (empty($matches)) {
                                     $isValid = false;  // No valid match found in this row
-                                    break;  // Exit as soon as an invalid row is found
-                                }
-
-                                foreach ($matches as $match) {
-                                    $key[] = ["text" => $match[1], "url" => $match[2]];
-
-                                    // If row exceeds the limit, it's still valid as long as patterns match
-                                    if (count($key) >= $limitPerRow) {
-                                        $key = [];  // Reset for the next row
+                                } else {
+                                    $key = [];
+                                    foreach ($matches as $match) {
+                                        // Validate URL
+                                        if (!filter_var($match[2], FILTER_VALIDATE_URL)) {
+                                            $isValid = false;
+                                            break;
+                                        }
+                
+                                        $key[] = ["text" => $match[1], "url" => $match[2]];
+                
+                                        // If row exceeds the limit, it's still valid as long as patterns match
+                                        if (count($key) > $limitPerRow) {
+                                            $isValid = false;
+                                            break;
+                                        }
                                     }
                                 }
-
-                                $validPatternFound = true;  // Set this to true if at least one valid match is found
+                
+                                // Exit as soon as an invalid row is found
+                                if (!$isValid) {
+                                    break;
+                                }
                             }
-
+                
                             // If no valid pattern was found or an invalid row exists, trigger the validation error
-                            if (!$validPatternFound || !$isValid) {
+                            if (!$isValid) {
                                 $fail("Tugmalar noto'g'ri formatda yozilgan. Misol: [Tugma matni - https://tugma.url]");
                             }
                         },
-                    ]),
+                    ]),                
                 Forms\Components\TextInput::make('file_id')
                     ->label('Fayl ID raqami')
                     ->nullable()
