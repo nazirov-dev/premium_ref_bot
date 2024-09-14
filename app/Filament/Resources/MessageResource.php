@@ -40,11 +40,13 @@ class MessageResource extends Resource
                         $set('file_id', null);
                     })
                     ->live(true),
-                Forms\Components\Textarea::make('text')
+                Forms\Components\RichEditor::make('text')
                     ->label('Matn')
+                    ->columnSpanFull()
                     ->visible(fn(Get $get) => $get('type') === 'text'),
                 Forms\Components\TextInput::make('buttons')
-                    ->label('Tugmalar'),
+                    ->label('Tugmalar')
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('file_id')
                     ->label('Fayl ID raqami')
                     ->nullable()
