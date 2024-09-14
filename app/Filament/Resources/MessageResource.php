@@ -38,8 +38,7 @@ class MessageResource extends Resource
                     ->default('text')
                     ->label('Turi')
                     ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set, ?string $old) {
-                        // $set('file_id', null);
+                    ->afterStateUpdated(function ($state, callable $set) {
                         if ($state === 'text') {
                             $set('file_id', null);
                         }
@@ -47,6 +46,37 @@ class MessageResource extends Resource
                     })
                     ->required()
                     ->live(),
+                Forms\Components\TextInput::make('file_id')
+                    ->label('Fayl ID raqami')
+                    ->nullable()
+                    ->visible(fn(Get $get) => in_array($get('type'), ['photo', 'video']))
+                    ->rules([
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (empty($value))
+                                return true;
+                            $bot = new TelegramService();
+                            $file_type = $get('type');
+                            if ($file_type === 'photo') {
+                                $try = $bot->sendPhoto([
+                                    'chat_id' => env('DEV_ID'),
+                                    'photo' => $value,
+                                    'caption' => "Photo file id checking bro )"
+                                ]);
+                            } elseif ($file_type === 'video') {
+                                $try = $bot->sendVideo([
+                                    'chat_id' => env('DEV_ID'),
+                                    'video' => $value,
+                                    'caption' => "Video file id checking bro )"
+                                ]);
+                            }
+                            if ($try['ok']) {
+                                return true;
+                            } else {
+                                $fail('Fayl ID raqami ' . $file_type . ' uchun noto\'g\'ri');
+                            }
+                        }
+
+                    ]),
                 Forms\Components\RichEditor::make('text')
                     ->label('Matn')
                     ->columnSpanFull()
@@ -116,37 +146,6 @@ class MessageResource extends Resource
                                 $fail('Tugmalar xato yozilgan');
                             }
                         },
-                    ]),
-                Forms\Components\TextInput::make('file_id')
-                    ->label('Fayl ID raqami')
-                    ->nullable()
-                    ->visible(fn(Get $get) => in_array($get('type'), ['photo', 'video']))
-                    ->rules([
-                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                            if (empty($value))
-                                return true;
-                            $bot = new TelegramService();
-                            $file_type = $get('type');
-                            if ($file_type === 'photo') {
-                                $try = $bot->sendPhoto([
-                                    'chat_id' => env('DEV_ID'),
-                                    'photo' => $value,
-                                    'caption' => "Photo file id checking bro )"
-                                ]);
-                            } elseif ($file_type === 'video') {
-                                $try = $bot->sendVideo([
-                                    'chat_id' => env('DEV_ID'),
-                                    'video' => $value,
-                                    'caption' => "Video file id checking bro )"
-                                ]);
-                            }
-                            if ($try['ok']) {
-                                return true;
-                            } else {
-                                $fail('Fayl ID raqami ' . $file_type . ' uchun noto\'g\'ri');
-                            }
-                        }
-
                     ]),
             ]);
     }
