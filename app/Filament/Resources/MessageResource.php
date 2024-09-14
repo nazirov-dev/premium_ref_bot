@@ -33,6 +33,7 @@ class MessageResource extends Resource
                         'photo' => 'Rasm',
                         'video' => 'Video'
                     ])
+                    ->default('text')
                     ->label('Turi')
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set) {
