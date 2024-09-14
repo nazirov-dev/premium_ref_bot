@@ -571,7 +571,8 @@ class PrivateChat extends Controller
                                     'text' => $this->replacePlaceholders(Text::get('not_enough_balance'), [
                                         '{balance}' => $user->balance,
                                         '{price}' => $category->price
-                                    ])
+                                    ]),
+                                    'show_alert' => true
                                 ]);
                                 return response()->json(['ok' => true], 200);
                             } else {
