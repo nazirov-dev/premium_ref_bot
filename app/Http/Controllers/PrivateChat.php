@@ -395,7 +395,7 @@ class PrivateChat extends Controller
                 } else {
                     $findButton = Button::with('messages')->where(['name' => $text, 'status' => true])->first();
                     if ($findButton) {
-                        $messages = $findButton->messages;
+                        $messages = $findButton->getMessages();
                         $replacements = [
                             '{first_name}' => $bot->FirstName(),
                             '{last_name}' => $bot->LastName(),

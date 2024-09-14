@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Message;
 
 class Button extends Model
 {
@@ -17,8 +18,8 @@ class Button extends Model
         'slug',
         'messages'
     ];
-    public function messages()
+    public function getMessages()
     {
-        return $this->hasMany(Message::class, 'id', 'messages');
+        return Message::whereIn('id', $this->messages)->get();
     }
 }
