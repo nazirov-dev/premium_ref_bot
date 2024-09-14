@@ -68,9 +68,7 @@ class MessageResource extends Resource
 
                             foreach ($rows as $row) {
                                 // Check for balanced brackets
-                                $openBrackets = substr_count($row, '[');
-                                $closeBrackets = substr_count($row, ']');
-                                if ($openBrackets !== $closeBrackets) {
+                                if (substr_count($row, '[') !== substr_count($row, ']')) {
                                     $valid = false;
                                     break;
                                 }
@@ -78,16 +76,19 @@ class MessageResource extends Resource
                                 // Extract matches
                                 preg_match_all('/\[(.*?)\-(.*?)\]/', $row, $matches, PREG_SET_ORDER);
 
-                                if (!empty($matches)) {
-                                    $validPatternFound = true;
+                                // Check button count per row
+                                if (count($matches) > $limitPerRow) {
+                                    $valid = false;
+                                    break;
                                 }
 
+                                // Validate each match
                                 foreach ($matches as $match) {
-                                    $textPart = $match[1];
-                                    $urlPart = $match[2];
+                                    $textPart = trim($match[1]);
+                                    $urlPart = trim($match[2]);
 
-                                    // Validate URL
-                                    if (!filter_var($urlPart, FILTER_VALIDATE_URL)) {
+                                    // Check if text is not empty and URL is valid
+                                    if (empty($textPart) || !filter_var($urlPart, FILTER_VALIDATE_URL)) {
                                         $valid = false;
                                         break;
                                     }
@@ -98,8 +99,8 @@ class MessageResource extends Resource
                                 }
                             }
 
-                            // Check if at least one valid pattern was found and brackets are balanced
-                            if (!$validPatternFound || !$valid) {
+                            // Check if at least one valid pattern was found
+                            if (!$valid || !$validPatternFound) {
                                 $fail("Tugmalar noto'g'ri formatda yozilgan. Misol: [Tugma matni - https://tugma.url]");
                             }
                         },
