@@ -236,7 +236,7 @@ class PrivateChat extends Controller
                 }
             }
             if (empty($user->phone_number)) {
-                if ($update_type == 'contact') {
+                if ($update_type == 'contact' and $bot->getContactUserId() == $chat_id) {
                     $phone_number = preg_replace('/\D/', '', $bot->Text());
                     if (!preg_match("/^\+?998\d{9}$/", $phone_number)) {
                         $bot->sendMessage([
