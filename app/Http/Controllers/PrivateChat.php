@@ -277,9 +277,15 @@ class PrivateChat extends Controller
                 }
                 if ($text == '/start') {
                     $start_message = Text::get('start_message');
+                    $replacements = [
+                        '{first_name}' => $bot->FirstName(),
+                        '{last_name}' => $bot->LastName(),
+                        '{username}' => $bot->Username(),
+                        '{user_id}' => $chat_id
+                    ];
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
-                        'text' => $start_message,
+                        'text' => $this->replacePlaceholders($start_message, $replacements),
                         'reply_markup' => $this->getMainButtons($settings, $bot)
                     ]);
                     return response()->json(['ok' => true], 200);
