@@ -88,7 +88,8 @@ class BoostChannelResource extends Resource
                 ]),
             ])
             ->defaultSort('id', 'desc')
-            ->heading('Boost kanallar');
+            ->heading('Boost kanallar')
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array

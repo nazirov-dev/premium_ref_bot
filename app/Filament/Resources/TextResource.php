@@ -70,7 +70,8 @@ class TextResource extends Resource
                 Tables\Actions\CreateAction::make()
             ])
             ->defaultSort('id', 'desc')
-            ->heading('Matnlar');
+            ->heading('Matnlar')
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array

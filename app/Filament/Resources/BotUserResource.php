@@ -66,7 +66,8 @@ class BotUserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user_id')
                     ->searchable()
-                    ->label('Foydalanuvchi ID raqami'),
+                    ->label('Foydalanuvchi ID raqami')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Ismi'),
                 Tables\Columns\TextColumn::make('username')
@@ -77,23 +78,34 @@ class BotUserResource extends Resource
                     ->color('primary'),
                 Tables\Columns\TextColumn::make('phone_number')
                     ->label('Telefon raqami')
-                    ->searchable(),
-                Tables\Columns\TextInputColumn::make('balance')
-                    ->label('Balansi'),
+                    ->searchable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('balance')
+                    ->label('Balansi')
+                    ->suffix(' so\'m')
+                    ->badge()
+                    ->color(function ($record) {
+                        return $record->balance > 0 ? 'success' : 'danger';
+                    }),
                 Tables\Columns\TextColumn::make('referrer_id')
                     ->label('Taklif qilgan ID raqami')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('is_premium')
-                    ->label('Premiummi?'),
+                    ->label('Premiummi?')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('daily_bonus_status')
-                    ->label('Kunlik bonus olganmi?'),
+                    ->label('Kunlik bonus olganmi?')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ToggleColumn::make('status')
                     ->label('Aktivmi?'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Ro\'yhatdan o\'tgan vaqti'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('O\'zgartirilgan vaqti')
+                    ->toggleable(isToggledHiddenByDefault: true)
             ])
+            ->searchOnBlur()
             ->filters([
                 //
             ])

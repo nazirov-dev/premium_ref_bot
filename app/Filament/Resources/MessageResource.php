@@ -184,7 +184,8 @@ class MessageResource extends Resource
                 ]),
             ])
             ->defaultSort('id', 'desc')
-            ->heading('Xabarlar');
+            ->heading('Xabarlar')
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array

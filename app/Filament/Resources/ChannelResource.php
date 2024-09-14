@@ -58,7 +58,8 @@ class ChannelResource extends Resource
                 // ]),
             ])
             ->defaultSort('id', 'desc')
-            ->heading('Kanallar');
+            ->heading('Kanallar')
+            ->searchOnBlur();
 
     }
 

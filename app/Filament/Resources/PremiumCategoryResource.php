@@ -48,11 +48,14 @@ class PremiumCategoryResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->label('Slug')
-                    ->searchable(),
+                    ->searchable()
+                    ,
                 Tables\Columns\TextColumn::make('price')
                     ->label('Narxi')
-                    ->suffix('So\'m')
-                    ->searchable(),
+                    ->suffix(' so\'m')
+                    ->searchable()
+                    ->badge()
+                    ->color('success'),
                 Tables\Columns\ToggleColumn::make('status')
                     ->label('Aktivmi?')
                     ->searchable(),
@@ -69,7 +72,8 @@ class PremiumCategoryResource extends Resource
                 ]),
             ])
             ->defaultSort('id', 'desc')
-            ->heading('Premium kategoriyalar');
+            ->heading('Premium kategoriyalar')
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array

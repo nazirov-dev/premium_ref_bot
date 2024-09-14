@@ -35,7 +35,7 @@ class ButtonResource extends Resource
                 Forms\Components\Select::make('messages')
                     ->multiple()
                     ->options(
-                        Message::pluck('name', 'id')->toArray()
+                        Message::all()->pluck('name', 'id')->toArray()
                     )
                     ->searchable()
                     ->label('Xabarlar'),
@@ -73,7 +73,8 @@ class ButtonResource extends Resource
                 ]),
             ])
             ->heading('Tugmalar')
-            ->defaultSort('id', 'desc');
+            ->defaultSort('id', 'desc')
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array
