@@ -116,7 +116,7 @@ class BotUserResource extends Resource
                     ->label('O\'zgartirilgan vaqti')
                     ->toggleable(isToggledHiddenByDefault: true)
             ])
-            ->searchOnBlur()
+            
             ->filters([
                 //
             ])

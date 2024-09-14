@@ -79,7 +79,7 @@ class TextResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Matnlar')
-            ->searchOnBlur();
+            ;
     }
 
     public static function getRelations(): array

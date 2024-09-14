@@ -107,7 +107,7 @@ class PromoCodeResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Promo codes')
-            ->searchOnBlur();
+            ;
     }
 
     public static function getRelations(): array

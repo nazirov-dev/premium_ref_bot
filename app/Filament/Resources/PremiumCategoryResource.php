@@ -84,7 +84,7 @@ class PremiumCategoryResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Premium kategoriyalar')
-            ->searchOnBlur();
+            ;
     }
 
     public static function getRelations(): array

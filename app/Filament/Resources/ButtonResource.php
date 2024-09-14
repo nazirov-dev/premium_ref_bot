@@ -83,7 +83,7 @@ class ButtonResource extends Resource
             ])
             ->heading('Tugmalar')
             ->defaultSort('id', 'desc')
-            ->searchOnBlur();
+            ;
     }
 
     public static function getRelations(): array
