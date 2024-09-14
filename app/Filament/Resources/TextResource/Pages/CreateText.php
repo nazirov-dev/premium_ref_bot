@@ -15,8 +15,8 @@ class CreateText extends CreateRecord
     {
         function cleanTelegramHtml($html)
         {
-            // Step 1: Escape unsupported characters
-            $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+            // Step 1: Replace non-breaking spaces (&nbsp;) with regular spaces
+            $html = str_replace('&nbsp;', ' ', $html);
 
             // Step 2: Replace supported tags or remove unsupported ones
             $html = preg_replace([
@@ -29,8 +29,7 @@ class CreateText extends CreateRecord
                 '/<del>(.*?)<\/del>/i',          // <del> -> <s>
                 '/<strike>(.*?)<\/strike>/i',    // <strike> -> <s>
                 '/<s>(.*?)<\/s>/i',              // <s> -> <s>
-                '/<span\s+class="tg-spoiler">(.*?)<\/span>/i', // <span class="tg-spoiler"> -> <tg-spoiler>
-                '/<tg-spoiler>(.*?)<\/tg-spoiler>/i', // <tg-spoiler> -> <tg-spoiler>
+                '/<span\s+style="text-decoration:\s*underline;">(.*?)<\/span>/i', // <span style="text-decoration: underline;"> -> <u>
                 '/<a\s+href="(.*?)">(.*?)<\/a>/i',    // <a href="..."> -> <a href="...">
                 '/<br\s*\/?>/i',                // <br> -> \n
                 '/<pre>(.*?)<\/pre>/is',         // <pre> -> <pre>
@@ -48,8 +47,7 @@ class CreateText extends CreateRecord
                 '<s>$1</s>',   // Map <del> to <s>
                 '<s>$1</s>',
                 '<s>$1</s>',
-                '<tg-spoiler>$1</tg-spoiler>', // Map <span class="tg-spoiler"> to <tg-spoiler>
-                '<tg-spoiler>$1</tg-spoiler>',
+                '<u>$1</u>',   // Map <span style="text-decoration: underline;"> to <u>
                 '<a href="$1">$2</a>',   // Retain <a> tag for links
                 "\n",                    // Replace <br> with newline
                 '<pre>$1</pre>',         // Retain <pre> for code block
@@ -64,6 +62,7 @@ class CreateText extends CreateRecord
 
             return $html;
         }
+
 
         $cleaned = cleanTelegramHtml($data['value']);
         Log::info('CreateText: ', [$data, $cleaned]);
