@@ -13,7 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Closure;
 class MessageResource extends Resource
 {
     protected static ?string $model = Message::class;
@@ -57,7 +57,39 @@ class MessageResource extends Resource
                     ->visible(fn(Get $get) => $get('type') === 'text'),
                 Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->rules([
+                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                            // Define the function for validating Telegram Inline Keyboard input
+                                $text = $value;
+                                $limitPerRow = 5;
+                                $key = [];
+                                $rows = explode("\n", $text);
+                                $validPatternFound = false;
+                
+                                foreach ($rows as $row) {
+                                    preg_match_all('/\[(.*?)\-(.*?)\]/', $row, $matches, PREG_SET_ORDER);
+                
+                                    if (!empty($matches)) {
+                                        $validPatternFound = true;
+                                    }
+                
+                                    foreach ($matches as $match) {
+                                        $key[] = ["text" => $match[1], "url" => $match[2]];
+                
+                                        // If row exceeds the limit, it's still valid as long as patterns match
+                                        if (count($key) >= $limitPerRow) {
+                                            $key = [];  // Reset for the next row
+                                        }
+                                    }
+                                }
+                
+                            // Validate the value using the function
+                            if (!$validPatternFound) {
+                                $fail("Tugmalar noto'g'ri formatda yozilgan. Misol: [Tugma matni - https://tugma.url]");
+                            }
+                        },
+                    ]),
                 Forms\Components\TextInput::make('file_id')
                     ->label('Fayl ID raqami')
                     ->nullable()
