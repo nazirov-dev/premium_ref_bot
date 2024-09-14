@@ -135,6 +135,7 @@ class PrivateChat extends Controller
 
             // check if user not exists in database
             if (is_null($user)) {
+                $referral_id = null;
                 #check is user visited via referral link, link like: https://t.me/your_bot?start=user_id
                 if (strpos($text, '/start ') !== false and $settings->referral_status) {
                     $referral_id = explode(' ', $text)[1] ?? null;
