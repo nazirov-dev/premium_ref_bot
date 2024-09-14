@@ -7,6 +7,7 @@ use App\Filament\Resources\MessageResource\RelationManagers;
 use App\Models\Message;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -32,13 +33,20 @@ class MessageResource extends Resource
                         'photo' => 'Rasm',
                         'video' => 'Video'
                     ])
-                    ->label('Turi'),
+                    ->label('Turi')
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('file_id', null);
+                    })
+                    ->live(true),
                 Forms\Components\Textarea::make('text')
                     ->label('Matn'),
                 Forms\Components\TextInput::make('buttons')
                     ->label('Tugmalar'),
                 Forms\Components\TextInput::make('file_id')
-                    ->label('Fayl ID raqami')->nullable()
+                    ->label('Fayl ID raqami')
+                    ->nullable()
+                    ->visible(fn(Get $get) => $get('type') !== 'text')
             ]);
     }
 
@@ -74,7 +82,7 @@ class MessageResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('id', 'desc') 
+            ->defaultSort('id', 'desc')
             ->heading('Xabarlar');
     }
 
