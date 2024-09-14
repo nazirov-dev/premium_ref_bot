@@ -515,7 +515,8 @@ class PrivateChat extends Controller
                     } else {
                         $bot->answerCallbackQuery([
                             'callback_query_id' => $bot->Callback_ID(),
-                            'text' => Text::get('daily_bonus_not_available')
+                            'text' => Text::get('daily_bonus_not_available'),
+                            'show_alert' => true
                         ]);
                     }
                 } elseif ($callback_data == 'withdraw_request') {
