@@ -56,7 +56,7 @@ class MessageResource extends Resource
                         'underline',
                         'undo',
                     ])
-                    ->visible(fn(Get $get) => $get('type') === 'text'),
+                    ->visible(fn(Get $get) => in_array($get('type'), ['text', 'photo', 'video'])),
 
                 Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
