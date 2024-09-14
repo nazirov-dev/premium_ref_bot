@@ -18,7 +18,7 @@ class CreateBotUsersTable extends Migration
             $table->bigInteger('user_id');
             $table->string('name');
             $table->string('username')->nullable()->default(null);
-            $table->string('phone_numer')->nullable()->default(null);
+            $table->string('phone_number')->nullable()->default(null);
             $table->decimal('balance', 10, 2, true)->default(0)->nullable();
             $table->bigInteger('referrer_id')->nullable()->default(null); // Referrer ID
             $table->boolean('is_premium')->default(false);
