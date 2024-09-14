@@ -28,23 +28,23 @@ class TextResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')
-                ->label('Kalit so\'z')
-                ->required()
-                ->columnSpanFull(),
+                    ->label('Kalit so\'z')
+                    ->required(),
                 Forms\Components\RichEditor::make('value')
-                ->label('Matn')
-                ->required()
-                ->toolbarButtons([
-                    'blockquote',
-                    'bold',
-                    'codeBlock',
-                    'italic',
-                    'link',
-                    'redo',
-                    'strike',
-                    'underline',
-                    'undo',
-                ]),
+                    ->label('Matn')
+                    ->required()
+                    ->toolbarButtons([
+                        'blockquote',
+                        'bold',
+                        'codeBlock',
+                        'italic',
+                        'link',
+                        'redo',
+                        'strike',
+                        'underline',
+                        'undo',
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -59,7 +59,7 @@ class TextResource extends Resource
                 //
             ])
             ->actions([
-                    Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
