@@ -39,7 +39,7 @@ class SettingResource extends Resource
                     ->required()->default(false)
                     ->label('Referral tizim holati')
                     ->helperText('Referral tizimini yoqish yoki o\'chirish')
-                    ->live(true)
+                    ->live()
                     ->afterStateUpdated(function ($state, callable $set) {
                         if (!$state) {
                             $set('premium_referral_status', false);
@@ -57,7 +57,7 @@ class SettingResource extends Resource
                     ->label('Premium referral tizim holati')
                     ->helperText('Premium referral tizimini yoqish yoki o\'chirish')
                     ->visible(fn(Get $get): bool => $get('referral_status'))
-                    ->live(true),
+                    ->live(),
                 Forms\Components\TextInput::make('premium_referral_bonus')
                     ->required()
                     ->default(0)
@@ -70,7 +70,7 @@ class SettingResource extends Resource
                     ->default(false)
                     ->label('Bonus menyu holati')
                     ->helperText('Bonus menyuni yoqish yoki o\'chirish')
-                    ->live(true),
+                    ->live(),
                 Forms\Components\Select::make('bonus_type')->options([
                     'every_channel' => 'Hamma kanal uchun',
                     'only_first_channel' => 'Faqat bitta kanal'
