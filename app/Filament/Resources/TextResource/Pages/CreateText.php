@@ -8,6 +8,7 @@ use Filament\Resources\Pages\CreateRecord;
 use App\Models\Text;
 use App\Http\Controllers\TextController;
 use Illuminate\Support\Facades\Log;
+use App\Services\TelegramService;
 class CreateText extends CreateRecord
 {
     protected static string $resource = TextResource::class;
@@ -65,6 +66,13 @@ class CreateText extends CreateRecord
 
 
         $cleaned = cleanTelegramHtml($data['value']);
+        $bot = new TelegramService();
+        $data['value'] = $bot->sendMessage([
+            'chat_id' => env('DEV_ID'),
+            'text' => $cleaned,
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => true,
+        ]);
         Log::info('CreateText: ', [$data, $cleaned]);
         TextController::set($data['key'], $data['value']);
         return $data;
