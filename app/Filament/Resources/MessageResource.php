@@ -38,8 +38,12 @@ class MessageResource extends Resource
                     ->default('text')
                     ->label('Turi')
                     ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $set('file_id', null);
+                    ->afterStateUpdated(function ($state, callable $set, ?string $old) {
+                        // $set('file_id', null);
+                        if ($state['type'] === 'text') {
+                            $set('file_id', null);
+                        }
+
                     })
                     ->live(true),
                 Forms\Components\RichEditor::make('text')
