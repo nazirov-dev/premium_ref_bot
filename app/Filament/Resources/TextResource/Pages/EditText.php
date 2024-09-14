@@ -7,7 +7,7 @@ use App\Filament\Resources\TextResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use App\Http\Controllers\TextController;
-
+use Illuminate\Support\Facades\Log;
 
 class EditText extends EditRecord
 {
@@ -17,7 +17,7 @@ class EditText extends EditRecord
     {
         $cleaned = TextController::sanitizeHtmlForTelegram($data['value']);
         $data['value'] = $cleaned;
-
+        Log::info($data);
         TextController::set($data['key'], $cleaned);
         return $data;
     }
