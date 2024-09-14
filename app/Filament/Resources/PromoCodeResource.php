@@ -17,22 +17,8 @@ class PromoCodeResource extends Resource
 {
     protected static ?string $model = PromoCode::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    /* table structure:
-            $table->id();
-            $table->string('code')->unique();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('premium_category_id');
-            $table->foreign('premium_category_id')->references('id')->on('premium_categories')->onDelete('cascade');
-            $table->decimal('price', 10, 2);
-            $table->dateTime('expired_at')->nullable();
-            $table->enum('status', [
-                'active',
-                'expired',
-                'completed',
-                'canceled'
-            ])->default('active');
-            $table->timestamps(); */
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static ?string $navigationLabel = 'Promo kodlar';
     public static function form(Form $form): Form
     {
         return $form

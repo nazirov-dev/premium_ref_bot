@@ -17,18 +17,8 @@ class BoostChannelResource extends Resource
 {
     protected static ?string $model = BoostChannel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    /* table structure:
-       $table->id();
-            $table->string('name');
-            $table->bigInteger('channel_id');
-            $table->decimal('bonus_each_boost', 10, 2, true)->default(0)->nullable();
-            $table->decimal('daily_bonus_each_boost', 10, 2, true)->default(0)->nullable();
-            $table->decimal('daily_bonus', 10, 2, true)->default(0)->nullable();
-            $table->enum('daily_bonus_type', ['simple', 'bonus_each_boost'])->default('simple');
-            $table->boolean('status')->default(false);
-            $table->timestamps(); */
+    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+    protected static ?string $navigationLabel = 'Boost qilish uchun kanallar';
     public static function form(Form $form): Form
     {
         return $form
