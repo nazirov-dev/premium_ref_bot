@@ -56,6 +56,7 @@ class MessageResource extends Resource
                         'undo',
                     ])
                     ->visible(fn(Get $get) => $get('type') === 'text'),
+
                 Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
                     ->columnSpanFull()
@@ -66,7 +67,7 @@ class MessageResource extends Resource
 
                             // Step 1: Check if brackets are balanced
                             if (substr_count($text, '[') !== substr_count($text, ']')) {
-                                $fail("Brackets are not balanced.");
+                                $fail("Tugmalar ochilib yopilishida xatolik bor.");
                                 return;
                             }
 
@@ -75,7 +76,7 @@ class MessageResource extends Resource
                             preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
 
                             if (empty($matches)) {
-                                $fail("No valid buttons found. Ensure buttons are in the format [Text - URL].");
+                                $fail("Birorta ham to'g'ri formatda tugma topilmadi. Tugma formati quyidagi formatda bo'lishi shart: [Text-URL].");
                                 return;
                             }
 
@@ -86,30 +87,35 @@ class MessageResource extends Resource
                                 preg_match_all($pattern, $row, $matches, PREG_SET_ORDER);
 
                                 if (empty($matches)) {
-                                    $fail("Invalid format in row: $row");
+                                    $fail("$row qatorda xato formatdagi tugma bor");
                                     return;
                                 }
 
                                 foreach ($matches as $match) {
+                                    $buttonText = trim($match[1]);
                                     $url = trim($match[2]);
 
-                                    // Check for valid URL format
-                                    if (!filter_var($url, FILTER_VALIDATE_URL)) {
-                                        $fail("Invalid URL format: " . $url);
+                                    // Check for empty text or URL
+                                    if (empty($buttonText) || empty($url)) {
+                                        $fail("Tugma matni yoki URL bo'sh bo'lishi mumkin emas.");
                                         return;
                                     }
 
-                                    $buttons[] = ["text" => trim($match[1]), "url" => $url];
+                                    // Check for valid URL format
+                                    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                                        $fail("Url formati xato: " . $url);
+                                        return;
+                                    }
+
+                                    $buttons[] = ["text" => $buttonText, "url" => $url];
                                 }
 
                                 // Check for button count per row
                                 if (count($buttons) > 5) {
-                                    $fail("A row cannot have more than 5 buttons.");
+                                    $fail("Bir qatorda 5 tadan ko'p tugma qo'yib bo'lmaydi!");
                                     return;
                                 }
                             }
-
-                            // If no issues, validation passes
                         },
                     ]),
                 Forms\Components\TextInput::make('file_id')
