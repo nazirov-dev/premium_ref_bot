@@ -43,6 +43,17 @@ class MessageResource extends Resource
                 Forms\Components\RichEditor::make('text')
                     ->label('Matn')
                     ->columnSpanFull()
+                    ->toolbarButtons([
+                        'blockquote',
+                        'bold',
+                        'codeBlock',
+                        'italic',
+                        'link',
+                        'redo',
+                        'strike',
+                        'underline',
+                        'undo',
+                    ])
                     ->visible(fn(Get $get) => $get('type') === 'text'),
                 Forms\Components\TextInput::make('buttons')
                     ->label('Tugmalar')
