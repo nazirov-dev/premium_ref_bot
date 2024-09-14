@@ -12,26 +12,22 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class PremiumCategoryResource extends Resource
 {
     protected static ?string $model = PremiumCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-        /*table structure
-            $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->bigInteger('price');
-            $table->boolean('status')->default(true);
-            $table->timestamps(); */
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Nomi'),
+                    ->label('Nomi')
+                    ->live(true)
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),,
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug'),
                 Forms\Components\TextInput::make('price')
