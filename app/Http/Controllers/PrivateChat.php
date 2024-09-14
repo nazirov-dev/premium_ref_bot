@@ -518,6 +518,7 @@ class PrivateChat extends Controller
                             'text' => Text::get('daily_bonus_not_available'),
                             'show_alert' => true
                         ]);
+                        return response()->json(['ok' => true], 200);
                     }
                 } elseif ($callback_data == 'withdraw_request') {
                     $minimum_withdraw_amount = PremiumCategory::where(['status' => true])->min('price');
