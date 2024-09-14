@@ -56,59 +56,59 @@ class MessageResource extends Resource
                         'undo',
                     ])
                     ->visible(fn(Get $get) => $get('type') === 'text'),
-                    Forms\Components\Textarea::make('buttons')
+                Forms\Components\Textarea::make('buttons')
                     ->label('Tugmalar')
-                    ->columnSpanFull()  
+                    ->columnSpanFull()
                     ->rules([
-                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                        fn(): Closure => function (string $attribute, $value, Closure $fail) {
                             // Normalize whitespace
                             $text = preg_replace('/\s+/', ' ', $value);
-                
+
                             // Step 1: Check if brackets are balanced
                             if (substr_count($text, '[') !== substr_count($text, ']')) {
                                 $fail("Brackets are not balanced.");
                                 return;
                             }
-                
+
                             // Step 2: Match all button patterns
                             $pattern = '/\[(.*?) - (https?:\/\/[^\s\]]+)\]/';
                             preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
-                
+
                             if (empty($matches)) {
                                 $fail("No valid buttons found. Ensure buttons are in the format [Text - URL].");
                                 return;
                             }
-                
+
                             $buttons = [];
                             $rows = explode("\n", $text);
-                
+
                             foreach ($rows as $row) {
                                 preg_match_all($pattern, $row, $matches, PREG_SET_ORDER);
-                
+
                                 if (empty($matches)) {
                                     $fail("Invalid format in row: $row");
                                     return;
                                 }
-                
+
                                 foreach ($matches as $match) {
-                                    $buttons[] = ["text" => trim($match[1]), "url" => trim($match[2])];
+                                    $url = trim($match[2]);
+
+                                    // Check for valid URL format
+                                    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                                        $fail("Invalid URL format: " . $url);
+                                        return;
+                                    }
+
+                                    $buttons[] = ["text" => trim($match[1]), "url" => $url];
                                 }
-                
+
                                 // Check for button count per row
                                 if (count($buttons) > 5) {
                                     $fail("A row cannot have more than 5 buttons.");
                                     return;
                                 }
                             }
-                
-                            // Additional validation for URL format
-                            foreach ($buttons as $button) {
-                                if (!filter_var($button['url'], FILTER_VALIDATE_URL)) {
-                                    $fail("Invalid URL format: " . $button['url']);
-                                    return;
-                                }
-                            }
-                
+
                             // If no issues, validation passes
                         },
                     ]),
