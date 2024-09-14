@@ -18,8 +18,8 @@ class TextResource extends Resource
 {
     protected static ?string $model = Text::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-chat-bubble-bottom-center-text';
-    protected static ?string $navigationLabel = 'Matnlar';
+    protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
+    protected static ?string $navigationLabel = 'Textlar';
 
 
     public static function form(Form $form): Form
