@@ -31,7 +31,7 @@ class ButtonResource extends Resource
                 Forms\Components\Select::make('messages')
                     ->multiple()
                     ->options(
-                        Message::where('status', true)->get()->pluck('name', 'id')->toArray()
+                        Message::pluck('name', 'id')->toArray()
                     )
                     ->searchable()
                     ->label('Xabarlar'),
