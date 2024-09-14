@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class PromoCode extends Model
 {
@@ -23,5 +24,10 @@ class PromoCode extends Model
     public function user()
     {
         return $this->belongsTo(BotUser::class, 'user_id');
-    }   
+    }
+    public function getPriceAttribute($value)
+    {
+        return Number::format($value);
+    }
+
 }

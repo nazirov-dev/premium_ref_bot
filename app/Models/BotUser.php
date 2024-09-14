@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class BotUser extends Model
 {
@@ -28,4 +29,7 @@ class BotUser extends Model
         'daily_bonus_status' => 'boolean'
     ];
 
+    public function getBalanceAttribute($value){
+        return Number::format($value);
+    }
 }
