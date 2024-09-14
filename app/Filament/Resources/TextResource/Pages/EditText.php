@@ -15,7 +15,10 @@ class EditText extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        TextController::set($data['key'], $data['value']);
+        $cleaned = TextController::sanitizeHtmlForTelegram($data['value']);
+        $data['value'] = $cleaned;
+
+        TextController::set($data['key'], $cleaned);
         return $data;
     }
 
