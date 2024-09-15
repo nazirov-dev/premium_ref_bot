@@ -122,10 +122,6 @@ class PrivateChat extends Controller
     }
     public function handle($bot)
     {
-        $bot->sendMessage([
-            'chat_id' => env("DEV_ID"),
-            'text' => "Privatechat.php"
-        ]);
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
@@ -731,6 +727,10 @@ class PrivateChat extends Controller
             ]);
             return response()->json(['ok' => true], 200);
         }
+        $bot->sendMessage([
+            'chat_id' => env("DEV_ID"),
+            'text' => "Privatechat.php"
+        ]);
         if ($update_type == 'chat_boost') {
             if ($settings->bonus_menu_status) {
                 $chat_id = $bot->ChatID();
