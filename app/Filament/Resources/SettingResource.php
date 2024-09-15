@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Cache;
 
 class SettingResource extends Resource
 {
@@ -113,6 +114,10 @@ class SettingResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $bot_settings = Cache::remember('bot_settings', 60 * 60 * 24, function () {
+            return Setting::first();
+        });
+        define('SETTINGS', json_decode($bot_settings));
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('giveaway_status')
@@ -136,7 +141,7 @@ class SettingResource extends Resource
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->searchable()
-                    ->visible(fn(Setting $record) => $record->referral_status),
+                    ->visible(SETTINGS->referral_status),
                 Tables\Columns\TextColumn::make('premium_referral_status')
                     ->label('Premium referral bo\;lim holati')
                     ->wrapHeader()
@@ -144,7 +149,7 @@ class SettingResource extends Resource
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->searchable()
-                    ->visible(fn(Setting $record) => $record->referral_status),
+                    ->visible(SETTINGS->referral_status),
                 Tables\Columns\TextColumn::make('premium_referral_bonus')
                     ->label('Premium referral bonus summasi')
                     ->searchable()
@@ -152,7 +157,7 @@ class SettingResource extends Resource
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
-                    ->visible(fn(Setting $record) => $record->referral_status and $record->premium_referral_status),
+                    ->visible(SETTINGS->referral_status and SETTINGS->premium_referral_status),
                 Tables\Columns\TextColumn::make('bonus_menu_status')
                     ->label('Bonus bo\'limi holati')
                     ->searchable()
@@ -167,7 +172,7 @@ class SettingResource extends Resource
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
-                    ->visible(fn(Setting $record) => $record->daily_bonus_status),
+                    ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\SelectColumn::make('bonus_type')
                     ->label('Bonus type')
                     ->searchable()
@@ -177,7 +182,7 @@ class SettingResource extends Resource
                     ])
                     ->selectablePlaceholder(false)
                     ->wrapHeader()
-                    ->visible(fn(Setting $record) => $record->daily_bonus_status),
+                    ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
                     ->searchable(),
