@@ -197,6 +197,7 @@ class SettingResource extends Resource
                         'every_channel' => 'Hamma kanal uchun',
                         'only_first_channel' => 'Faqat bitta kanal'
                     ])
+                    ->grow()
                     ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
