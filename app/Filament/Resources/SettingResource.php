@@ -72,7 +72,12 @@ class SettingResource extends Resource
                     ->default(false)
                     ->label('Bonus menyu holati')
                     ->helperText('Bonus menyuni yoqish yoki o\'chirish')
-                    ->live(),
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if (!$state) {
+                            $set('daily_bonus_status', false);
+                        }
+                    }),,
                 Forms\Components\Toggle::make('daily_bonus_status')
                     ->required()
                     ->default(false)
