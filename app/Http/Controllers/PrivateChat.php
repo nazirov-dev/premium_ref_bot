@@ -202,7 +202,7 @@ class PrivateChat extends Controller
                         'chat_id' => $chat_id,
                         'text' => "Your step is $step"
                     ]);
-                    if (stripos('reject_promo_code_', $step) !== false and $chat_id == $settings->admin_id) {
+                    if (stripos($step, 'reject_promo_code_') !== false and $chat_id == $settings->admin_id) {
                         $promo_code_id = explode('_', $step)[3];
                         $promo_code = PromoCode::find($promo_code_id);
                         if ($promo_code) {
