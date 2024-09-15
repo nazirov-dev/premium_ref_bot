@@ -190,7 +190,7 @@ class PrivateChat extends Controller
                                 '{username}' => $bot->Username(),
                                 '{user_id}' => $chat_id,
                                 '{bonus}' => $bonus,
-                                '{new_balance}' => $refferrer->balance
+                                '{new_balance}' => Number::format($refferrer->balance)
                             ]),
                             'parse_mode' => 'HTML'
                         ]);
@@ -305,7 +305,7 @@ class PrivateChat extends Controller
                         '{username}' => $bot->Username(),
                         '{user_id}' => $chat_id,
                         '{phone_number}' => $user->phone_number,
-                        '{balance}' => $user->balance,
+                        '{balance}' => Number::format($user->balance),
                         '{frens_count}' => $counts->frens_count,
                         '{frens_premium_count}' => $counts->frens_premium_count,
                         '{total_frens}' => $counts->total
@@ -360,7 +360,7 @@ class PrivateChat extends Controller
                     $top_users_message = Text::get('top_users_message');
                     $top_users_list = '';
                     foreach ($top_users as $key => $user) {
-                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' - ' . $user->balance . ' so\'m' . PHP_EOL;
+                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' - ' . Number::format($user->balance) . ' so\'m' . PHP_EOL;
                     }
                     $replacements = [
                         '{first_name}' => $bot->FirstName(),
@@ -408,7 +408,7 @@ class PrivateChat extends Controller
                             '{username}' => $bot->Username(),
                             '{user_id}' => $chat_id,
                             '{phone_number}' => $user->phone_number,
-                            '{balance}' => $user->balance
+                            '{balance}' => Number::format($user->balance)
                         ];
                         foreach ($messages as $message) {
                             $this->sendMessage($bot, $message, $chat_id, $replacements);
@@ -561,7 +561,7 @@ class PrivateChat extends Controller
                             ]) . PHP_EOL;
                         }
                         $info_message = $this->replacePlaceholders(Text::get(key: 'withdraw_request_info'), [
-                            '{balance}' => $user->balance,
+                            '{balance}' => Number::format($user->balance),
                             '{minimum_withdraw_amount}' => $minimum_withdraw_amount,
                             '{premium_categories}' => $premium_categories_message
                         ]);
@@ -582,7 +582,7 @@ class PrivateChat extends Controller
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
                                     'text' => $this->replacePlaceholders(Text::get('not_enough_balance'), [
-                                        '{balance}' => $user->balance,
+                                        '{balance}' => Number::format($user->balance),
                                         '{price}' => Number::format($category->price)
                                     ]),
                                     'show_alert' => true
@@ -603,7 +603,7 @@ class PrivateChat extends Controller
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
                                     'text' => $this->replacePlaceholders(Text::get('withdraw_request_success'), [
-                                        '{balance}' => $user->balance,
+                                        '{balance}' => Number::format($user->balance),
                                         '{price}' => Number::format($category->price),
                                         '{category_name}' => $category->name,
                                         '{promo_code}' => $promo_code->code,
@@ -614,7 +614,7 @@ class PrivateChat extends Controller
                                 $bot->sendMessage([
                                     'chat_id' => $chat_id,
                                     'text' => $this->replacePlaceholders(Text::get('withdraw_request_success_message'), [
-                                        '{balance}' => $user->balance,
+                                        '{balance}' => Number::format($user->balance),
                                         '{price}' => Number::format($category->price),
                                         '{category_name}' => $category->name,
                                         '{promo_code}' => $promo_code->code,
@@ -767,7 +767,7 @@ class PrivateChat extends Controller
                         'text' => $this->replacePlaceholders(Text::get('boost_removed'), [
                             '{channel_name}' => $boost_channel->name,
                             '{boosts_count}' => $boosts_count,
-                            '{balance}' => $user->balance,
+                            '{balance}' => Number::format($user->balance),
                             '{minus}' => $boost_channel->bonus_each_boost
                         ])
                     ]);
