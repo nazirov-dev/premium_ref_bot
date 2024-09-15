@@ -16,6 +16,7 @@ use App\Models\PromoCode;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Illuminate\Support\Number;
 
 class PrivateChat extends Controller
 {
@@ -213,7 +214,7 @@ class PrivateChat extends Controller
                             $promo_code_rejected_proof_message = $this->replacePlaceholders(Text::get('promo_code_rejected_proof_message'), [
                                 '{promo_code}' => $promo_code->code,
                                 '{category_name}' => $promo_code->category->name,
-                                '{price}' => $promo_code->price,
+                                '{price}' => Number::format($promo_code->price),
                                 '{user_id}' => $promo_code->user_id,
                                 '{now}' => now()->format('Y-m-d H:i:s'),
                                 '{reject_reason}' => $text
@@ -550,12 +551,12 @@ class PrivateChat extends Controller
                         foreach ($premium_categories as $category) {
                             $premium_categories_buttons[] = [
                                 [
-                                    'text' => $category->name . " - " . $category->price . " so'm " . ($minimum_withdraw_amount > $category->price ? "❌" : "✅"),
+                                    'text' => $category->name . " - " . Number::format($category->price) . " so'm " . ($minimum_withdraw_amount > $category->price ? "❌" : "✅"),
                                     'callback_data' => 'premium_category_' . $category->id
                                 ]
                             ];
                             $premium_categories_message .= $this->replacePlaceholders(Text::get('premium_categories_message'), [
-                                '{price}' => $category->price,
+                                '{price}' => Number::format($category->price),
                                 '{name}' => $category->name
                             ]) . PHP_EOL;
                         }
@@ -582,7 +583,7 @@ class PrivateChat extends Controller
                                     'callback_query_id' => $bot->Callback_ID(),
                                     'text' => $this->replacePlaceholders(Text::get('not_enough_balance'), [
                                         '{balance}' => $user->balance,
-                                        '{price}' => $category->price
+                                        '{price}' => Number::format($category->price)
                                     ]),
                                     'show_alert' => true
                                 ]);
@@ -596,14 +597,14 @@ class PrivateChat extends Controller
                                     'code' => $promo_code,
                                     'user_id' => $chat_id,
                                     'premium_category_id' => $category->id,
-                                    'price' => $category->price,
+                                    'price' => Number::format($category->price),
                                     'expired_at' => $expire_date
                                 ]);
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
                                     'text' => $this->replacePlaceholders(Text::get('withdraw_request_success'), [
                                         '{balance}' => $user->balance,
-                                        '{price}' => $category->price,
+                                        '{price}' => Number::format($category->price),
                                         '{category_name}' => $category->name,
                                         '{promo_code}' => $promo_code->code,
                                         '{expired_at}' => (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s'))
@@ -614,7 +615,7 @@ class PrivateChat extends Controller
                                     'chat_id' => $chat_id,
                                     'text' => $this->replacePlaceholders(Text::get('withdraw_request_success_message'), [
                                         '{balance}' => $user->balance,
-                                        '{price}' => $category->price,
+                                        '{price}' => Number::format($category->price),
                                         '{category_name}' => $category->name,
                                         '{promo_code}' => $promo_code->code,
                                         '{expired_at}' => (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s'))
@@ -624,7 +625,7 @@ class PrivateChat extends Controller
                                 $bot->deleteThisMessage();
                                 $bot->sendMessage([
                                     'chat_id' => $settings->admin_id,
-                                    'text' => "Yangi promo code ro'yhatdan o'tdi:\n\nPromo code: {$promo_code->code}\nYaroqlilik muddati: " . (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s')) . "\nKategoriya: " . $category->name . "\nNarxi: " . $category->price . " so'm",
+                                    'text' => "Yangi promo code ro'yhatdan o'tdi:\n\nPromo code: {$promo_code->code}\nYaroqlilik muddati: " . (is_null($expire_date) ? 'Cheksiz' : $expire_date->format('Y-m-d H:i:s')) . "\nKategoriya: " . $category->name . "\nNarxi: " . Number::format($category->price) . " so'm",
                                     'reply_markup' => $bot->buildInlineKeyboard([
                                         [['text' => "Tasdiqlash ✅", 'callback_data' => 'promo_code_accepted_' . $promo_code->id]],
                                         [['text' => "Rad etish ❌", 'callback_data' => 'promo_code_rejected_' . $promo_code->id]]
@@ -657,7 +658,7 @@ class PrivateChat extends Controller
                                 $proof_message = $this->replacePlaceholders(Text::get('proof_message'), [
                                     '{promo_code}' => $promo_code->code,
                                     '{category_name}' => $promo_code->category->name,
-                                    '{price}' => $promo_code->price,
+                                    '{price}' => Number::format($promo_code->price),
                                     '{user_id}' => $promo_code->user_id,
                                     '{first_name}' => $promo_code->user->name,
                                     '{username}' => $promo_code->user->username,
