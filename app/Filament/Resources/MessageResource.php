@@ -187,10 +187,12 @@ class MessageResource extends Resource
                 Tables\Columns\TextColumn::make('buttons')
                     ->label('Tugmalar')
                     ->searchable()
-                    ->limit(50),
+                    ->limit(50)
+                    ->placeholder('Tugma mavjud emas!'),
                 Tables\Columns\TextColumn::make('file_id')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Fayl ID raqami')
+                    ->placeholder('Fayl ID mavjud emas!')
                     ->searchable()
             ])
             ->filters([
