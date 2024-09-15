@@ -37,6 +37,8 @@ class BoostChannelResource extends Resource
                     ->label('Nomi'),
                 Forms\Components\TextInput::make('channel_id')
                     ->label('Kanal ID'),
+                Forms\Components\TextInput::make('boost_link')
+                    ->label('Boost qilish uchun link'),
                 Forms\Components\TextInput::make('bonus_each_boost')
                     ->label('Har bir boost uchun bonus')
                     ->numeric()
@@ -69,6 +71,9 @@ class BoostChannelResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('channel_id')
                     ->label('Kanal ID')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('boost_link')
+                    ->label('Boost link')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('bonus_each_boost')
                     ->label('Har bir boost uchun bonus')

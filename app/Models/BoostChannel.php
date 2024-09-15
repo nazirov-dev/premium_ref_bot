@@ -16,6 +16,7 @@ class BoostChannel extends Model
         'daily_bonus_each_boost',
         'daily_bonus',
         'daily_bonus_type',
+        'boost_link',
         'status'
     ];
     protected $casts = [
