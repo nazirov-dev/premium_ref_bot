@@ -433,7 +433,8 @@ class PrivateChat extends Controller
                     if (!$settings->bonus_menu_status) {
                         $bot->answerCallbackQuery([
                             'callback_query_id' => $bot->Callback_ID(),
-                            'text' => Text::get('bonus_menu_not_available')
+                            'text' => Text::get('bonus_menu_not_available'),
+                            'show_alert' => true
                         ]);
                         return response()->json(['ok' => true], 200);
                     }
@@ -462,7 +463,8 @@ class PrivateChat extends Controller
                         if ($user->daily_bonus_status) {
                             $bot->answerCallbackQuery([
                                 'callback_query_id' => $bot->Callback_ID(),
-                                'text' => Text::get('daily_bonus_already_received')
+                                'text' => Text::get('daily_bonus_already_received'),
+                                'show_alert' => true
                             ]);
                         } else {
                             $boost_channels = BoostChannel::where(['status' => true])->get();
@@ -511,7 +513,8 @@ class PrivateChat extends Controller
                                 $user->save();
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
-                                    'text' => Text::get('daily_bonus_received')
+                                    'text' => Text::get('daily_bonus_received'),
+                                    'show_alert' => true
                                 ]);
                                 $bot->deleteThisMessage();
                                 $replacements = [
