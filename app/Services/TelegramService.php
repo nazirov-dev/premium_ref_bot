@@ -719,33 +719,35 @@ class TelegramService
             return self::CALLBACK_QUERY;
         } elseif (isset($update['edited_message'])) {
             return self::EDITED_MESSAGE;
-        } elseif (isset($update['message']['text'])) {
-            return self::MESSAGE;
-        } elseif (isset($update['message']['photo'])) {
-            return self::PHOTO;
-        } elseif (isset($update['message']['video'])) {
-            return self::VIDEO;
-        } elseif (isset($update['message']['audio'])) {
-            return self::AUDIO;
-        } elseif (isset($update['message']['voice'])) {
-            return self::VOICE;
-        } elseif (isset($update['message']['contact'])) {
-            return self::CONTACT;
-        } elseif (isset($update['message']['location'])) {
-            return self::LOCATION;
-        } elseif (isset($update['message']['reply_to_message'])) {
-            return self::REPLY;
-        } elseif (isset($update['message']['animation'])) {
-            return self::ANIMATION;
-        } elseif (isset($update['message']['sticker'])) {
-            return self::STICKER;
-        } elseif (isset($update['message']['document'])) {
-            return self::DOCUMENT;
+        } elseif (isset($update['message'])) {
+            if (isset($update['message']['text'])) {
+                return self::MESSAGE;
+            } elseif (isset($update['message']['photo'])) {
+                return self::PHOTO;
+            } elseif (isset($update['message']['video'])) {
+                return self::VIDEO;
+            } elseif (isset($update['message']['audio'])) {
+                return self::AUDIO;
+            } elseif (isset($update['message']['voice'])) {
+                return self::VOICE;
+            } elseif (isset($update['message']['contact'])) {
+                return self::CONTACT;
+            } elseif (isset($update['message']['location'])) {
+                return self::LOCATION;
+            } elseif (isset($update['message']['reply_to_message'])) {
+                return self::REPLY;
+            } elseif (isset($update['message']['animation'])) {
+                return self::ANIMATION;
+            } elseif (isset($update['message']['sticker'])) {
+                return self::STICKER;
+            } elseif (isset($update['message']['document'])) {
+                return self::DOCUMENT;
+            }
         } elseif (isset($update['channel_post'])) {
             return self::CHANNEL_POST;
-        } elseif (isset($update['message']['chat_boost'])) {
+        } elseif (isset($update['chat_boost'])) {
             return self::CHAT_BOOST;
-        } elseif (isset($update['message']['removed_chat_boost'])) {
+        } elseif (isset($update['removed_chat_boost'])) {
             return self::REMOVED_CHAT_BOOST;
         } else {
             return false;
