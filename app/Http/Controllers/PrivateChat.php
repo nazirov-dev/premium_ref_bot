@@ -257,6 +257,7 @@ class PrivateChat extends Controller
                         'text' => Text::get('phone_number_saved'),
                         'reply_markup' => $this->getMainButtons($settings, $bot)
                     ]);
+                    return response()->json(['ok' => true], 200);
                 }
                 $bot->sendMessage([
                     'chat_id' => $chat_id,
