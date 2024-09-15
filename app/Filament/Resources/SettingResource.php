@@ -115,18 +115,46 @@ class SettingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ToggleColumn::make('giveaway_status')->label('Giveaway status')->searchable(),
-                Tables\Columns\TextColumn::make('referral_bonus')->label('Referral bonus')->searchable(),
-                Tables\Columns\TextColumn::make('premium_referral_bonus')->label('Premium referral bonus')->searchable(),
-                Tables\Columns\ToggleColumn::make('bonus_menu_status')->label('Bonus menu status')->searchable(),
-                Tables\Columns\ToggleColumn::make('referral_status')->label('Referral status')->searchable(),
-                Tables\Columns\ToggleColumn::make('premium_referral_status')->label('Premium referral status')->searchable(),
-                Tables\Columns\ToggleColumn::make('daily_bonus_status')->label('Kunlik bonus status')->searchable(),
-                Tables\Columns\TextColumn::make('top_users_count')->label('Top users count')->searchable(),
-                Tables\Columns\SelectColumn::make('bonus_type')->label('Bonus type')->searchable(),
-                Tables\Columns\TextColumn::make('promo_code_expire_days')->label('Promo code expire days')->searchable(),
-                Tables\Columns\TextColumn::make('admin_id')->label('Admin id')->searchable(),
-                Tables\Columns\TextColumn::make('proof_channel_id')->label('Admin id')->searchable(),
+                Tables\Columns\ToggleColumn::make('giveaway_status')
+                    ->label('Giveaway status')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('referral_bonus')
+                    ->label('Referral bonus')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('premium_referral_bonus')
+                    ->label('Premium referral bonus')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('bonus_menu_status')
+                    ->label('Bonus menu status')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('referral_status')
+                    ->label('Referral status')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('premium_referral_status')
+                    ->label('Premium referral status')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('daily_bonus_status')
+                    ->label('Kunlik bonus status')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('top_users_count')
+                    ->label('Top users count')
+                    ->searchable(),
+                Tables\Columns\SelectColumn::make('bonus_type')
+                    ->label('Bonus type')
+                    ->searchable()
+                    ->options([
+                        'every_channel' => 'Hamma kanal uchun',
+                        'only_first_channel' => 'Faqat bitta kanal'
+                    ]),
+                Tables\Columns\TextColumn::make('promo_code_expire_days')
+                    ->label('Promo code expire days')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('admin_id')
+                    ->label('Admin id')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('proof_channel_id')
+                    ->label('Admin id')
+                    ->searchable(),
             ])
             ->filters([
                 //
