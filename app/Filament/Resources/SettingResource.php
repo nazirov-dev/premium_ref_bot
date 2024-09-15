@@ -197,7 +197,7 @@ class SettingResource extends Resource
                         'every_channel' => 'Hamma kanal uchun',
                         'only_first_channel' => 'Faqat bitta kanal'
                     ])
-                    ->selectablePlaceholder(false)
+                    // ->selectablePlaceholder(false)
                     ->wrapHeader()
                     ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
@@ -205,14 +205,16 @@ class SettingResource extends Resource
                     ->searchable()
                     ->wrapHeader(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
-                    ->label('Promo code expire days')
+                    ->label('Promo kod muddati')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('admin_id')
                     ->label('Admin ID')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('proof_channel_id')
                     ->label('Isbot kanal ID')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->wrapHeader(),
             ])
             ->filters([
