@@ -502,7 +502,8 @@ class PrivateChat extends Controller
                             if (!$boosted) {
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
-                                    'text' => Text::get('daily_bonus_not_received')
+                                    'text' => Text::get('daily_bonus_not_received'),
+                                    'show_alert' => true
                                 ]);
                                 return response()->json(['ok' => true], 200);
                             } else {
