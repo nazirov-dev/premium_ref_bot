@@ -198,6 +198,10 @@ class PrivateChat extends Controller
                     $user->save();
                     Cache::forget($chat_id . '.step');
                 } else {
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => "Your step is $step"
+                    ]);
                     if (stripos('reject_promo_code_', $step) !== false and $chat_id == $settings->admin_id) {
                         $promo_code_id = explode('_', $step)[3];
                         $promo_code = PromoCode::find($promo_code_id);
@@ -682,7 +686,6 @@ class PrivateChat extends Controller
                             $promo_code_id = explode('_', $callback_data)[3];
                             $promo_code = PromoCode::find($promo_code_id);
                             if ($promo_code) {
-                                // set step with promo id and chat_id and ask for rejecting reason
                                 Cache::set($chat_id . '.step', 'reject_promo_code_' . $promo_code_id);
                                 $bot->answerCallbackQuery([
                                     'callback_query_id' => $bot->Callback_ID(),
