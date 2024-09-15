@@ -177,6 +177,7 @@ class MessageResource extends Resource
                         'photo' => 'Rasm',
                         'video' => 'Video'
                     ])
+                    ->default('text')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('text')
