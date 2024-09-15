@@ -28,12 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'danger' => Color::Rose,
-                'gray' => Color::Gray,
-                'info' => Color::Blue,
-                'primary' => Color::Indigo,
-                'success' => Color::Emerald,
-                'warning' => Color::Orange,
+                'primary'=>Color::Rose,
             ])
             ->globalSearch()
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
