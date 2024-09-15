@@ -182,7 +182,8 @@ class MessageResource extends Resource
                 Tables\Columns\TextColumn::make('text')
                     ->label('Matn')
                     ->searchable()
-                    ->wrap(),
+                    ->wrap()
+                    ->html(),
                 Tables\Columns\TextColumn::make('buttons')
                     ->label('Tugmalar')
                     ->searchable()
