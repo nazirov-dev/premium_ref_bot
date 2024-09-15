@@ -111,10 +111,7 @@ class BotUserResource extends Resource
                 Tables\Columns\TextColumn::make('is_premium')
                     ->wrapHeader()
                     ->label('Premiummi?')
-                    ->state([
-                        true => 'Ha',
-                        false => 'Yo\'q'
-                    ])
+                    ->format(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('daily_bonus_status')
                     ->wrapHeader()
