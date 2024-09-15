@@ -171,26 +171,26 @@ class PrivateChat extends Controller
 
             if (!is_null($step)) {
                 if ($step == 'start') {
-                    if (!is_null($user->refferrer_id) and $settings->referral_status) {
+                    if (!is_null($user->referrer_id) and $settings->referral_status) {
                         if ($bot->isPremiumUser() and $settings->premium_referral_status) {
                             $bonus = $settings->premium_referral_bonus;
                         } else {
                             $bonus = $settings->referral_bonus;
                         }
-                        $refferrer = BotUser::where('user_id', $user->refferrer_id)->first();
-                        if ($refferrer) {
-                            $refferrer->balance += $bonus;
-                            $refferrer->save();
+                        $referrer = BotUser::where('user_id', $user->referrer_id)->first();
+                        if ($referrer) {
+                            $referrer->balance += $bonus;
+                            $referrer->save();
                         }
                         $bot->sendMessage([
-                            'chat_id' => $user->refferrer_id,
+                            'chat_id' => $user->referrer_id,
                             'text' => $this->replacePlaceholders(Text::get('referral_bonus_message'), [
                                 '{first_name}' => $bot->FirstName(),
                                 '{last_name}' => $bot->LastName(),
                                 '{username}' => $bot->Username(),
                                 '{user_id}' => $chat_id,
                                 '{bonus}' => $bonus,
-                                '{new_balance}' => Number::format($refferrer->balance)
+                                '{new_balance}' => Number::format($referrer->balance)
                             ]),
                             'parse_mode' => 'HTML'
                         ]);
