@@ -113,8 +113,9 @@ class BotUserResource extends Resource
                     ->label('Premiummi?')
                     ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\CheckboxColumn::make('daily_bonus_status')
+                Tables\Columns\TextColumn::make('daily_bonus_status')
                     ->wrapHeader()
+                    ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
                     ->label('Kunlik bonus olganmi?')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ToggleColumn::make('status')
