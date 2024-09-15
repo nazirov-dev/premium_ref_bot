@@ -120,10 +120,10 @@ class TextController extends Controller
     }
     public static function sanitizeHtmlForFilament($html)
     {
-        Log::info('Html before: ', $html);
+        Log::info('Html before: '. $html);
         // Step 1: Convert newlines to <br> tags for line breaks
         $html = nl2br($html);  // Converts all \n to <br>
-        Log::info('Html after: ', $html);
+        Log::info('Html after: '. $html);
         
         // // Step 2: Ensure paragraphs are handled properly
         // // If the string doesn't start with a newline, wrap it with <p> tags
