@@ -364,7 +364,7 @@ class PrivateChat extends Controller
                         $top_users_list .= $this->replacePlaceholder($each_user_message_in_top, [
                             '{number}' => $key + 1,
                             '{name}' => $user->name,
-                            '{balance}' => $user->balance
+                            '{balance}' => Number::format($user->balance)
                         ]) . PHP_EOL;
                     }
                     $replacements = [
