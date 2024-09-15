@@ -361,7 +361,7 @@ class PrivateChat extends Controller
                     $top_users_list = '';
                     $each_user_message_in_top = Text::get('each_user_message_in_top');
                     foreach ($top_users as $key => $user) {
-                        $top_users_list .= $this->replacePlaceholder($each_user_message_in_top, [
+                        $top_users_list .= $this->replacePlaceholders($each_user_message_in_top, [
                             '{number}' => $key + 1,
                             '{name}' => $user->name,
                             '{balance}' => Number::format($user->balance)
