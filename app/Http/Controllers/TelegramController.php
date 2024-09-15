@@ -32,9 +32,11 @@ class TelegramController extends Controller
                 if (!$joinRequest->exists) {
                     $joinRequest->save();
                 }
+                exit;
             }
-
-            exit;
+            if (isset($input['removed_chat_boost']) or isset($input['chat_boost'])) {
+                $chat_type = 'private';
+            }
         }
 
         if ($chat_type == 'private') {
