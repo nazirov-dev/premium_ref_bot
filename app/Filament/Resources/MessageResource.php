@@ -166,7 +166,6 @@ class MessageResource extends Resource
     {
         return $table
             ->columns([
-                //table
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nomi')
                     ->searchable(),
@@ -177,9 +176,9 @@ class MessageResource extends Resource
                         'photo' => 'Rasm',
                         'video' => 'Video'
                     ])
-                    ->default('text')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
+                    // ->searchable()
+                    ,
                 Tables\Columns\TextColumn::make('text')
                     ->label('Matn')
                     ->searchable()
