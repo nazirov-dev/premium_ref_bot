@@ -122,7 +122,7 @@ class SettingResource extends Resource
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('referral_status')
+                Tables\Columns\TextColumn::make('referral_status')
                     ->label('Referral bo\'lim holati')
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
@@ -137,7 +137,7 @@ class SettingResource extends Resource
                     })
                     ->searchable()
                     ->visible(fn(Setting $record) => $record->referral_status),
-                Tables\Columns\ToggleColumn::make('premium_referral_status')
+                Tables\Columns\TextColumn::make('premium_referral_status')
                     ->label('Premium referral bo\;lim holati')
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
@@ -153,14 +153,14 @@ class SettingResource extends Resource
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->visible(fn(Setting $record) => $record->referral_status and $record->premium_referral_status),
-                Tables\Columns\ToggleColumn::make('bonus_menu_status')
+                Tables\Columns\TextColumn::make('bonus_menu_status')
                     ->label('Bonus bo\'limi holati')
                     ->searchable()
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     }),
-                Tables\Columns\ToggleColumn::make('daily_bonus_status')
+                Tables\Columns\TextColumn::make('daily_bonus_status')
                     ->label('Kunlik bonus status')
                     ->searchable()
                     ->wrapHeader()
@@ -175,6 +175,7 @@ class SettingResource extends Resource
                         'every_channel' => 'Hamma kanal uchun',
                         'only_first_channel' => 'Faqat bitta kanal'
                     ])
+                    ->selectablePlaceholder(false)
                     ->wrapHeader()
                     ->visible(fn(Setting $record) => $record->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
