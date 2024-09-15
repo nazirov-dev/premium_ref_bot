@@ -126,6 +126,8 @@ class SettingResource extends Resource
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
+                    ->badge()
+                    ->color(function($state){return $state ? 'success' : 'danger';})
                     ->searchable(),
                 Tables\Columns\TextColumn::make('referral_status')
                     ->label('Referral bo\'lim holati')
