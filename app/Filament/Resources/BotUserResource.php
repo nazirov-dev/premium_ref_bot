@@ -108,9 +108,13 @@ class BotUserResource extends Resource
                     ->searchable()
                     ->wrapHeader()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\CheckboxColumn::make('is_premium')
+                Tables\Columns\TextColumn::make('is_premium')
                     ->wrapHeader()
                     ->label('Premiummi?')
+                    ->state([
+                        true => 'Ha',
+                        false => 'Yo\'q'
+                    ])
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('daily_bonus_status')
                     ->wrapHeader()
