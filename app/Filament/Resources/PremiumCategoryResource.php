@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
+use Illuminate\Support\Number;
+
 
 class PremiumCategoryResource extends Resource
 {
@@ -63,6 +65,7 @@ class PremiumCategoryResource extends Resource
                 ,
                 Tables\Columns\TextColumn::make('price')
                     ->label('Narxi')
+                    ->formatStateUsing(fn(string $state): string => Number::format($state))
                     ->suffix(' so\'m')
                     ->searchable()
                     ->badge()

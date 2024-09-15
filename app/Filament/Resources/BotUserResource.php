@@ -13,6 +13,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Number;
+
 
 class BotUserResource extends Resource
 {
@@ -93,6 +95,7 @@ class BotUserResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('balance')
                     ->label('Balansi')
+                    ->formatStateUsing(fn(string $state): string => Number::format($state))
                     ->suffix(' so\'m')
                     ->badge()
                     ->color(function ($record) {
@@ -116,7 +119,7 @@ class BotUserResource extends Resource
                     ->label('O\'zgartirilgan vaqti')
                     ->toggleable(isToggledHiddenByDefault: true)
             ])
-            
+
             ->filters([
                 //
             ])
