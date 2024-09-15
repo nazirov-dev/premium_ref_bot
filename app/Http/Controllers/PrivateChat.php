@@ -294,9 +294,10 @@ class PrivateChat extends Controller
                     ]);
                     return response()->json(['ok' => true], 200);
                 } elseif ($text == Text::get('my_balance_button_label')) {
-                    $counts = BotUser::selectRaw('COUNT(*) as total, SUM(is_premium = 0) as frens_count, SUM(is_premium = 1) as frens_premium_count')
+                    $counts = BotUser::selectRaw('COUNT(*) as total, IFNULL(SUM(is_premium = 0), 0) as frens_count, IFNULL(SUM(is_premium = 1), 0) as frens_premium_count')
                         ->where('referrer_id', $chat_id)
                         ->first();
+
                     $replacements = [
                         '{first_name}' => $bot->FirstName(),
                         '{last_name}' => $bot->LastName(),
