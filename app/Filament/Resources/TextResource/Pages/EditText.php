@@ -22,7 +22,11 @@ class EditText extends EditRecord
         TextController::set($data['key'], $cleaned);
         return $data;
     }
-
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['value'] = TextController::sanitizeHtmlForFilament($data['value']);
+        return $data;
+    }
     protected function getHeaderActions(): array
     {
         return [];

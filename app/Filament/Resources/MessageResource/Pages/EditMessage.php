@@ -55,6 +55,11 @@ class EditMessage extends EditRecord
 
         return $data;
     }
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['text'] = TextController::sanitizeHtmlForFilament($data['text']);
+        return $data;
+    }
     protected function getHeaderActions(): array
     {
         return [
