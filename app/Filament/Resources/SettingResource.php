@@ -77,7 +77,7 @@ class SettingResource extends Resource
                         if (!$state) {
                             $set('daily_bonus_status', false);
                         }
-                    }),,
+                    }),
                 Forms\Components\Toggle::make('daily_bonus_status')
                     ->required()
                     ->default(false)
