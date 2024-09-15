@@ -15,6 +15,7 @@ class PromoCode extends Model
         'user_id',
         'premium_category_id',
         'price',
+        'reject_reason',
         'expired_at',
         'status'
     ];

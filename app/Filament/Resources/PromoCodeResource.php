@@ -52,6 +52,9 @@ class PromoCodeResource extends Resource
                     ->label('Price')
                     ->numeric()
                     ->required(),
+                Forms\Components\TextInput::make('reject_reason')
+                    ->label('Rad etish sababi')
+                    ->required(),
                 Forms\Components\DateTimePicker::make('expired_at')
                     ->label('Expired at')
                     ->nullable(),

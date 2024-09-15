@@ -24,6 +24,7 @@ return new class extends Migration {
                 'completed',
                 'canceled'
             ])->default('active');
+            $table->text('reject_reason');
             $table->timestamps();
         });
     }
