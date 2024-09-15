@@ -355,12 +355,12 @@ class PrivateChat extends Controller
                         ]);
                         return response()->json(['ok' => true], 200);
                     }
-                    //get top $settings->top_users_count by balance
+
                     $top_users = BotUser::orderBy('balance', 'desc')->limit($settings->top_users_count)->get();
                     $top_users_message = Text::get('top_users_message');
                     $top_users_list = '';
                     foreach ($top_users as $key => $user) {
-                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' - ' . Number::format($user->balance) . ' so\'m' . PHP_EOL;
+                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' — ' . Number::format($user->balance) . ' so\'m' . PHP_EOL;
                     }
                     $replacements = [
                         '{first_name}' => $bot->FirstName(),
