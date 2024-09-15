@@ -14,7 +14,7 @@ class EditSetting extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        Cache::put('settings', json_encode($data));
+        Cache::put('bot_settings', json_encode($data));
         return $data;
     }
 
