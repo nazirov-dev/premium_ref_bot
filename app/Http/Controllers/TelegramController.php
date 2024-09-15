@@ -14,10 +14,10 @@ class TelegramController extends Controller
     {
         $input = $request->all();
         $bot = new TelegramService;
-        $bot->sendMessage([
-            'chat_id' => 1996292437,
-            'text' => json_encode($bot->getData(), 128)
-        ]);
+            // $bot->sendMessage([
+            //     'chat_id' => 1996292437,
+            //     'text' => json_encode($bot->getData(), 128)
+            // ]);
 
         if (isset($input['message']))
             $chat_type = $input['message']['chat']['type'] ?? null;
