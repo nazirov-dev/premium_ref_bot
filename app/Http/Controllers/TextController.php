@@ -122,19 +122,19 @@ class TextController extends Controller
         // Step 1: Convert newlines to <br> tags for line breaks
         $html = nl2br($html);  // Converts all \n to <br>
 
-        // Step 2: Ensure paragraphs are handled properly
-        // If the string doesn't start with a newline, wrap it with <p> tags
-        if (strpos($html, "\n") !== 0) {
-            $html = '<p>' . $html;  // Start the first paragraph
-        }
+        // // Step 2: Ensure paragraphs are handled properly
+        // // If the string doesn't start with a newline, wrap it with <p> tags
+        // if (strpos($html, "\n") !== 0) {
+        //     $html = '<p>' . $html;  // Start the first paragraph
+        // }
 
-        // Step 3: Replace all \n with closing </p> and opening <p>
-        $html = str_replace("\n", "</p><p>", $html);
+        // // Step 3: Replace all \n with closing </p> and opening <p>
+        // $html = str_replace("\n", "</p><p>", $html);
 
-        // Step 4: Ensure the string ends with a closing </p> tag
-        if (substr($html, -4) !== '</p>') {
-            $html .= '</p>';
-        }
+        // // Step 4: Ensure the string ends with a closing </p> tag
+        // if (substr($html, -4) !== '</p>') {
+        //     $html .= '</p>';
+        // }
 
         return $html;
     }
