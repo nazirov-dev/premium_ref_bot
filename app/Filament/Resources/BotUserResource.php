@@ -80,6 +80,7 @@ class BotUserResource extends Resource
                 Tables\Columns\TextColumn::make('user_id')
                     ->searchable()
                     ->label('Foydalanuvchi ID raqami')
+                    ->wrapHeader()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Ismi'),
@@ -91,6 +92,7 @@ class BotUserResource extends Resource
                     ->color('primary'),
                 Tables\Columns\TextColumn::make('phone_number')
                     ->label('Telefon raqami')
+                    ->wrapHeader()
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('balance')
@@ -104,19 +106,24 @@ class BotUserResource extends Resource
                 Tables\Columns\TextColumn::make('referrer_id')
                     ->label('Taklif qilgan ID raqami')
                     ->searchable()
+                    ->wrapHeader()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('is_premium')
+                    ->wrapHeader()
                     ->label('Premiummi?')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\CheckboxColumn::make('daily_bonus_status')
+                    ->wrapHeader()
                     ->label('Kunlik bonus olganmi?')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ToggleColumn::make('status')
                     ->label('Aktivmi?'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Ro\'yhatdan o\'tgan vaqti'),
+                    ->label('Ro\'yhatdan o\'tgan vaqti')
+                    ->wrapHeader(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('O\'zgartirilgan vaqti')
+                    ->wrapHeader()
                     ->toggleable(isToggledHiddenByDefault: true)
             ])
 

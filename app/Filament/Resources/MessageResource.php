@@ -192,6 +192,7 @@ class MessageResource extends Resource
                 Tables\Columns\TextColumn::make('file_id')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Fayl ID raqami')
+                    ->wrapHeader()
                     ->placeholder('Fayl ID mavjud emas!')
                     ->searchable()
             ])
