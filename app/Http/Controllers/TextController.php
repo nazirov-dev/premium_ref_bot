@@ -120,25 +120,7 @@ class TextController extends Controller
     }
     public static function sanitizeHtmlForFilament($html)
     {
-        Log::info('Html before: '. $html);
-        // Step 1: Convert newlines to <br> tags for line breaks
         $html = str_replace("\n", "<br>", $html);
-        Log::info('Html after: '. $html);
-        
-        // // Step 2: Ensure paragraphs are handled properly
-        // // If the string doesn't start with a newline, wrap it with <p> tags
-        // if (strpos($html, "\n") !== 0) {
-        //     $html = '<p>' . $html;  // Start the first paragraph
-        // }
-
-        // // Step 3: Replace all \n with closing </p> and opening <p>
-        // $html = str_replace("\n", "</p><p>", $html);
-
-        // // Step 4: Ensure the string ends with a closing </p> tag
-        // if (substr($html, -4) !== '</p>') {
-        //     $html .= '</p>';
-        // }
-
         return $html;
     }
 
