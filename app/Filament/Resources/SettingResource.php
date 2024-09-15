@@ -119,36 +119,67 @@ class SettingResource extends Resource
                     ->label('Giveaway holati')
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
-                        return $state ? 'Yoqilgan' : "O'chirilgan"; })
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('referral_bonus')
-                    ->label('Referral bonus')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('premium_referral_bonus')
-                    ->label('Premium referral bonus')
-                    ->searchable(),
-                Tables\Columns\ToggleColumn::make('bonus_menu_status')
-                    ->label('Bonus menu status')
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('referral_status')
-                    ->label('Referral status')
+                    ->label('Referral bo\'lim holati')
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
                     ->searchable(),
+                Tables\Columns\TextColumn::make('referral_bonus')
+                    ->label('Referral bonus summasi')
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
+                    ->searchable()
+                    ->visible(fn(Setting $record) => $record->referral_status),
                 Tables\Columns\ToggleColumn::make('premium_referral_status')
-                    ->label('Premium referral status')
-                    ->searchable(),
+                    ->label('Premium referral bo\;lim holati')
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
+                    ->searchable()
+                    ->visible(fn(Setting $record) => $record->referral_status),
+                Tables\Columns\TextColumn::make('premium_referral_bonus')
+                    ->label('Premium referral bonus summasi')
+                    ->searchable()
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
+                    ->visible(fn(Setting $record) => $record->referral_status and $record->premium_referral_status),
+                Tables\Columns\ToggleColumn::make('bonus_menu_status')
+                    ->label('Bonus bo\'limi holati')
+                    ->searchable()
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    }),
                 Tables\Columns\ToggleColumn::make('daily_bonus_status')
                     ->label('Kunlik bonus status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('top_users_count')
-                    ->label('Top users count')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
+                    ->visible(fn(Setting $record) => $record->daily_bonus_status),
                 Tables\Columns\SelectColumn::make('bonus_type')
                     ->label('Bonus type')
                     ->searchable()
                     ->options([
                         'every_channel' => 'Hamma kanal uchun',
                         'only_first_channel' => 'Faqat bitta kanal'
-                    ]),
+                    ])
+                    ->wrapHeader()
+                    ->visible(fn(Setting $record) => $record->daily_bonus_status),
+                Tables\Columns\TextColumn::make('top_users_count')
+                    ->label('Top foydalanuvchilar soni')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo code expire days')
                     ->searchable(),
@@ -156,8 +187,9 @@ class SettingResource extends Resource
                     ->label('Admin id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('proof_channel_id')
-                    ->label('Admin id')
-                    ->searchable(),
+                    ->label('Isbot kanal ID raqami')
+                    ->searchable()
+                    ->wrapHeader(),
             ])
             ->filters([
                 //
