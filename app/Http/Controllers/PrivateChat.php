@@ -745,7 +745,7 @@ class PrivateChat extends Controller
                         $bot->sendMessage([
                             'chat_id' => $user_id,
                             'text' => $this->replacePlaceholders(Text::get('boost_received'), [
-                                '{bonus}' => $boost_channel->bonus_each_boost,
+                                '{bonus}' => Number::format($boost_channel->bonus_each_boost),
                                 '{channel_name}' => $boost_channel->name,
                                 '{boosts_count}' => $boosts_count
                             ])
@@ -777,7 +777,7 @@ class PrivateChat extends Controller
                             '{channel_name}' => $boost_channel->name,
                             '{boosts_count}' => $boosts_count,
                             '{balance}' => Number::format($user->balance),
-                            '{minus}' => $boost_channel->bonus_each_boost
+                            '{minus}' => Number::format($boost_channel->bonus_each_boost)
                         ])
                     ]);
                 }
