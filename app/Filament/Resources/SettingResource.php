@@ -72,6 +72,11 @@ class SettingResource extends Resource
                     ->label('Bonus menyu holati')
                     ->helperText('Bonus menyuni yoqish yoki o\'chirish')
                     ->live(),
+                Forms\Components\Toggle::make('daily_bonus_status')
+                    ->required()
+                    ->default(false)
+                    ->label('Kunlik bonus holati')
+                    ->helperText('Bonus menyuni yoqish yoki o\'chirish'),
                 Forms\Components\Select::make('bonus_type')->options([
                     'every_channel' => 'Hamma kanal uchun',
                     'only_first_channel' => 'Faqat bitta kanal'
@@ -116,6 +121,7 @@ class SettingResource extends Resource
                 Tables\Columns\ToggleColumn::make('bonus_menu_status')->label('Bonus menu status')->searchable(),
                 Tables\Columns\ToggleColumn::make('referral_status')->label('Referral status')->searchable(),
                 Tables\Columns\ToggleColumn::make('premium_referral_status')->label('Premium referral status')->searchable(),
+                Tables\Columns\ToggleColumn::make('daily_bonus_status')->label('Kunlik bonus status')->searchable(),
                 Tables\Columns\TextColumn::make('top_users_count')->label('Top users count')->searchable(),
                 Tables\Columns\SelectColumn::make('bonus_type')->label('Bonus type')->searchable(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')->label('Promo code expire days')->searchable(),

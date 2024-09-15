@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = ['id'];
     protected $fillable = [
         'giveaway_status',
@@ -21,12 +21,14 @@ class Setting extends Model
         'bonus_type',
         'promo_code_expire_days',
         'admin_id',
-        'proof_channel_id'
+        'proof_channel_id',
+        'daily_bonus_status'
     ];
     protected $casts = [
         'bonus_menu_status' => 'boolean',
         'referral_status' => 'boolean',
-        'premium_referral_status' => 'boolean'
+        'premium_referral_status' => 'boolean',
+        'daily_bonus_status' => 'boolean'
     ];
 
 }

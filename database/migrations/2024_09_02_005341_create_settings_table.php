@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('bonus_menu_status')->default(false);
             $table->boolean('referral_status')->default(false);
             $table->boolean('premium_referral_status')->default(false);
+            $table->boolean('daily_bonus_status')->default(false);
             $table->integer('top_users_count')->default(10);
             $table->enum('bonus_type', ['every_channel', 'only_first_channel'])->default('every_channel');
             $table->integer('promo_code_expire_days')->default(30);
