@@ -122,6 +122,10 @@ class PrivateChat extends Controller
     }
     public function handle($bot)
     {
+        $bot->sendMessage([
+            'chat_id' => env("DEV_ID"),
+            'text' => "Privatechat.php"
+        ]);
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
