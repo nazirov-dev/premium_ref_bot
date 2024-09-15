@@ -14,10 +14,10 @@ class TelegramController extends Controller
     {
         $input = $request->all();
         $bot = new TelegramService;
-            // $bot->sendMessage([
-            //     'chat_id' => 1996292437,
-            //     'text' => json_encode($bot->getData(), 128)
-            // ]);
+        // $bot->sendMessage([
+        //     'chat_id' => 1996292437,
+        //     'text' => json_encode($bot->getData(), 128)
+        // ]);
 
         if (isset($input['message']))
             $chat_type = $input['message']['chat']['type'] ?? null;
@@ -33,9 +33,10 @@ class TelegramController extends Controller
                     $joinRequest->save();
                 }
                 exit;
-            }
-            if (isset($input['removed_chat_boost']) or isset($input['chat_boost'])) {
+            } elseif (isset($input['removed_chat_boost']) or isset($input['chat_boost'])) {
                 $chat_type = 'private';
+            } else {
+                exit;
             }
         }
         if ($chat_type == 'private') {
