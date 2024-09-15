@@ -172,6 +172,12 @@ class MessageResource extends Resource
                     ->searchable(),
                 Tables\Columns\SelectColumn::make('type')
                     ->label('Turi')
+                    ->options([
+                        'text' => 'Matn',
+                        'photo' => 'Rasm',
+                        'video' => 'Video'
+                    ])
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('text')
                     ->label('Matn')
@@ -180,6 +186,7 @@ class MessageResource extends Resource
                     ->label('Tugmalar')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('file_id')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Fayl ID raqami')
                     ->searchable()
             ])
@@ -196,7 +203,7 @@ class MessageResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Xabarlar')
-            ;
+            ->searchOnBlur();
     }
 
     public static function getRelations(): array
