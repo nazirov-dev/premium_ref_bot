@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
 
         $schedule->command('app:send-notification')->everyMinute();
-        $schedule->command('app:clean-files')->everyFiveMinutes();
+        $schedule->command('reset:daily-bonus')->dailyAt('00:00');
         // $schedule->command('inspire')->hourly();
     }
 
