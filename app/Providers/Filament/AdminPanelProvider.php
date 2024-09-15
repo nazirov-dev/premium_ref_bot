@@ -17,23 +17,18 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Illuminate\Support\Facades\Log;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $colors = Color::all();
-        $random_color = array_rand($colors);
-        $color = $colors[$random_color];
-        Log::info('Color: ', $color);
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => $color,
+                'primary' => Color::Amber,
             ])
             ->globalSearch()
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
