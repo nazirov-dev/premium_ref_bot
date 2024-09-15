@@ -122,16 +122,21 @@ class SettingResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('giveaway_status')
                     ->label('Giveaway holati')
-                    ->wrapHeader()
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->badge()
-                    ->color(function($state){return $state ? 'success' : 'danger';})
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('referral_status')
                     ->label('Referral bo\'lim holati')
                     ->wrapHeader()
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
@@ -139,26 +144,24 @@ class SettingResource extends Resource
                 Tables\Columns\TextColumn::make('referral_bonus')
                     ->label('Referral bonus summasi')
                     ->wrapHeader()
-                    ->formatStateUsing(function ($state) {
-                        return $state ? 'Yoqilgan' : "O'chirilgan";
-                    })
                     ->searchable()
                     ->visible(SETTINGS->referral_status),
                 Tables\Columns\TextColumn::make('premium_referral_status')
                     ->label('Premium referral bo\'lim holati')
                     ->wrapHeader()
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
                     ->searchable()
                     ->visible(SETTINGS->referral_status),
                 Tables\Columns\TextColumn::make('premium_referral_bonus')
-                    ->label('Premium referral bonus summasi')
+                    ->label('Premium ref bonus summasi')
                     ->searchable()
                     ->wrapHeader()
-                    ->formatStateUsing(function ($state) {
-                        return $state ? 'Yoqilgan' : "O'chirilgan";
-                    })
                     ->visible(SETTINGS->referral_status and SETTINGS->premium_referral_status),
                 Tables\Columns\TextColumn::make('bonus_menu_status')
                     ->label('Bonus bo\'limi holati')
@@ -166,17 +169,29 @@ class SettingResource extends Resource
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
                     }),
                 Tables\Columns\TextColumn::make('daily_bonus_status')
-                    ->label('Kunlik bonus status')
+                    ->label('Kunlik bonus holati')
                     ->searchable()
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
                     })
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
                     ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\SelectColumn::make('bonus_type')
-                    ->label('Bonus type')
+                    ->label('Bonus turi')
                     ->searchable()
                     ->options([
                         'every_channel' => 'Hamma kanal uchun',
@@ -187,15 +202,16 @@ class SettingResource extends Resource
                     ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrapHeader(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo code expire days')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('admin_id')
-                    ->label('Admin id')
+                    ->label('Admin ID')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('proof_channel_id')
-                    ->label('Isbot kanal ID raqami')
+                    ->label('Isbot kanal ID')
                     ->searchable()
                     ->wrapHeader(),
             ])
