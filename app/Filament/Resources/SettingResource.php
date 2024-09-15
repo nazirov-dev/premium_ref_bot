@@ -143,7 +143,7 @@ class SettingResource extends Resource
                     ->searchable()
                     ->visible(SETTINGS->referral_status),
                 Tables\Columns\TextColumn::make('premium_referral_status')
-                    ->label('Premium referral bo\;lim holati')
+                    ->label('Premium referral bo\'lim holati')
                     ->wrapHeader()
                     ->formatStateUsing(function ($state) {
                         return $state ? 'Yoqilgan' : "O'chirilgan";
