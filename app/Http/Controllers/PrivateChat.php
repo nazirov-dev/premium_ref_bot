@@ -147,7 +147,7 @@ class PrivateChat extends Controller
                     'username' => $bot->Username(),
                     'status' => true,
                     'balance' => 0,
-                    'refferrer_id' => $referral_id,
+                    'referrer_id' => $referral_id,
                     'is_premium' => $bot->isPremiumUser()
                 ]);
                 Cache::set($chat_id . '.step', 'start');
