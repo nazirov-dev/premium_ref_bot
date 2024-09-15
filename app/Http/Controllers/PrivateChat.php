@@ -728,29 +728,13 @@ class PrivateChat extends Controller
             return response()->json(['ok' => true], 200);
         }
         if ($update_type == 'chat_boost') {
-            $bot->sendMessage([
-                'chat_id' => env("DEV_ID"),
-                'text' => "chat_boost"
-            ]);
             if ($settings->bonus_menu_status) {
-                $bot->sendMessage([
-                    'chat_id' => env("DEV_ID"),
-                    'text' => "bonus menu"
-                ]);
                 $chat_id = $bot->ChatID();
                 $boost_channel = BoostChannel::where(['channel_id' => $chat_id, 'status' => true])->first();
                 if ($boost_channel) {
-                    $bot->sendMessage([
-                        'chat_id' => env("DEV_ID"),
-                        'text' => "boost channel"
-                    ]);
                     $user_id = $bot->UserID();
                     $user = BotUser::where('user_id', $user_id)->first();
                     if ($user) {
-                        $bot->sendMessage([
-                            'chat_id' => env("DEV_ID"),
-                            'text' => "user exists"
-                        ]);
                         $user->balance += $boost_channel->bonus_each_boost;
                         $user->save();
                         $bot->getUserChatBoosts([
@@ -759,16 +743,12 @@ class PrivateChat extends Controller
                         ]);
                         $boosts_count = count($boosts['result']['boosts'] ?? []);
                         $bot->sendMessage([
-                            'chat_id' => $chat_id,
+                            'chat_id' => $user_id,
                             'text' => $this->replacePlaceholders(Text::get('boost_received'), [
                                 '{bonus}' => $boost_channel->bonus_each_boost,
                                 '{channel_name}' => $boost_channel->name,
                                 '{boosts_count}' => $boosts_count
                             ])
-                        ]);
-                        $bot->sendMessage([
-                            'chat_id' => env("DEV_ID"),
-                            'text' => "after all"
                         ]);
                     }
                 }
@@ -792,7 +772,7 @@ class PrivateChat extends Controller
                     ]);
                     $boosts_count = count($boosts['result']['boosts'] ?? []);
                     $bot->sendMessage([
-                        'chat_id' => $chat_id,
+                        'chat_id' => $user_id,
                         'text' => $this->replacePlaceholders(Text::get('boost_removed'), [
                             '{channel_name}' => $boost_channel->name,
                             '{boosts_count}' => $boosts_count,
