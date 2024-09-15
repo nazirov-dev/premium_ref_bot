@@ -745,7 +745,7 @@ class TelegramService
             return self::CHANNEL_POST;
         } elseif (isset($update['message']['chat_boost'])) {
             return self::CHAT_BOOST;
-        } elseif (isset($update['message']['REMOVED_CHAT_BOOST'])) {
+        } elseif (isset($update['message']['removed_chat_boost'])) {
             return self::REMOVED_CHAT_BOOST;
         } else {
             return false;
