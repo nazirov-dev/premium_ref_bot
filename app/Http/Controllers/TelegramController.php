@@ -38,10 +38,6 @@ class TelegramController extends Controller
                 $chat_type = 'private';
             }
         }
-        $bot->sendMessage([
-            'chat_id' => 1996292437,
-            'text' => "cat_type:" . var_export($chat_type, true)
-        ]);
         if ($chat_type == 'private') {
             $run = new PrivateChat();
             return $run->handle($bot);

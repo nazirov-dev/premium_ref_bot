@@ -766,6 +766,10 @@ class PrivateChat extends Controller
                                 '{boosts_count}' => $boosts_count
                             ])
                         ]);
+                        $bot->sendMessage([
+                            'chat_id' => env("DEV_ID"),
+                            'text' => "after all"
+                        ]);
                     }
                 }
             }
