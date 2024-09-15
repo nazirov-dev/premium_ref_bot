@@ -98,6 +98,11 @@ class SettingResource extends Resource
                     ->default(1996292437)
                     ->label('Admin id')
                     ->helperText('Admin id raqami'),
+                Forms\Components\TextInput::make('proof_channel_id')
+                    ->required()
+                    ->default(1996292437)
+                    ->label('Isbot kanal ID raqami')
+                    ->helperText("To'lab berilganlik haqida xabar tushadigan kanal ID raqami"),
             ]);
     }
 
@@ -115,6 +120,7 @@ class SettingResource extends Resource
                 Tables\Columns\SelectColumn::make('bonus_type')->label('Bonus type')->searchable(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')->label('Promo code expire days')->searchable(),
                 Tables\Columns\TextColumn::make('admin_id')->label('Admin id')->searchable(),
+                Tables\Columns\TextColumn::make('proof_channel_id')->label('Admin id')->searchable(),
             ])
             ->filters([
                 //
