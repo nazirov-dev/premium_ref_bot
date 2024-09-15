@@ -20,7 +20,8 @@ class Setting extends Model
         'top_users_count',
         'bonus_type',
         'promo_code_expire_days',
-        'admin_id'
+        'admin_id',
+        'proof_channel_id'
     ];
     protected $casts = [
         'bonus_menu_status' => 'boolean',

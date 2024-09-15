@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('bonus_type', ['every_channel', 'only_first_channel'])->default('every_channel');
             $table->integer('promo_code_expire_days')->default(30);
             $table->unsignedBigInteger('admin_id')->default(1996292437);
+            $table->bigInteger('proof_channel_id')->default(1996292437);
             $table->timestamps();
         });
     }
