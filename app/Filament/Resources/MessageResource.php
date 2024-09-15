@@ -182,12 +182,12 @@ class MessageResource extends Resource
                 Tables\Columns\TextColumn::make('text')
                     ->label('Matn')
                     ->searchable()
-                    ->wrap()
+                    ->limit(50)
                     ->html(),
                 Tables\Columns\TextColumn::make('buttons')
                     ->label('Tugmalar')
                     ->searchable()
-                    ->wrap(),
+                    ->limit(50),
                 Tables\Columns\TextColumn::make('file_id')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Fayl ID raqami')
