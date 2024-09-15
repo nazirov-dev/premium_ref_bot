@@ -76,10 +76,18 @@ class PromoCodeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->label('Promo code')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->color('info')
+                    ->copyable()
+                    ->copyMessage('Promo koddan nusxa olindi')
+                    ->copyMessageDuration(1500),
                 Tables\Columns\TextColumn::make('user_id')
                     ->label('User ID')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('User IDdan nusxa olindi')
+                    ->copyMessageDuration(1500),
                 Tables\Columns\SelectColumn::make('premium_category_id')
                     ->label('Premium category')
                     ->options(
@@ -88,7 +96,9 @@ class PromoCodeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
                     ->label('Price')
-                    ->suffix('so\'m')
+                    ->suffix(' so\'m')
+                    ->badge()
+                    ->color('success')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('expired_at')
                     ->label('Expired at')
@@ -110,7 +120,7 @@ class PromoCodeResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Promo codes')
-            ;
+        ;
     }
 
     public static function getRelations(): array
