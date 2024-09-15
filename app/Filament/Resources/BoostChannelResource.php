@@ -84,9 +84,13 @@ class BoostChannelResource extends Resource
                 Tables\Columns\TextColumn::make('daily_bonus')
                     ->label('Kundagi bonus')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('daily_bonus_type')
+                Tables\Columns\SelectColumn::make('daily_bonus_type')
                     ->label('Kunlik bonus turi')
-                    ->searchable(),
+                    ->searchable()
+                    ->options([
+                        'simple' => 'Oddiy',
+                        'bonus_each_boost' => 'Har bir boost uchun bonus',
+                    ]),
                 Tables\Columns\ToggleColumn::make('status')
                     ->label('Aktivmi?')
                     ->searchable(),
@@ -104,7 +108,7 @@ class BoostChannelResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->heading('Boost kanallar')
-            ;
+        ;
     }
 
     public static function getRelations(): array
