@@ -359,8 +359,13 @@ class PrivateChat extends Controller
                     $top_users = BotUser::orderBy('balance', 'desc')->limit($settings->top_users_count)->get();
                     $top_users_message = Text::get('top_users_message');
                     $top_users_list = '';
+                    $each_user_message_in_top = Text::get('each_user_message_in_top');
                     foreach ($top_users as $key => $user) {
-                        $top_users_list .= ($key + 1) . ') ' . $user->name . ' — ' . Number::format($user->balance) . ' so\'m' . PHP_EOL;
+                        $top_users_list .= $this->replacePlaceholder($each_user_message_in_top, [
+                            '{number}' => $key + 1,
+                            '{name}' => $user->name,
+                            '{balance}' => $user->balance
+                        ]) . PHP_EOL;
                     }
                     $replacements = [
                         '{first_name}' => $bot->FirstName(),
