@@ -122,7 +122,7 @@ class TextController extends Controller
     {
         Log::info('Html before: '. $html);
         // Step 1: Convert newlines to <br> tags for line breaks
-        $html = nl2br($html);  // Converts all \n to <br>
+        $html = str_replace("\n", "<br>", $html);
         Log::info('Html after: '. $html);
         
         // // Step 2: Ensure paragraphs are handled properly
