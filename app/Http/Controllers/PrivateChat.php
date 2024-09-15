@@ -727,18 +727,30 @@ class PrivateChat extends Controller
             ]);
             return response()->json(['ok' => true], 200);
         }
-        $bot->sendMessage([
-            'chat_id' => env("DEV_ID"),
-            'text' => "Privatechat.php"
-        ]);
         if ($update_type == 'chat_boost') {
+            $bot->sendMessage([
+                'chat_id' => env("DEV_ID"),
+                'text' => "chat_boost"
+            ]);
             if ($settings->bonus_menu_status) {
+                $bot->sendMessage([
+                    'chat_id' => env("DEV_ID"),
+                    'text' => "bonus menu"
+                ]);
                 $chat_id = $bot->ChatID();
                 $boost_channel = BoostChannel::where(['channel_id' => $chat_id, 'status' => true])->first();
                 if ($boost_channel) {
+                    $bot->sendMessage([
+                        'chat_id' => env("DEV_ID"),
+                        'text' => "boost channel"
+                    ]);
                     $user_id = $bot->UserID();
                     $user = BotUser::where('user_id', $user_id)->first();
                     if ($user) {
+                        $bot->sendMessage([
+                            'chat_id' => env("DEV_ID"),
+                            'text' => "user exists"
+                        ]);
                         $user->balance += $boost_channel->bonus_each_boost;
                         $user->save();
                         $bot->getUserChatBoosts([
