@@ -25,7 +25,8 @@ class BoostChannelResource extends Resource
     {
         return [
             'name',
-            'channel_id'
+            'channel_id',
+            'boost_link'
         ];
     }
 
@@ -48,7 +49,7 @@ class BoostChannelResource extends Resource
                     ->numeric()
                     ->nullable(),
                 Forms\Components\TextInput::make('daily_bonus')
-                    ->label('Kundagi bonus')
+                    ->label('Kundalik bonus summasi')
                     ->numeric()
                     ->nullable(),
                 Forms\Components\Select::make('daily_bonus_type')
@@ -77,16 +78,20 @@ class BoostChannelResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('bonus_each_boost')
                     ->label('Har bir boost uchun bonus')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrapHeader(),
                 Tables\Columns\TextColumn::make('daily_bonus_each_boost')
                     ->label('Har kundagi har bir boost uchun bonus')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrapHeader(),
                 Tables\Columns\TextColumn::make('daily_bonus')
-                    ->label('Kundagi bonus')
-                    ->searchable(),
+                    ->label('Kundalik bonus')
+                    ->searchable()
+                    ->wrapHeader(),
                 Tables\Columns\SelectColumn::make('daily_bonus_type')
                     ->label('Kunlik bonus turi')
                     ->searchable()
+                    ->wrapHeader()
                     ->options([
                         'simple' => 'Oddiy',
                         'bonus_each_boost' => 'Har bir boost uchun bonus',

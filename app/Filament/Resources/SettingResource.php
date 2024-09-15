@@ -115,8 +115,11 @@ class SettingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ToggleColumn::make('giveaway_status')
-                    ->label('Giveaway status')
+                Tables\Columns\TextColumn::make('giveaway_status')
+                    ->label('Giveaway holati')
+                    ->wrapHeader()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Yoqilgan' : "O'chirilgan"; })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('referral_bonus')
                     ->label('Referral bonus')
