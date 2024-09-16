@@ -136,7 +136,7 @@ class PrivateChat extends Controller
             $bot->sendMessage([
                 'chat_id' => $chat_id,
                 'text' => Text::get('you_are_banned'),
-                'reply_markup' => null,
+                'reply_markup' => $bot->buildKeyBoardHide()
             ]);
             return response()->json(['ok' => true], 200);
         }
@@ -860,7 +860,7 @@ class PrivateChat extends Controller
                         $bot->sendMessage([
                             'chat_id' => $chat_id,
                             'text' => $ban_message,
-                            'reply_markup' => null
+                            'reply_markup' => $bot->buildKeyBoardHide()
                         ]);
                         $user = BotUser::where(['user_id' => $chat_id])->first();
                         $user->is_banned = true;
