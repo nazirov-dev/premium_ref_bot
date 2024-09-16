@@ -59,6 +59,7 @@ class SettingResource extends Resource
                 Forms\Components\TextInput::make('premium_referral_bonus')
                     ->required()
                     ->default(0)
+                    ->suffix('so\'m')
                     ->label('Premium referral bonus')
                     ->helperText('Premium referral bonus summasi premium referral uchun')
                     ->numeric()
@@ -92,6 +93,7 @@ class SettingResource extends Resource
                 Forms\Components\TextInput::make('top_users_count')
                     ->required()
                     ->default(10)
+                    ->suffix('ta')
                     ->label('Top foydalanuvchilar')
                     ->helperText('Top foydalanuvchilar bo\'limida ko\'rsatiladigan foydalanuvchilar soni'),
                 Forms\Components\Select::make('multi_account_action')
@@ -103,6 +105,7 @@ class SettingResource extends Resource
                 Forms\Components\TextInput::make('promo_code_expire_days')
                     ->required()
                     ->default(30)
+                    ->suffix('kun')
                     ->label('Promo code amal qilish muddati')
                     ->helperText('Promo kod amal qilish muddati kunlar hissobida, agarda limit qo\'yishni xohlamasangiz 0 qo\'ying')
                     ->numeric()
