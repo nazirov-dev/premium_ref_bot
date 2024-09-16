@@ -31,12 +31,6 @@ class SettingResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Toggle::make('giveaway_status')
-                    ->required()
-                    ->default(0)
-                    ->label('Konkurs holati')
-                    ->helperText('Konkurs holatini yoqish yoki o\'chirish')
-                    ->columnSpanFull(),
                 Forms\Components\Toggle::make('referral_status')
                     ->required()->default(false)
                     ->label('Referral tizim holati')
