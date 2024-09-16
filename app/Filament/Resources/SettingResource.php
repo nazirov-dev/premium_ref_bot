@@ -188,13 +188,15 @@ class SettingResource extends Resource
                         return $state ? 'success' : 'danger';
                     })
                     ->visible(SETTINGS->daily_bonus_status),
-                Tables\Columns\SelectColumn::make('bonus_type')
+                Tables\Columns\TextColumn::make('bonus_type')
                     ->label('Bonus turi')
                     ->searchable()
-                    ->options([
-                        'every_channel' => 'Hamma kanal uchun',
-                        'only_first_channel' => 'Faqat bitta kanal'
-                    ])
+                    ->formatStateUsing(function ($state) {
+                        return [
+                            'every_channel' => 'Hamma kanal uchun',
+                            'only_first_channel' => 'Faqat bitta kanal'
+                        ][$state];
+                    })
                     ->visible(SETTINGS->daily_bonus_status)
                     ->selectablePlaceholder(false)
                     ->disabled(),
@@ -202,13 +204,15 @@ class SettingResource extends Resource
                     ->label('Top foydalanuvchilar soni')
                     ->searchable()
                     ->wrapHeader(),
-                Tables\Columns\SelectColumn::make('multi_account_action')
+                Tables\Columns\TextColumn::make('multi_account_action')
                     ->label('Nakrutka vaqtida nima qilish')
                     ->wrapHeader()
-                    ->options([
-                        'warn' => "Ogohlantirish",
-                        'ban' => 'Ban qilish'
-                    ])
+                    ->formatStateUsing(function ($state) {
+                        return [
+                            'warn' => "Ogohlantirish",
+                            'ban' => 'Ban qilish'
+                        ][$state];
+                    })
                     ->selectablePlaceholder(false)
                     ->disabled(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
