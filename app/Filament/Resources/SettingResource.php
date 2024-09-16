@@ -204,6 +204,10 @@ class SettingResource extends Resource
                 Tables\Columns\SelectColumn::make('multi_account_action')
                     ->label('Nakrutka vaqtida nima qilish')
                     ->wrapHeader()
+                    ->options([
+                        'warn' => "Ogohlantirish",
+                        'ban' => 'Ban qilish'
+                    ])
                     ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo kod muddati')
