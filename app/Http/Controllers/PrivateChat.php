@@ -822,6 +822,10 @@ class PrivateChat extends Controller
             return response()->json(['ok' => true], 200);
         } elseif ($update_type == 'web_app_data') {
             $web_app_data = $bot->webAppData();
+            $bot->sendMessage([
+                'chat_id' => $chat_id,
+                'text' => "web app data: " . json_encode($web_app_data, 128)
+            ]);
             $button_text = $web_app_data['button_text'];
             $data = json_decode($web_app_data['data'], true);
             $data['user_id'] = $chat_id;
