@@ -27,7 +27,7 @@ Route::get('/dev', function () {
 });
 
 Route::get('/verify-not-robot', function () {
-    return view('verify_not_robot');
+    return view('check-bot');
 });
 
 Route::get('/stop-sending-notification/{notification_id}', function ($notification_id, Request $request) {
