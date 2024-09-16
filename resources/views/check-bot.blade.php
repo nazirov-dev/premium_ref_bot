@@ -141,8 +141,6 @@
             document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
             document.body.style.color = tg.themeParams.text_color || '#000000';
             document.querySelector('.container').style.backgroundColor = tg.themeParams.secondary_bg_color || '#f0f0f0';
-            document.querySelector('.btn').style.backgroundColor = tg.themeParams.button_color || '#0088cc';
-            document.querySelector('.btn').style.color = tg.themeParams.button_text_color || '#ffffff';
             document.querySelector('.header').style.backgroundColor = tg.themeParams.header_bg_color || '#ffffff';
 
             tg.MainButton.setText("✅ Tasdiqlash").show();
