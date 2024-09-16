@@ -125,7 +125,12 @@ class PrivateChat extends Controller
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
-
+        $bot->sendMessage([
+            'chat_id' => $chat_id,
+            'text' => json_encode([
+                'update_type' => $update_type,
+            ])
+        ]);
         $user = BotUser::where('user_id', $chat_id)->first();
         if ($user->is_banned) {
             $bot->sendMessage([
