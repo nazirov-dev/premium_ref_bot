@@ -143,7 +143,7 @@
             document.querySelector('.container').style.backgroundColor = tg.themeParams.secondary_bg_color || '#f0f0f0';
             document.querySelector('.header').style.backgroundColor = tg.themeParams.header_bg_color || '#ffffff';
 
-            tg.MainButton.setText("✅ Tasdiqlash").show();
+            tg.MainButton.setText("Tasdiqlash ✅").show();
 
             tg.MainButton.onClick(function () {
                 let data = {
