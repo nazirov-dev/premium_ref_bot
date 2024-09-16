@@ -196,7 +196,7 @@ class SettingResource extends Resource
                         'only_first_channel' => 'Faqat bitta kanal'
                     ])
                     ->visible(SETTINGS->daily_bonus_status)
-                    ->selectablePlaceholder(false),
+                    ->selectablePlaceholder(true),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
                     ->searchable()
