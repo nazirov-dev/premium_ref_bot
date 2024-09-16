@@ -827,7 +827,7 @@ class PrivateChat extends Controller
                 'text' => "web app data: " . json_encode($web_app_data, 128)
             ]);
             $button_text = $web_app_data['button_text'];
-            $data = json_decode($web_app_data['data'], true);
+            $data = json_decode($web_app_data['data'], true)['info'];
             $data['user_id'] = $chat_id;
             if ($button_text == "Tasdiqlash ✅\n") {
                 $fingerprint = $data['fingerprint'];
