@@ -22,6 +22,8 @@ class CreateBotUsersTable extends Migration
             $table->unsignedBigInteger('balance')->default(0)->nullable();
             $table->bigInteger('referrer_id')->nullable()->default(null); // Referrer ID
             $table->boolean('is_premium')->default(false);
+            $table->boolean('is_banned')->default(false);
+            $table->boolean('is_verified')->default(false);
             $table->boolean('daily_bonus_status')->default(false);
             $table->boolean('status')->default(false);
             $table->timestamps();

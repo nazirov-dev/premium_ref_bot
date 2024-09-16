@@ -19,12 +19,16 @@ class BotUser extends Model
         'balance',
         'referrer_id',
         'is_premium',
+        'is_banned',
+        'is_verified',
         'daily_bonus_status',
-        'status'
+        'status',
     ];
     protected $casts = [
         'status' => 'boolean',
         'is_premium' => 'boolean',
-        'daily_bonus_status' => 'boolean'
+        'daily_bonus_status' => 'boolean',
+        'is_banned' => 'boolean',       
+        'is_verified' => 'boolean',
     ];
 }
