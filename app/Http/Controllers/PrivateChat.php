@@ -127,7 +127,7 @@ class PrivateChat extends Controller
         $update_type = $bot->getUpdateType();
 
         $user = BotUser::where('user_id', $chat_id)->first();
-        if ($user->is_banned) {
+        if ($user and $user->is_banned) {
             $bot->sendMessage([
                 'chat_id' => $chat_id,
                 'text' => Text::get('you_are_banned'),
