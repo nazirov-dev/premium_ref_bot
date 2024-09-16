@@ -116,13 +116,17 @@ class BotUserResource extends Resource
                 Tables\Columns\TextColumn::make('is_banned')
                     ->wrapHeader()
                     ->label('Ban?')
-                    ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->formatStateUsing(fn($record) => $record->is_banned ? 'Ha' : 'Yo\'q')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->badge()
+                    ->color('danger'),
                 Tables\Columns\TextColumn::make('is_verified')
                     ->wrapHeader()
                     ->label('Tasdiqlangan?')
-                    ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->formatStateUsing(fn($record) => $record->is_verified ? 'Ha' : 'Yo\'q')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->badge()
+                    ->color('success'),
                 Tables\Columns\TextColumn::make('daily_bonus_status')
                     ->wrapHeader()
                     ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
