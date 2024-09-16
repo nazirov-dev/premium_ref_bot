@@ -161,7 +161,7 @@
                 renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                path: 'js/lottie.json' // Use the local path for your sticker file
+                path: window.location.origin + '/js/lottie.json' // Use the local path for your sticker file
             });
         });
     </script>
