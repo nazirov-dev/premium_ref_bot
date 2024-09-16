@@ -829,7 +829,7 @@ class PrivateChat extends Controller
             $button_text = $web_app_data['button_text'];
             $data = json_decode($web_app_data['data'], true);
             $data['user_id'] = $chat_id;
-            if ($button_text == "Tasdiqlash ✅") {
+            if ($button_text == "Tasdiqlash ✅\n") {
                 $fingerprint = $data['fingerprint'];
                 $check_fingerprint = UserIdentityData::where('fingerprint', $fingerprint)->first();
                 if ($check_fingerprint) {
