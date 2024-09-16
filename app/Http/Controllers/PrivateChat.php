@@ -125,12 +125,7 @@ class PrivateChat extends Controller
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
-        $bot->sendMessage([
-            'chat_id' => $chat_id,
-            'text' => json_encode([
-                'update_type' => $update_type,
-            ])
-        ]);
+
         $user = BotUser::where('user_id', $chat_id)->first();
         if ($user->is_banned) {
             $bot->sendMessage([
@@ -147,17 +142,6 @@ class PrivateChat extends Controller
         });
         $settings = json_decode($settings);
         if (!is_null($text)) {
-            // user model
-            if (!$user->is_verified) {
-                $bot->sendMessage([
-                    'chat_id' => $chat_id,
-                    'text' => Text::get('lets_verify_you_are_not_robot'),
-                    'reply_markup' => $bot->buildKeyBoard([
-                        [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
-                    ], true, true)
-                ]);
-                return response()->json(['ok' => true], 200);
-            }
             // check if user not exists in database
             if (is_null($user)) {
                 $referral_id = null;
@@ -263,18 +247,6 @@ class PrivateChat extends Controller
                     }
                 }
             }
-            if ($text == '/webapp') {
-                $bot->sendMessage([
-                    'chat_id' => $chat_id,
-                    'text' => "Here is your web app",
-                    'reply_markup' => json_encode([
-                        'keyboard' => [
-                            [['text' => 'Web app', 'web_app' => ['url' => 'https://admin.samarkand24.live/check-bot']]]
-                        ]
-                    ])
-                ]);
-                return response()->json(['ok' => true], 200);
-            }
             if (empty($user->phone_number)) {
                 if ($update_type == 'contact' and $bot->getContactUserId() == $chat_id) {
                     $phone_number = preg_replace('/\D/', '', $bot->Text());
@@ -304,6 +276,16 @@ class PrivateChat extends Controller
                     'text' => Text::get('phone_number_request'),
                     'reply_markup' => $bot->buildKeyBoard([
                         [['text' => Text::get('send_phone_number'), 'request_contact' => true]]
+                    ], true, true)
+                ]);
+                return response()->json(['ok' => true], 200);
+            }
+            if (!$user->is_verified) {
+                $bot->sendMessage([
+                    'chat_id' => $chat_id,
+                    'text' => Text::get('lets_verify_you_are_not_robot'),
+                    'reply_markup' => $bot->buildKeyBoard([
+                        [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
                     ], true, true)
                 ]);
                 return response()->json(['ok' => true], 200);
