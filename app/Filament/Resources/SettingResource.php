@@ -132,16 +132,6 @@ class SettingResource extends Resource
         define('SETTINGS', json_decode($bot_settings));
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('giveaway_status')
-                    ->label('Giveaway holati')
-                    ->formatStateUsing(function ($state) {
-                        return $state ? 'Yoqilgan' : "O'chirilgan";
-                    })
-                    ->badge()
-                    ->color(function ($state) {
-                        return $state ? 'success' : 'danger';
-                    })
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('referral_status')
                     ->label('Referral bo\'lim holati')
                     ->wrapHeader()

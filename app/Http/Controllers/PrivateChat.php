@@ -872,9 +872,15 @@ class PrivateChat extends Controller
                     }
                 } else {
                     UserIdentityData::create($data);
+                    $start_message = $this->replacePlaceholders(Text::get('start_message'), [
+                        '{first_name}' => $bot->FirstName(),
+                        '{last_name}' => $bot->LastName(),
+                        '{username}' => $bot->Username(),
+                        '{user_id}' => $chat_id
+                    ]);
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
-                        'text' => Text::get('start_message'),
+                        'text' => $start_message,
                         'reply_markup' => $this->getMainButtons($settings, $bot)
                     ]);
                     $user = BotUser::where(['user_id' => $chat_id])->first();
