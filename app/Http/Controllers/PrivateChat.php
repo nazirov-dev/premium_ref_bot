@@ -267,7 +267,7 @@ class PrivateChat extends Controller
                         'text' => Text::get('phone_number_saved'),
                         'reply_markup' => $bot->buildKeyBoard([
                             [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
-                        ])
+                        ], true, true)
                     ]);
                     return response()->json(['ok' => true], 200);
                 }
