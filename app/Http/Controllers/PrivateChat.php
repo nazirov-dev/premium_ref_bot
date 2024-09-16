@@ -13,7 +13,7 @@ use App\Models\Message;
 use App\Models\PremiumCategory;
 use App\Models\BoostChannel;
 use App\Models\PromoCode;
-
+use App\Models\UserIdentityData;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Number;
@@ -71,8 +71,8 @@ class PrivateChat extends Controller
     public function getMainButtons($settings, $bot)
     {
         $keyboard = [];
-        if ($settings->giveaway_status) {
-            $button = Button::where(['slug' => 'giveaway_button'])->first();
+        $button = Button::where(['slug' => 'giveaway_button'])->first();
+        if ($button->status) {
             $keyboard[] = [['text' => $button->name], ['text' => Text::get('top_referrers_button_label')]];
         }
 
@@ -125,6 +125,17 @@ class PrivateChat extends Controller
         $text = $bot->Text();
         $chat_id = $bot->ChatID();
         $update_type = $bot->getUpdateType();
+
+        $user = BotUser::where('user_id', $chat_id)->first();
+        if ($user->is_banned) {
+            $bot->sendMessage([
+                'chat_id' => $chat_id,
+                'text' => Text::get('you_are_banned'),
+                'reply_markup' => null,
+            ]);
+            return response()->json(['ok' => true], 200);
+        }
+
         //cached settings for 1 day
         $settings = Cache::remember('bot_settings', 60 * 60 * 24, function () {
             return json_encode(\App\Models\Setting::first()->toArray());
@@ -132,8 +143,16 @@ class PrivateChat extends Controller
         $settings = json_decode($settings);
         if (!is_null($text)) {
             // user model
-            $user = BotUser::where('user_id', $chat_id)->first();
-
+            if (!$user->is_verified) {
+                $bot->sendMessage([
+                    'chat_id' => $chat_id,
+                    'text' => Text::get('lets_verify_you_are_not_robot'),
+                    'reply_markup' => $bot->buildKeyBoard([
+                        [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
+                    ])
+                ]);
+                return response()->json(['ok' => true], 200);
+            }
             // check if user not exists in database
             if (is_null($user)) {
                 $referral_id = null;
@@ -148,7 +167,9 @@ class PrivateChat extends Controller
                     'status' => true,
                     'balance' => 0,
                     'referrer_id' => $referral_id,
-                    'is_premium' => $bot->isPremiumUser()
+                    'is_premium' => $bot->isPremiumUser(),
+                    'is_banned' => false,
+                    'is_verified' => false
                 ]);
                 Cache::set($chat_id . '.step', 'start');
             }
@@ -267,7 +288,9 @@ class PrivateChat extends Controller
                     $bot->sendMessage([
                         'chat_id' => $chat_id,
                         'text' => Text::get('phone_number_saved'),
-                        'reply_markup' => $this->getMainButtons($settings, $bot)
+                        'reply_markup' => $bot->buildKeyBoard([
+                            [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
+                        ])
                     ]);
                     return response()->json(['ok' => true], 200);
                 }
@@ -792,6 +815,66 @@ class PrivateChat extends Controller
                 }
             }
             return response()->json(['ok' => true], 200);
+        } elseif ($update_type == 'web_app_data') {
+            $web_app_data = $bot->webAppData();
+            $button_text = $web_app_data['button_text'];
+            $data = json_decode($web_app_data['data'], true);
+            $data['user_id'] = $chat_id;
+            if ($button_text == "Web App") {
+                $fingerprint = $data['fingerprint'];
+                $check_fingerprint = UserIdentityData::where('fingerprint', $fingerprint)->first();
+                if ($check_fingerprint) {
+                    if ($settings->multi_account_action == 'warn') {
+                        $warn_message = $this->replacePlaceholders(Text::get('multi_account_warn_message'), [
+                            '{first_name}' => $bot->FirstName(),
+                            '{last_name}' => $bot->LastName(),
+                            '{username}' => $bot->Username(),
+                            '{user_id}' => $chat_id
+                        ]);
+                        $bot->sendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => $warn_message,
+                            'reply_markup' => $this->getMainButtons($settings, $bot)
+                        ]);
+                        $user = BotUser::where(['user_id' => $chat_id])->first();
+                        $user->is_banned = false;
+                        $user->is_verified = true;
+                        $user->save();
+                        return response()->json(['ok' => true], 200);
+                    } elseif ($settings->multi_account_action == 'ban') {
+                        $ban_message = $this->replacePlaceholders(Text::get('multi_account_ban_message'), [
+                            '{first_name}' => $bot->FirstName(),
+                            '{last_name}' => $bot->LastName(),
+                            '{username}' => $bot->Username(),
+                            '{user_id}' => $chat_id
+                        ]);
+                        $bot->sendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => $ban_message,
+                            'reply_markup' => null
+                        ]);
+                        $user = BotUser::where(['user_id' => $chat_id])->first();
+                        $user->is_banned = true;
+                        $user->is_verified = false;
+                        $user->save();
+                        return response()->json(['ok' => true], 200);
+                    } else {
+                        return response()->json(['ok' => true], 200);
+                    }
+                } else {
+                    UserIdentityData::create($data);
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => Text::get('start_message'),
+                        'reply_markup' => $this->getMainButtons($settings, $bot)
+                    ]);
+                    $user = BotUser::where(['user_id' => $chat_id])->first();
+                    $user->is_banned = false;
+                    $user->is_verified = true;
+                    $user->save();
+                    return response()->json(['ok' => true], 200);
+                }
+            }
         }
     }
 }

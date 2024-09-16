@@ -98,6 +98,12 @@ class SettingResource extends Resource
                     ->default(10)
                     ->label('Top foydalanuvchilar')
                     ->helperText('Top foydalanuvchilar bo\'limida ko\'rsatiladigan foydalanuvchilar soni'),
+                Forms\Components\Select::make('multi_account_action')
+                    ->label('Nakrutka vaqtida nima qilish')
+                    ->options([
+                        'warn' => "Ogohlantirish",
+                        'ban' => 'Ban qilish'
+                    ]),
                 Forms\Components\TextInput::make('promo_code_expire_days')
                     ->required()
                     ->default(30)
@@ -191,10 +197,6 @@ class SettingResource extends Resource
                     ->color(function ($state) {
                         return $state ? 'success' : 'danger';
                     })
-                    ->badge()
-                    ->color(function ($state) {
-                        return $state ? 'success' : 'danger';
-                    })
                     ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\SelectColumn::make('bonus_type')
                     ->label('Bonus turi')
@@ -203,11 +205,16 @@ class SettingResource extends Resource
                         'every_channel' => 'Hamma kanal uchun',
                         'only_first_channel' => 'Faqat bitta kanal'
                     ])
-                    ->visible(SETTINGS->daily_bonus_status),
+                    ->visible(SETTINGS->daily_bonus_status)
+                    ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
                     ->searchable()
                     ->wrapHeader(),
+                Tables\Columns\SelectColumn::make('multi_account_action')
+                    ->label('Nakrutka vaqtida nima qilish')
+                    ->wrapHeader()
+                    ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo kod muddati')
                     ->searchable(),

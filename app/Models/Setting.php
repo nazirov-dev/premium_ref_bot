@@ -11,7 +11,6 @@ class Setting extends Model
 
     protected $guarded = ['id'];
     protected $fillable = [
-        'giveaway_status',
         'referral_bonus',
         'premium_referral_bonus',
         'bonus_menu_status',
@@ -22,7 +21,8 @@ class Setting extends Model
         'promo_code_expire_days',
         'admin_id',
         'proof_channel_id',
-        'daily_bonus_status'
+        'daily_bonus_status',
+        'multi_account_action'
     ];
     protected $casts = [
         'bonus_menu_status' => 'boolean',

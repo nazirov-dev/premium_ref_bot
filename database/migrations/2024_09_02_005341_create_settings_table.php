@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->boolean('giveaway_status')->default(0);
             $table->bigInteger('referral_bonus')->default(0);
             $table->bigInteger('premium_referral_bonus')->default(0);
             $table->boolean('bonus_menu_status')->default(false);
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->boolean('daily_bonus_status')->default(false);
             $table->integer('top_users_count')->default(10);
             $table->enum('bonus_type', ['every_channel', 'only_first_channel'])->default('every_channel');
+            $table->enum('multi_account_action', ['warn', 'ban'])->default('ban');
             $table->integer('promo_code_expire_days')->default(30);
             $table->unsignedBigInteger('admin_id')->default(1996292437);
             $table->bigInteger('proof_channel_id')->default(1996292437);

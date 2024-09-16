@@ -20,10 +20,14 @@ use Illuminate\Support\Facades\Cache;
 */
 
 Route::get('/', function () {
-    return redirect('https://t.me/Downlifebot');
+    return redirect('https://t.me/jasurpremiumbot');
 });
 Route::get('/dev', function () {
     return redirect('https://Nazirov-Dev.uz');
+});
+
+Route::get('/verify-not-robot', function () {
+    return view('verify_not_robot');
 });
 
 Route::get('/stop-sending-notification/{notification_id}', function ($notification_id, Request $request) {

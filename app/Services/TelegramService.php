@@ -26,6 +26,7 @@ class TelegramService
     public const DOCUMENT = 'document';
     public const CHAT_BOOST = 'chat_boost';
     public const REMOVED_CHAT_BOOST = 'removed_chat_boost';
+    public const WEB_APP_DATA = 'web_app_data';
 
     private $bot_token = '';
     private $data = [];
@@ -281,6 +282,15 @@ class TelegramService
             return @$this->data['message']['contact']['phone_number'];
         } else {
             return (isset($this->data['message']['text'])) ? $this->data['message']['text'] : null;
+        }
+    }
+    public function webAppData()
+    {
+        $type = $this->getUpdateType();
+        if ($type == self::WEB_APP_DATA) {
+            return $this->data['message']['web_app_data'] ?? null;
+        } else {
+            return null;
         }
     }
     public function getContactUserId()
@@ -742,6 +752,8 @@ class TelegramService
                 return self::STICKER;
             } elseif (isset($update['message']['document'])) {
                 return self::DOCUMENT;
+            } elseif (isset($update['message']['web_app_data'])) {
+                return self::WEB_APP_DATA;
             }
         } elseif (isset($update['channel_post'])) {
             return self::CHANNEL_POST;
