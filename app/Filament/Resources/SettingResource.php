@@ -197,9 +197,7 @@ class SettingResource extends Resource
                             'only_first_channel' => 'Faqat bitta kanal'
                         ][$state];
                     })
-                    ->visible(SETTINGS->daily_bonus_status)
-                    ->selectablePlaceholder(false)
-                    ->disabled(),
+                    ->visible(SETTINGS->daily_bonus_status),
                 Tables\Columns\TextColumn::make('top_users_count')
                     ->label('Top foydalanuvchilar soni')
                     ->searchable()
@@ -212,9 +210,7 @@ class SettingResource extends Resource
                             'warn' => "Ogohlantirish",
                             'ban' => 'Ban qilish'
                         ][$state];
-                    })
-                    ->selectablePlaceholder(false)
-                    ->disabled(),
+                    }),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo kod muddati')
                     ->searchable(),
