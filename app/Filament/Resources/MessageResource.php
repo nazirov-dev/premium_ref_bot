@@ -70,13 +70,13 @@ class MessageResource extends Resource
                             $file_type = $get('type');
                             if ($file_type === 'photo') {
                                 $try = $bot->sendPhoto([
-                                    'chat_id' => env('DEV_ID'),
+                                    'chat_id' => config('env.DEV_ID'),
                                     'photo' => $value,
                                     'caption' => "Photo file id checking bro )"
                                 ]);
                             } elseif ($file_type === 'video') {
                                 $try = $bot->sendVideo([
-                                    'chat_id' => env('DEV_ID'),
+                                    'chat_id' => config('env.DEV_ID'),
                                     'video' => $value,
                                     'caption' => "Video file id checking bro )"
                                 ]);
@@ -148,7 +148,7 @@ class MessageResource extends Resource
                             }
                             $bot = new TelegramService();
                             $result = $bot->sendMessage([
-                                'chat_id' => env('DEV_ID'),
+                                'chat_id' => config('env.DEV_ID'),
                                 'text' => 'Keyboard syntax checking bro )',
                                 'reply_markup' => $bot->buildInlineKeyboard(convertToTelegramInlineKeyboard($value))
                             ]);
