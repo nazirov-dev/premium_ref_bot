@@ -8,7 +8,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="{{ asset('js/lottie-web.min.js') }}"></script>
     <script src="{{ asset('js/bundle.js') }}"></script>
-    <link rel="preload" href="{{ asset('js/lottie.json') }}" as="fetch">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
