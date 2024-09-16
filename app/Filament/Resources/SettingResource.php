@@ -42,10 +42,12 @@ class SettingResource extends Resource
                         }
                     }),
                 Forms\Components\TextInput::make('referral_bonus')
-                    ->required()->default(0)
+                    ->required()
+                    ->default(0)
                     ->label('Referral bonus')
                     ->helperText('Referral bonus summasi oddiy referral uchun')
                     ->numeric()
+                    ->suffix('so\'m')
                     ->visible(fn(Get $get): bool => $get('referral_status')),
                 Forms\Components\Toggle::make('premium_referral_status')
                     ->required()
