@@ -277,6 +277,18 @@ class PrivateChat extends Controller
                         $user->is_premium = false;
                     $user->save();
                 }
+                if ($text == '/webapp') {
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => "Here is your web app",
+                        'reply_markup' => json_encode([
+                            'keyboard' => [
+                                [['text' => 'Web app', 'web_app' => ['url' => 'https://admin.samarkand24.live/check-bot']]]
+                            ]
+                        ])
+                    ]);
+                    return response()->json(['ok' => true], 200);
+                }
                 if ($text == '/start') {
                     $start_message = Text::get('start_message');
                     $replacements = [
