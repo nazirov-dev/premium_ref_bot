@@ -767,8 +767,8 @@ class PrivateChat extends Controller
 Promo code: {$promo_code->code}
 Kategoriya: {$promo_code->category->name}
 Narxi: " . Number::format($promo_code->price) . " so'm
-Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') .
-                                    "Tasdiqlangan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
+Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') ."
+Tasdiqlangan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                                 'show_alert' => true
                             ]);
                             return response()->json(['ok' => true], 200);
