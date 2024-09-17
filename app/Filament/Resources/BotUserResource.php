@@ -113,10 +113,9 @@ class BotUserResource extends Resource
                     ->label('Premiummi?')
                     ->formatStateUsing(fn($record) => $record->is_premium ? 'Ha' : 'Yo\'q')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('is_banned')
+                Tables\Columns\ToggleColumn::make('is_banned')
                     ->wrapHeader()
                     ->label('Ban?')
-                    ->formatStateUsing(fn($record) => $record->is_banned ? 'Ha' : 'Yo\'q')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->badge()
                     ->color('danger'),
