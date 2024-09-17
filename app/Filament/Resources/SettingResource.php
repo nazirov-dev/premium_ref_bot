@@ -210,7 +210,8 @@ class SettingResource extends Resource
                             'warn' => "Ogohlantirish",
                             'ban' => 'Ban qilish'
                         ][$state];
-                    }),
+                    })
+                    ->hidden(),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo kod muddati')
                     ->searchable(),
