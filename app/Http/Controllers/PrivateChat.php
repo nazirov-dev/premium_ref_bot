@@ -160,11 +160,11 @@ class PrivateChat extends Controller
                     'is_banned' => false,
                     'is_verified' => false
                 ]);
-                Cache::set($chat_id . '.step', 'start');
             }
             $check_subscription = $this->check_user_subscribed_to_channels($bot, $chat_id);
             if ($check_subscription !== true) {
-                $bot->deleteThisMessage();
+                if ($update_type == 'callback_query')
+                    $bot->deleteThisMessage();
                 $keyboard = [];
                 foreach ($check_subscription as $channel) {
                     $keyboard[] = [['text' => $channel['name'], 'url' => $channel['invite_link']]];
@@ -178,6 +178,7 @@ class PrivateChat extends Controller
                 return response()->json(['ok'], 200);
             } else {
                 if ($text == 'check') {
+                    $bot->deleteThisMessage();
                     $text = '/start';
                     $update_type = 'message';
                 }
@@ -186,7 +187,7 @@ class PrivateChat extends Controller
             $step = Cache::get($chat_id . '.step');
 
             if (!is_null($step)) {
-                if ($step == 'start') {
+                if ($step == 'check-ref') {
                     if (!is_null($user->referrer_id) and $settings->referral_status) {
                         if ($bot->isPremiumUser() and $settings->premium_referral_status) {
                             $bonus = $settings->premium_referral_bonus;
@@ -275,6 +276,7 @@ class PrivateChat extends Controller
                             [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
                         ], true, true)
                     ]);
+                    Cache::set($chat_id . '.step', 'check-ref');
                     return response()->json(['ok' => true], 200);
                 }
                 $bot->sendMessage([
@@ -733,10 +735,66 @@ class PrivateChat extends Controller
                                 $bot->editMessageText([
                                     'chat_id' => $chat_id,
                                     'message_id' => $bot->MessageID(),
-                                    'text' => 'Rad etish sababini kiriting:'
+                                    'text' => 'Rad etish sababini kiriting:',
+                                    'reply_markup' => $bot->buildInlineKeyboard([
+                                        [['text' => '❌ Rad etish', 'callback_data' => 'rejected_' . $promo_code_id]]
+                                    ])
+                                ]);
+                                $promo_code->status = 'rejected';
+                                $promo_code->save();
+                                return response()->json(['ok' => true], 200);
+                            } else {
+                                $bot->answerCallbackQuery([
+                                    'callback_query_id' => $bot->Callback_ID(),
+                                    'text' => 'Bu promo code bazadan topilmadi!',
+                                    'show_alert' => true
+                                ]);
+                                $bot->editMessageReplyMarkup([
+                                    'chat_id' => $chat_id,
+                                    'message_id' => $bot->MessageID(),
+                                    'reply_markup' => $bot->buildInlineKeyboard([
+                                        [['text' => 'Bazadan topilmadi 🔍', 'callback_data' => 'notfound_' . $promo_code_id]]
+                                    ])
                                 ]);
                                 return response()->json(['ok' => true], 200);
                             }
+                        } elseif (stripos($callback_data, 'accepted_')) {
+                            $promo_code_id = explode('_', $callback_data)[1];
+                            $promo_code = PromoCode::with('category')->find($promo_code_id);
+                            $bot->answerCallbackQuery([
+                                'callback_query_id' => $bot->Callback_ID(),
+                                'text' => "Promo code tasdiqlangan ✅:
+Promo code: {$promo_code->code}
+Kategoriya: {$promo_code->category->name}
+Narxi: " . Number::format($promo_code->price) . " so'm
+Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') .
+                                    "Tasdiqlangan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
+                                'show_alert' => true
+                            ]);
+                            return response()->json(['ok' => true], 200);
+                        } elseif (stripos($callback_data, 'rejected_')) {
+                            $promo_code_id = explode('_', $callback_data)[1];
+                            $promo_code = PromoCode::with('category')->find($promo_code_id);
+                            $bot->answerCallbackQuery([
+                                'callback_query_id' => $bot->Callback_ID(),
+                                'text' => "Promo code rad etilgan ❌:
+Promo code: {$promo_code->code}
+Kategoriya: {$promo_code->category->name}
+Narxi: " . Number::format($promo_code->price) . " so'm
+Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') . "
+Rad etilish sababi: {$promo_code->reject_reason}
+Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
+                                'show_alert' => true
+                            ]);
+                            return response()->json(['ok' => true], 200);
+                        } elseif (stripos($callback_data, 'notfound_') !== false) {
+                            $promo_code_id = explode('_', $callback_data)[1];
+                            $bot->answerCallbackQuery([
+                                'callback_query_id' => $bot->Callback_ID(),
+                                'text' => 'Bu promo code bazadan topilgan edi!',
+                                'show_alert' => true
+                            ]);
+                            return response()->json(['ok' => true], 200);
                         }
                     }
                 }
@@ -815,7 +873,7 @@ class PrivateChat extends Controller
             $button_text = $web_app_data['button_text'];
             $data = json_decode($web_app_data['data'], true)['info'];
             $data['user_id'] = $chat_id;
-            if ($button_text == "Tasdiqlash ✅\n") {
+            if ($button_text == Text::get('verify_not_robot_button')) {
                 $fingerprint = $data['fingerprint'];
                 $check_fingerprint = UserIdentityData::where('fingerprint', $fingerprint)->first();
                 if ($check_fingerprint) {
@@ -835,6 +893,7 @@ class PrivateChat extends Controller
                         $user->is_banned = false;
                         $user->is_verified = true;
                         $user->save();
+                        Cache::forget($chat_id . '.step');
                         return response()->json(['ok' => true], 200);
                     } elseif ($settings->multi_account_action == 'ban') {
                         $ban_message = $this->replacePlaceholders(Text::get('multi_account_ban_message'), [
