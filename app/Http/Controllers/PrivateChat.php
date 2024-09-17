@@ -216,7 +216,7 @@ class PrivateChat extends Controller
                     $user->save();
                     Cache::forget($chat_id . '.step');
                 } else {
-                    if (stripos($step, 'reject_promo_code_') !== false and $chat_id == $settings->admin_id) {
+                    if (stripos($step, 'reject_promo_code_') !== false and $chat_id == $settings->admin_id and $update_type == 'message') {
                         $promo_code_id = explode('_', $step)[3];
                         $promo_code = PromoCode::find($promo_code_id);
                         if ($promo_code) {
@@ -737,7 +737,7 @@ class PrivateChat extends Controller
                                     'message_id' => $bot->MessageID(),
                                     'text' => 'Rad etish sababini kiriting:',
                                     'reply_markup' => $bot->buildInlineKeyboard([
-                                        [['text' => '❌ Rad etish', 'callback_data' => 'rejected_' . $promo_code_id]]
+                                        [['text' => '❌ Rad etilgan', 'callback_data' => 'rejected_' . $promo_code_id]]
                                     ])
                                 ]);
                                 $promo_code->status = 'rejected';
