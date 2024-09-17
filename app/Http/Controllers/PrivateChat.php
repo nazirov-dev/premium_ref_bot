@@ -198,19 +198,20 @@ class PrivateChat extends Controller
                         if ($referrer) {
                             $referrer->balance += $bonus;
                             $referrer->save();
+
+                            $bot->sendMessage([
+                                'chat_id' => $user->referrer_id,
+                                'text' => $this->replacePlaceholders(Text::get('referral_bonus_message'), [
+                                    '{first_name}' => $bot->FirstName(),
+                                    '{last_name}' => $bot->LastName(),
+                                    '{username}' => $bot->Username(),
+                                    '{user_id}' => $chat_id,
+                                    '{bonus}' => $bonus,
+                                    '{new_balance}' => Number::format($referrer->balance)
+                                ]),
+                                'parse_mode' => 'HTML'
+                            ]);
                         }
-                        $bot->sendMessage([
-                            'chat_id' => $user->referrer_id,
-                            'text' => $this->replacePlaceholders(Text::get('referral_bonus_message'), [
-                                '{first_name}' => $bot->FirstName(),
-                                '{last_name}' => $bot->LastName(),
-                                '{username}' => $bot->Username(),
-                                '{user_id}' => $chat_id,
-                                '{bonus}' => $bonus,
-                                '{new_balance}' => Number::format($referrer->balance)
-                            ]),
-                            'parse_mode' => 'HTML'
-                        ]);
                     }
                     $user->balance = 0;
                     $user->save();
@@ -307,7 +308,7 @@ class PrivateChat extends Controller
                         $user->is_premium = false;
                     $user->save();
                 }
-                if ($text == '/start') {
+                if (stripos($text, '/start') !== false) {
                     $start_message = Text::get('start_message');
                     $replacements = [
                         '{first_name}' => $bot->FirstName(),
@@ -828,7 +829,6 @@ Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                             'chat_id' => $chat_id,
                             'user_id' => $user_id,
                         ]);
-                        // $boosts_count = count($boosts['result']['boosts'] ?? []);
                         $boosts_count = 0;
                         if ($get_boosts['ok'] and isset($get_boosts['result']['boosts']) and !empty($get_boosts['result']['boosts'])) {
                             $boosts_count = count($get_boosts['result']['boosts']);
