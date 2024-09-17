@@ -176,6 +176,10 @@ class PrivateChat extends Controller
                     'reply_markup' => $bot->buildInlineKeyBoard($keyboard)
                 ]);
                 return response()->json(['ok'], 200);
+            }else{
+                if($text == 'check'){
+                    $text = '/start';
+                }
             }
             // get step from cache
             $step = Cache::get($chat_id . '.step');
