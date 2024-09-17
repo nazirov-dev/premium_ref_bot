@@ -176,8 +176,16 @@ class PrivateChat extends Controller
                     'reply_markup' => $bot->buildInlineKeyBoard($keyboard)
                 ]);
                 return response()->json(['ok'], 200);
-            }else{
-                if($text == 'check'){
+            } else {
+                $bot->sendMessage([
+                    'chat_id' => $chat_id,
+                    'text' => "Azo 1"
+                ]);
+                if ($text == 'check') {
+                    $bot->sendMessage([
+                        'chat_id' => $chat_id,
+                        'text' => "Azo 2"
+                    ]);
                     $text = '/start';
                 }
             }
