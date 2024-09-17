@@ -25,7 +25,7 @@ class PromoCode extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(BotUser::class, 'user_id');
+        return $this->belongsTo(BotUser::class, 'user_id', 'user_id');
     }
     public function category()
     {
