@@ -117,7 +117,6 @@ class BotUserResource extends Resource
                     ->wrapHeader()
                     ->label('Ban?')
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->badge()
                     ->color('danger'),
                 Tables\Columns\TextColumn::make('is_verified')
                     ->wrapHeader()
