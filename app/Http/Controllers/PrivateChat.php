@@ -819,6 +819,8 @@ Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                 if ($boost_channel) {
                     $user_id = $bot->UserID();
                     $user = BotUser::where('user_id', $user_id)->first();
+                    if (!$user->is_verified or $user->is_banned)
+                        return response()->json(['ok' => true], 200);
                     if ($user) {
                         $user->balance += $boost_channel->bonus_each_boost;
                         $user->save();
@@ -849,6 +851,8 @@ Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                 $user_id = $bot->UserID();
                 $user = BotUser::where('user_id', $user_id)->first();
                 if ($user) {
+                    if (!$user->is_verified or $user->is_banned)
+                        return response()->json(['ok' => true], 200);
                     $user->balance -= $boost_channel->bonus_each_boost;
                     $user->save();
                     $boosts = $bot->getUserChatBoosts([
