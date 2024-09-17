@@ -177,15 +177,7 @@ class PrivateChat extends Controller
                 ]);
                 return response()->json(['ok'], 200);
             } else {
-                $bot->sendMessage([
-                    'chat_id' => $chat_id,
-                    'text' => "Azo 1"
-                ]);
                 if ($text == 'check') {
-                    $bot->sendMessage([
-                        'chat_id' => $chat_id,
-                        'text' => "Azo 2"
-                    ]);
                     $text = '/start';
                     $update_type = 'message';
                 }
