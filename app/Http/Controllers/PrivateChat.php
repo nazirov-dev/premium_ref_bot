@@ -675,10 +675,6 @@ class PrivateChat extends Controller
                     if ($chat_id == $settings->admin_id) {
                         if (stripos($callback_data, 'promo_code_accepted_') !== false) {
                             $promo_code_id = explode('_', $callback_data)[3];
-                            $bot->sendMessage([
-                                'chat_id' => $chat_id,
-                                'text' => "$callback_data = $promo_code_id"
-                            ]);
                             $promo_code = PromoCode::with(['user', 'category'])->find($promo_code_id);
                             if ($promo_code) {
                                 $promo_code->status = 'completed';
