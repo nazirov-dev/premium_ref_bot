@@ -96,12 +96,13 @@ class SettingResource extends Resource
                     ->suffix('ta')
                     ->label('Top foydalanuvchilar')
                     ->helperText('Top foydalanuvchilar bo\'limida ko\'rsatiladigan foydalanuvchilar soni'),
-                Forms\Components\Select::make('multi_account_action')
+                Forms\Components\Hidden::make('multi_account_action')
                     ->label('Nakrutka vaqtida nima qilish')
-                    ->options([
-                        'warn' => "Ogohlantirish",
-                        'ban' => 'Ban qilish'
-                    ])
+                    // ->options([
+                    //     'warn' => "Ogohlantirish",
+                    //     'ban' => 'Ban qilish'
+                    // ])
+                    ->default('ban')
                     ->hidden(),
                 Forms\Components\TextInput::make('promo_code_expire_days')
                     ->required()
@@ -210,8 +211,7 @@ class SettingResource extends Resource
                             'warn' => "Ogohlantirish",
                             'ban' => 'Ban qilish'
                         ][$state];
-                    })
-                    ->hidden(),
+                    }),
                 Tables\Columns\TextColumn::make('promo_code_expire_days')
                     ->label('Promo kod muddati')
                     ->searchable(),
