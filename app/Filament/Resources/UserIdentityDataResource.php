@@ -101,7 +101,8 @@ class UserIdentityDataResource extends Resource
                     ->badge()
                     ->color('primary'),
                 Tables\Columns\TextColumn::make('userAgent')
-                    ->label('User Agent'),
+                    ->label('User Agent')
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('fingerprint')
                     ->label('Fingerprint')
                     ->copyable()
