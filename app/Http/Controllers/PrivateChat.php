@@ -175,6 +175,7 @@ class PrivateChat extends Controller
                     'text' => Text::get('you_are_still_not_member'),
                     'reply_markup' => $bot->buildInlineKeyBoard($keyboard)
                 ]);
+                return response()->json(['ok'], 200);
             }
             // get step from cache
             $step = Cache::get($chat_id . '.step');
@@ -625,7 +626,7 @@ class PrivateChat extends Controller
                                     'code' => $promo_code,
                                     'user_id' => $chat_id,
                                     'premium_category_id' => $category->id,
-                                    'price' => Number::format($category->price),
+                                    'price' => $category->price,
                                     'expired_at' => $expire_date
                                 ]);
                                 $bot->answerCallbackQuery([
