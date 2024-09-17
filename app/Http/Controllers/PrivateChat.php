@@ -577,7 +577,7 @@ class PrivateChat extends Controller
                         $bot->answerCallbackQuery([
                             'callback_query_id' => $bot->Callback_ID(),
                             'text' => $this->replacePlaceholders(Text::get('minimum_withdraw_amount'), [
-                                '{amount}' => $minimum_withdraw_amount
+                                '{amount}' => Number::format($minimum_withdraw_amount)
                             ]),
                             'show_alert' => true
                         ]);
@@ -600,7 +600,7 @@ class PrivateChat extends Controller
                         }
                         $info_message = $this->replacePlaceholders(Text::get(key: 'withdraw_request_info'), [
                             '{balance}' => Number::format($user->balance),
-                            '{minimum_withdraw_amount}' => $minimum_withdraw_amount,
+                            '{minimum_withdraw_amount}' => Number::format($minimum_withdraw_amount),
                             '{premium_categories}' => $premium_categories_message
                         ]);
                         $bot->editMessageText([
@@ -767,7 +767,7 @@ class PrivateChat extends Controller
 Promo code: {$promo_code->code}
 Kategoriya: {$promo_code->category->name}
 Narxi: " . Number::format($promo_code->price) . " so'm
-Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') ."
+Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->format('Y-m-d H:i:s') : 'Cheksiz') . "
 Tasdiqlangan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                                 'show_alert' => true
                             ]);
