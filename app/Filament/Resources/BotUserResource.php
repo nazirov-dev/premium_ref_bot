@@ -117,7 +117,7 @@ class BotUserResource extends Resource
                     ->wrapHeader()
                     ->label('Ban?')
                     ->formatStateUsing(fn($record) => $record->is_banned ? 'Ha' : 'Yo\'q')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->badge()
                     ->color('danger'),
                 Tables\Columns\TextColumn::make('is_verified')
