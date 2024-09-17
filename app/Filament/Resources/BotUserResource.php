@@ -116,8 +116,7 @@ class BotUserResource extends Resource
                 Tables\Columns\ToggleColumn::make('is_banned')
                     ->wrapHeader()
                     ->label('Ban?')
-                    ->toggleable(isToggledHiddenByDefault: false)
-                    ->color('danger'),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('is_verified')
                     ->wrapHeader()
                     ->label('Tasdiqlangan?')
