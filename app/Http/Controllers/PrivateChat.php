@@ -447,6 +447,43 @@ class PrivateChat extends Controller
                             $this->sendMessage($bot, $message, $chat_id, $replacements);
                         }
                     } else {
+                        if ($chat_id == $settings->admin_id) {
+                            if (stripos($text, '/ban ') !== false) {
+                                $user_id = explode(' ', $text)[1];
+                                $user = BotUser::where('user_id', $user_id)->first();
+                                if ($user) {
+                                    $user->is_banned = true;
+                                    $user->save();
+                                    $bot->sendMessage([
+                                        'chat_id' => $chat_id,
+                                        'text' => "Foydalanuvchi bloklandi!"
+                                    ]);
+                                } else {
+                                    $bot->sendMessage([
+                                        'chat_id' => $chat_id,
+                                        'text' => "Foydalanuvchi topilmadi!"
+                                    ]);
+                                }
+                            } elseif (stripos($text, '/unban ') !== false) {
+                                $user_id = explode(' ', $text)[1];
+                                $user = BotUser::where('user_id', $user_id)->first();
+                                if ($user) {
+                                    UserIdentityData::where('user_id', $user_id)->delete();
+                                    $user->is_banned = false;
+                                    $user->save();
+                                    $bot->sendMessage([
+                                        'chat_id' => $chat_id,
+                                        'text' => "Foydalanuvchi blokdan chiqarildi!"
+                                    ]);
+                                } else {
+                                    $bot->sendMessage([
+                                        'chat_id' => $chat_id,
+                                        'text' => "Foydalanuvchi topilmadi!"
+                                    ]);
+                                }
+                            }
+                            return response()->json(['ok' => true], 200);
+                        }
                         $bot->sendMessage([
                             'chat_id' => $chat_id,
                             'text' => Text::get('command_not_found'),
