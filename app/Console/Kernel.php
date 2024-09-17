@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('app:send-notification')->everyMinute();
         $schedule->command('reset:daily-bonus')->dailyAt('00:00');
+        \Illuminate\Support\Facades\Log::info('Cron is working fine!');
         // $schedule->command('inspire')->hourly();
     }
 
