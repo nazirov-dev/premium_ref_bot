@@ -102,7 +102,11 @@ class PromoCodeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('expired_at')
                     ->label('Expired at')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->color(function ($record) {
+                        return $record->expired_at->isPast() ? 'danger' : 'success';
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->searchable(),
