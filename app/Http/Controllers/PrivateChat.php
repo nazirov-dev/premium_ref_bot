@@ -691,6 +691,10 @@ class PrivateChat extends Controller
                                         [['text' => '✅ Tasdiqlangan', 'callback_data' => 'accepted_' . $promo_code->id]]
                                     ])
                                 ]);
+                                $bot->sendMessage([
+                                    'chat_id' => $chat_id,
+                                    'text' => $promo_code->price
+                                ]);
                                 $proof_message = $this->replacePlaceholders(Text::get('proof_message'), [
                                     '{promo_code}' => $promo_code->code,
                                     '{category_name}' => $promo_code->category->name,
