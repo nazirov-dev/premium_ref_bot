@@ -69,7 +69,6 @@ class UserIdentityDataResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user_id')
-                    ->primary()
                     ->label('User ID')
                     ->copyable()
                     ->copyMessage('ID raqamdan nusxa olindi')
