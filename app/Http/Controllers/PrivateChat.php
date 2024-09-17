@@ -830,7 +830,7 @@ Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                         ]);
                         // $boosts_count = count($boosts['result']['boosts'] ?? []);
                         $boosts_count = 0;
-                        if($get_boosts['ok'] and isset($get_boosts['result']['boosts']) and !empty($get_boosts['result']['boosts'])) {
+                        if ($get_boosts['ok'] and isset($get_boosts['result']['boosts']) and !empty($get_boosts['result']['boosts'])) {
                             $boosts_count = count($get_boosts['result']['boosts']);
                         }
                         $bot->sendMessage([
