@@ -31,9 +31,4 @@ class PromoCode extends Model
     {
         return $this->belongsTo(PremiumCategory::class, 'premium_category_id');
     }
-    public function getPriceAttribute($value)
-    {
-        return Number::format($value);
-    }
-
 }
