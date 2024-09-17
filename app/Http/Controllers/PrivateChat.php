@@ -758,7 +758,7 @@ class PrivateChat extends Controller
                                 ]);
                                 return response()->json(['ok' => true], 200);
                             }
-                        } elseif (stripos($callback_data, 'accepted_')) {
+                        } elseif (stripos($callback_data, 'accepted_') !== false) {
                             $promo_code_id = explode('_', $callback_data)[1];
                             $promo_code = PromoCode::with('category')->find($promo_code_id);
                             $bot->answerCallbackQuery([
@@ -772,7 +772,7 @@ Yaroqlilik muddati: " . ($promo_code->expired_at ? $promo_code->expired_at->form
                                 'show_alert' => true
                             ]);
                             return response()->json(['ok' => true], 200);
-                        } elseif (stripos($callback_data, 'rejected_')) {
+                        } elseif (stripos($callback_data, 'rejected_') !== false) {
                             $promo_code_id = explode('_', $callback_data)[1];
                             $promo_code = PromoCode::with('category')->find($promo_code_id);
                             $bot->answerCallbackQuery([
