@@ -501,6 +501,8 @@ class PrivateChat extends Controller
                                     'chat_id' => $channel->channel_id,
                                     'user_id' => $chat_id
                                 ]);
+                                if (!isset($boosts['result']))
+                                    continue;
                                 $boost_count = count($boosts['result']['boosts']) ?? 0;
                                 if ($boost_count > 0) {
                                     $boosted = true;
