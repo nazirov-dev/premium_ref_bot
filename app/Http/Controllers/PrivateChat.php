@@ -589,7 +589,7 @@ class PrivateChat extends Controller
                         foreach ($premium_categories as $category) {
                             $premium_categories_buttons[] = [
                                 [
-                                    'text' => $category->name . " - " . Number::format($category->price) . " so'm " . ($minimum_withdraw_amount > $category->price ? "❌" : "✅"),
+                                    'text' => $category->name . " - " . Number::format($category->price) . " so'm " . ($minimum_withdraw_amount < $category->price ? "❌" : "✅"),
                                     'callback_data' => 'premium_category_' . $category->id
                                 ]
                             ];
