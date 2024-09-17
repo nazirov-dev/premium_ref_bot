@@ -21,7 +21,8 @@ class PromoCode extends Model
     ];
     protected $casts = [
         'status' => 'boolean',
-        'price' => 'integer'
+        'price' => 'integer',
+        'expired_at' => 'datetime',
     ];
     public function user()
     {
