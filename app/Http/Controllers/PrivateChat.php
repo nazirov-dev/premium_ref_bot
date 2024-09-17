@@ -187,6 +187,7 @@ class PrivateChat extends Controller
                         'text' => "Azo 2"
                     ]);
                     $text = '/start';
+                    $update_type = 'message';
                 }
             }
             // get step from cache
