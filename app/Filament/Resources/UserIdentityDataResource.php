@@ -86,16 +86,16 @@ class UserIdentityDataResource extends Resource
                     ->label('Browser Platform'),
                 Tables\Columns\TextColumn::make('sizeScreenW')
                     ->label('Size Screen W')
-                    ->togglealbe(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sizeScreenH')
                     ->label('Size Screen H')
-                    ->togglealbe(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sizeAvailW')
                     ->label('Size Avail W')
-                    ->togglealbe(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sizeAvailH')
                     ->label('Size Avail H')
-                    ->togglealbe(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ipAddress')
                     ->label('IP Address')
                     ->searchable()
