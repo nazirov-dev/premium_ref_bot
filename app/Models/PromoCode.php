@@ -20,7 +20,8 @@ class PromoCode extends Model
         'status'
     ];
     protected $casts = [
-        'status' => 'boolean'
+        'status' => 'boolean',
+        'price' => 'integer'
     ];
     public function user()
     {

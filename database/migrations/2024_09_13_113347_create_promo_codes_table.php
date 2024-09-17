@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('premium_category_id');
             $table->foreign('premium_category_id')->references('id')->on('premium_categories')->onDelete('cascade');
-            $table->decimal('price', 10, 2);
+            $table->unsignedBigInteger('price')->default(0);
             $table->dateTime('expired_at')->nullable();
             $table->enum('status', [
                 'active',
