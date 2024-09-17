@@ -24,7 +24,7 @@ return new class extends Migration
             $table->enum('multi_account_action', ['warn', 'ban'])->default('ban');
             $table->integer('promo_code_expire_days')->default(30);
             $table->unsignedBigInteger('admin_id')->default(1996292437);
-            $table->bigInteger('proof_channel_id')->default(1996292437);
+            $table->string('proof_channel_id')->default(1996292437);
             $table->timestamps();
         });
     }
