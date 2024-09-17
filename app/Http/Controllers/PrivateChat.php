@@ -824,11 +824,15 @@ Rad etilgan vaqti: {$promo_code->updated_at->format('Y-m-d H:i:s')}",
                     if ($user) {
                         $user->balance += $boost_channel->bonus_each_boost;
                         $user->save();
-                        $bot->getUserChatBoosts([
+                        $get_boosts = $bot->getUserChatBoosts([
                             'chat_id' => $chat_id,
                             'user_id' => $user_id,
                         ]);
-                        $boosts_count = count($boosts['result']['boosts'] ?? []);
+                        // $boosts_count = count($boosts['result']['boosts'] ?? []);
+                        $boosts_count = 0;
+                        if($get_boosts['ok'] and isset($get_boosts['result']['boosts']) and !empty($get_boosts['result']['boosts'])) {
+                            $boosts_count = count($get_boosts['result']['boosts']);
+                        }
                         $bot->sendMessage([
                             'chat_id' => $user_id,
                             'text' => $this->replacePlaceholders(Text::get('boost_received'), [
