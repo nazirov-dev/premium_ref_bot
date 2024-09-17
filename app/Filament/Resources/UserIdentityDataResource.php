@@ -73,7 +73,9 @@ class UserIdentityDataResource extends Resource
                     ->copyable()
                     ->copyMessage('ID raqamdan nusxa olindi')
                     ->copyMessageDuration(1500)
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->color('info'),
                 Tables\Columns\TextColumn::make('timeOpened')
                     ->label('Time Opened'),
                 Tables\Columns\TextColumn::make('timezone')
@@ -95,7 +97,9 @@ class UserIdentityDataResource extends Resource
                     ->searchable()
                     ->copyable()
                     ->copyMessage('IP addressdan nusxa olindi')
-                    ->copyMessageDuration(1500),
+                    ->copyMessageDuration(1500)
+                    ->badge()
+                    ->color('primary'),
                 Tables\Columns\TextColumn::make('userAgent')
                     ->label('User Agent'),
                 Tables\Columns\TextColumn::make('fingerprint')
@@ -103,7 +107,9 @@ class UserIdentityDataResource extends Resource
                     ->copyable()
                     ->copyMessage('Fingerprintdan nusxa olindi')
                     ->copyMessageDuration(1500)
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->color('warning'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Yaratilgan vaqti'),
             ])
