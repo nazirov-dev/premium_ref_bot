@@ -102,8 +102,7 @@ class SettingResource extends Resource
                     //     'warn' => "Ogohlantirish",
                     //     'ban' => 'Ban qilish'
                     // ])
-                    ->default('ban')
-                    ->hidden(),
+                    ->default('ban'),
                 Forms\Components\TextInput::make('promo_code_expire_days')
                     ->required()
                     ->default(30)
