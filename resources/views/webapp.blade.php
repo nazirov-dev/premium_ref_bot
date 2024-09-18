@@ -115,7 +115,6 @@
                 <p id="captcha-error" style="color:red;display:none;">Captcha javobi noto'g'ri qaytadan urinib ko'ring!
                 </p>
             </div>
-            <button class="btn" id="main-button" disabled>Tasdiqlash ✅</button>
         </div>
     </div>
 
