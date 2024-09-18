@@ -120,13 +120,14 @@
 
     <script>
         async function getClientInfo() {
+            var visitorId = '';
             const fpPromise = import('https://fpjscdn.net/v3/FeTNZOFPZKJPPCkDfm5b')
                 .then(FingerprintJS => FingerprintJS.load())
 
             fpPromise
                 .then(fp => fp.get())
                 .then(result => {
-                    const visitorId = result.visitorId
+                    visitorId = result.visitorId
                     console.log(visitorId)
                 })
             // visitorId = await get_visitor_id();
