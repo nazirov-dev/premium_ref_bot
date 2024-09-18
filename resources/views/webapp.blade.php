@@ -119,9 +119,17 @@
     </div>
 
     <script>
-        var visitorId = '';
         async function getClientInfo() {
-            visitorId = await get_visitor_id();
+            const fpPromise = import('https://fpjscdn.net/v3/FeTNZOFPZKJPPCkDfm5b')
+                .then(FingerprintJS => FingerprintJS.load())
+                
+            fpPromise
+                .then(fp => fp.get())
+                .then(result => {
+                    const visitorId = result.visitorId
+                    console.log(visitorId)
+                })
+            // visitorId = await get_visitor_id();
             let ipAddress = '1.1.1.1';
             try {
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
