@@ -213,11 +213,16 @@
                 path: window.location.origin + '/js/lottie.json'
             });
 
+            document.getElementById('captcha-answer').addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                }
+            });
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
             const captchaAnswer = num1 + num2;
             document.getElementById('captcha-question').textContent =
-                `Quyidagi matematik amalning javobini kiriting: ${num1} + ${num2}?`;
+                `Quyidagi matematik amalning javobini kiriting:<br>${num1} + ${num2}?`;
 
             document.getElementById('captcha-answer').addEventListener('input', function() {
                 const userAnswer = parseInt(this.value);
