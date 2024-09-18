@@ -184,10 +184,10 @@
             document.getElementById('captcha-answer').addEventListener('input', function() {
                 const userAnswer = parseInt(this.value);
                 if (userAnswer === captchaAnswer) {
-                    tg.MainButton.disable();
+                    tg.MainButton.enable();
                     document.getElementById('captcha-error').style.display = 'none';
                 } else {
-                    tg.MainButton.enable();
+                    tg.MainButton.disable();
                     document.getElementById('captcha-error').style.display = 'block';
                 }
             });
