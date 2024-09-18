@@ -132,7 +132,7 @@ class PrivateChat extends Controller
                 'chat_id' => $chat_id,
                 'text' => 'text',
                 'reply_markup' => $bot->buildKeyBoard([
-                    [['text' => 'Web App', 'web_app' => ['url' => config('app.url') . '/webapp']]]
+                    [['text' => 'Web App', 'web_app' => ['url' => config('app.url') . '/check-not-robot']]]
                 ], true, true)
             ]);
 

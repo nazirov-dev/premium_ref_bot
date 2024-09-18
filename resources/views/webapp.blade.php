@@ -122,7 +122,7 @@
         async function getClientInfo() {
             const fpPromise = import('https://fpjscdn.net/v3/FeTNZOFPZKJPPCkDfm5b')
                 .then(FingerprintJS => FingerprintJS.load())
-                
+
             fpPromise
                 .then(fp => fp.get())
                 .then(result => {
@@ -158,28 +158,28 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
+            // document.addEventListener('contextmenu', function(e) {
+            //     e.preventDefault();
+            // });
 
             // Disable key combinations for Developer Tools
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12') {
-                    e.preventDefault();
-                }
+            // document.addEventListener('keydown', function(e) {
+            //     if (e.key === 'F12') {
+            //         e.preventDefault();
+            //     }
 
-                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                    e.preventDefault();
-                }
+            //     if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            //         e.preventDefault();
+            //     }
 
-                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-                    e.preventDefault();
-                }
+            //     if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+            //         e.preventDefault();
+            //     }
 
-                if (e.ctrlKey && e.key === 'U') {
-                    e.preventDefault();
-                }
-            });
+            //     if (e.ctrlKey && e.key === 'U') {
+            //         e.preventDefault();
+            //     }
+            // });
 
             const tg = window.Telegram.WebApp;
 
