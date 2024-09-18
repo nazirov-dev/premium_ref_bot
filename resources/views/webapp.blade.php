@@ -221,7 +221,7 @@
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
             const captchaAnswer = num1 + num2;
-            document.getElementById('captcha-question').textContent =
+            document.getElementById('captcha-question').innerHTML =
                 `Quyidagi matematik amalning javobini kiriting:<br>${num1} + ${num2}?`;
 
             document.getElementById('captcha-answer').addEventListener('input', function() {
