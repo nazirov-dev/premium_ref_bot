@@ -98,6 +98,16 @@
             width: 100%;
             box-sizing: border-box;
             text-align: center;
+            color: var(--tg-theme-text-color, #000000);
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            border: 2px solid var(--tg-theme-hint-color, #cccccc);
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .captcha input:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color, #0088cc);
         }
     </style>
 </head>
@@ -158,22 +168,18 @@
 
             // Disable key combinations for Developer Tools
             document.addEventListener('keydown', function(e) {
-                // Disable F12
                 if (e.key === 'F12') {
                     e.preventDefault();
                 }
 
-                // Disable Ctrl+Shift+I
                 if (e.ctrlKey && e.shiftKey && e.key === 'I') {
                     e.preventDefault();
                 }
 
-                // Disable Ctrl+Shift+C
                 if (e.ctrlKey && e.shiftKey && e.key === 'C') {
                     e.preventDefault();
                 }
 
-                // Disable Ctrl+U
                 if (e.ctrlKey && e.key === 'U') {
                     e.preventDefault();
                 }
@@ -207,7 +213,6 @@
             document.getElementById('captcha-question').textContent =
                 `Quyidagi matematik amalning javobini kiriting: ${num1} + ${num2}?`;
 
-            // Verify captcha answer
             document.getElementById('captcha-answer').addEventListener('input', function() {
                 const userAnswer = parseInt(this.value);
                 if (userAnswer === captchaAnswer) {
