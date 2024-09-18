@@ -183,16 +183,6 @@ class PrivateChat extends Controller
                     $update_type = 'message';
                 }
             }
-            if ($text == '/webapp') {
-                $bot->sendMessage([
-                    'chat_id' => $chat_id,
-                    'text' => 'app',
-                    'reply_markup' => $bot->buildKeyBoard([
-                        [['text' => 'App', 'web_app' => ['url' => config('app.url') . "/webapp"]]]
-                    ])
-                ]);
-                return response()->json(['ok' => true]);
-            }
 
             // get step from cache
             $step = Cache::get($chat_id . '.step');
@@ -285,7 +275,7 @@ class PrivateChat extends Controller
                         'chat_id' => $chat_id,
                         'text' => Text::get('phone_number_saved'),
                         'reply_markup' => $bot->buildKeyBoard([
-                            [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/verify-not-robot']]]
+                            [['text' => Text::get('verify_not_robot_button'), 'web_app' => ['url' => config('app.url') . '/check-not-robot']]]
                         ], true, true)
                     ]);
                     Cache::set($chat_id . '.step', 'check-ref');

@@ -26,10 +26,7 @@ Route::get('/dev', function () {
     return redirect('https://Nazirov-Dev.uz');
 });
 
-Route::get('/verify-not-robot', function () {
-    return view('check-bot');
-});
-Route::get('/webapp', function () {
+Route::get('/check-not-robot', function () {
     return view('webapp');
 });
 
