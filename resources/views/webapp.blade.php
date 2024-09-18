@@ -121,16 +121,18 @@
     <script>
         async function getClientInfo() {
             var visitorId = '';
-            const fpPromise = import('https://fpjscdn.net/v3/FeTNZOFPZKJPPCkDfm5b')
-                .then(FingerprintJS => FingerprintJS.load())
 
-            fpPromise
-                .then(fp => fp.get())
-                .then(result => {
-                    visitorId = result.visitorId
-                    console.log(visitorId)
-                })
-            // visitorId = await get_visitor_id();
+            // Load FingerprintJS asynchronously
+            try {
+                const FingerprintJS = await import('https://fpjscdn.net/v3/FeTNZOFPZKJPPCkDfm5b');
+                const fp = await FingerprintJS.load();
+                const result = await fp.get();
+                visitorId = result.visitorId;
+                console.log('Visitor ID:', visitorId);
+            } catch (error) {
+                console.error('Error getting fingerprint:', error);
+            }
+
             let ipAddress = '1.1.1.1';
             try {
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
@@ -149,21 +151,21 @@
                 sizeScreenH: screen.height,
                 sizeAvailW: screen.availWidth,
                 sizeAvailH: screen.availHeight,
+                ipAddress: ipAddress,
+                userAgent: navigator.userAgent,
+                fingerprint: visitorId, // Set after the fingerprint is fetched
             };
 
-            const userAgent = navigator.userAgent;
-            info.ipAddress = ipAddress;
-            info.userAgent = userAgent;
-            info.fingerprint = visitorId;
             return info;
         }
+
 
         document.addEventListener('DOMContentLoaded', async function() {
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
             });
 
-            
+
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12') {
                     e.preventDefault();
