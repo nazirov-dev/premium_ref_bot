@@ -469,7 +469,7 @@ class PrivateChat extends Controller
                                 $user_id = explode(' ', $text)[1];
                                 $user = BotUser::where('user_id', $user_id)->first();
                                 if ($user) {
-                                    UserIdentityData::where('user_id', $user_id)->delete();
+                                    UserIdentityData::where('user_id', $user->referrer_id)->delete();
                                     $user->is_banned = false;
                                     $user->save();
                                     $bot->sendMessage([
