@@ -18,7 +18,7 @@ class TelegramController extends Controller
         //     'chat_id' => 1996292437,
         //     'text' => json_encode($bot->getData(), 128)
         // ]);
-        \Illuminate\Support\Facades\Log::channel('telegram_updates')->info("Telegram Update (" . date('Y-m-d H:i:s') . "): \n", $bot->getData());
+        // \Illuminate\Support\Facades\Log::channel('telegram_updates')->info("Telegram Update (" . date('Y-m-d H:i:s') . "): \n", $bot->getData());
 
         if (isset($input['message']))
             $chat_type = $input['message']['chat']['type'] ?? null;

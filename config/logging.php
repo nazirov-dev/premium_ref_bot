@@ -126,11 +126,6 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-        'telegram_updates' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/telegram_updates.log'), // Custom log file path
-            'level' => 'debug',
-        ],
     ],
 
 ];
