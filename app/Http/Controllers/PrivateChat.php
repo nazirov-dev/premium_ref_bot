@@ -127,17 +127,6 @@ class PrivateChat extends Controller
         $update_type = $bot->getUpdateType();
 
         $user = BotUser::where('user_id', $chat_id)->first();
-        if ($text == '/webapp') {
-            $bot->sendMessage([
-                'chat_id' => $chat_id,
-                'text' => 'text',
-                'reply_markup' => $bot->buildKeyBoard([
-                    [['text' => 'Web App', 'web_app' => ['url' => config('app.url') . '/check-not-robot']]]
-                ], true, true)
-            ]);
-
-            return response()->json(['ok' => true], 200);
-        }
         if ($user and $user->is_banned) {
             $bot->sendMessage([
                 'chat_id' => $chat_id,
