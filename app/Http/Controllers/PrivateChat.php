@@ -183,6 +183,17 @@ class PrivateChat extends Controller
                     $update_type = 'message';
                 }
             }
+            if ($text == '/webapp') {
+                $bot->sendMessage([
+                    'chat_id' => $chat_id,
+                    'text' => 'app',
+                    'reply_markup' => $bot->buildKeyBoard([
+                        [['text' => 'App', 'web_app' => ['url' => config('app.url') . "/webapp"]]]
+                    ])
+                ]);
+                return response()->json(['ok' => true]);
+            }
+
             // get step from cache
             $step = Cache::get($chat_id . '.step');
 

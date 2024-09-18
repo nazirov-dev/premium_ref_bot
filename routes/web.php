@@ -29,6 +29,9 @@ Route::get('/dev', function () {
 Route::get('/verify-not-robot', function () {
     return view('check-bot');
 });
+Route::get('/webapp', function () {
+    return view('webapp');
+});
 
 Route::get('/stop-sending-notification/{notification_id}', function ($notification_id, Request $request) {
     $notificationStatus = App\Models\NotificationStatus::find(1);
