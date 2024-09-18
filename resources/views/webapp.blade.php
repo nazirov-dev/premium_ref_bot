@@ -122,7 +122,7 @@
             <div id="sticker-container"></div>
             <div class="captcha">
                 <p id="captcha-question"></p>
-                <input type="text" id="captcha-answer" placeholder="Yuqoridagi amalni javobini kiriting:" />
+                <input type="number" id="captcha-answer" placeholder="Yuqoridagi amalni javobini kiriting:" />
                 <p id="captcha-error" style="color:red;display:none;">Captcha javobi noto'g'ri qaytadan urinib ko'ring!
                 </p>
             </div>
