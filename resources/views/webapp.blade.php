@@ -86,12 +86,6 @@
             flex: 1;
         }
 
-        .captcha {
-            margin: 20px 0;
-            text-align: center;
-            font-size: 18px;
-        }
-
         .captcha input {
             padding: 8px;
             font-size: 16px;
@@ -103,6 +97,18 @@
             border: 2px solid var(--tg-theme-hint-color, #cccccc);
             border-radius: 8px;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        /* Hide the spinner in Chrome, Safari, Edge, and Opera */
+        .captcha input::-webkit-outer-spin-button,
+        .captcha input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide the spinner in Firefox */
+        .captcha input[type=number] {
+            -moz-appearance: textfield;
         }
 
         .captcha input:focus {
