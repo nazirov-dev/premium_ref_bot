@@ -54,23 +54,6 @@
             color: var(--tg-theme-hint-color, #999999);
         }
 
-        .btn {
-            padding: 12px;
-            font-size: 16px;
-            color: var(--tg-theme-button-text-color, #ffffff);
-            background-color: var(--tg-theme-button-color, #0088cc);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-            display: none;
-        }
-
-        .btn:hover {
-            background-color: #006999;
-        }
-
         #sticker-container {
             width: 200px;
             height: 200px;
@@ -121,7 +104,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <span class="title">✈️</span>
+            <span class="title">🌟</span>
             <span class="hint">Jasur Premium Bot</span>
         </div>
         <div class="content">
