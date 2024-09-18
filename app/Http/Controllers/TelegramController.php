@@ -39,8 +39,8 @@ class TelegramController extends Controller
             } elseif (isset($input['my_chat_member'])) {
                 if (isset($input['my_chat_member']['new_chat_member']) and strtolower($input['my_chat_member']['new_chat_member']['user']['username']) == 'jasurpremiumbot' and in_array($input['my_chat_member']['new_chat_member']['status'], ['administrator', 'member'])) {
                     $bot->leaveChat(['chat_id' => $input['my_chat_member']['chat']['id']]);
-                    return response()->json(['ok' => true], 200);
                 }
+                return response()->json(['ok' => true], 200);
             } else {
                 return response()->json(['ok' => true], 200);
             }
