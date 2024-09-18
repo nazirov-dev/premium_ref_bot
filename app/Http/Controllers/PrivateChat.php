@@ -71,7 +71,7 @@ class PrivateChat extends Controller
     public function getMainButtons($settings, $bot)
     {
         $keyboard = [];
-        $button = Button::where(['slug' => 'giveaway_button'])->first();
+        $button = Button::where(['slug' => 'premium-aksiya'])->first();
         if ($button->status) {
             $keyboard[] = [['text' => $button->name], ['text' => Text::get('top_referrers_button_label')]];
         }
