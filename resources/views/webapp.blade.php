@@ -152,6 +152,33 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+
+            // Disable key combinations for Developer Tools
+            document.addEventListener('keydown', function(e) {
+                // Disable F12
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                }
+
+                // Disable Ctrl+Shift+I
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                }
+
+                // Disable Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                }
+
+                // Disable Ctrl+U
+                if (e.ctrlKey && e.key === 'U') {
+                    e.preventDefault();
+                }
+            });
+
             const tg = window.Telegram.WebApp;
 
             tg.ready();
