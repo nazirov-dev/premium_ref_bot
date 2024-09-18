@@ -113,7 +113,8 @@
             <div class="captcha">
                 <p id="captcha-question"></p>
                 <input type="text" id="captcha-answer" placeholder="Answer here" />
-                <p id="captcha-error" style="color:red;display:none;">Captcha javobi noto'g'ri qaytadan urinib ko'ring!</p>
+                <p id="captcha-error" style="color:red;display:none;">Captcha javobi noto'g'ri qaytadan urinib ko'ring!
+                </p>
             </div>
             <button class="btn" id="main-button" disabled>Tasdiqlash ✅</button>
         </div>
@@ -150,7 +151,7 @@
             return info;
         }
 
-        document.addEventListener('DOMContentLoaded', async function () {
+        document.addEventListener('DOMContentLoaded', async function() {
             const tg = window.Telegram.WebApp;
 
             tg.ready();
@@ -159,8 +160,10 @@
             const info = await getClientInfo();
             document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
             document.body.style.color = tg.themeParams.text_color || '#000000';
-            document.querySelector('.container').style.backgroundColor = tg.themeParams.secondary_bg_color || '#f0f0f0';
-            document.querySelector('.header').style.backgroundColor = tg.themeParams.header_bg_color || '#ffffff';
+            document.querySelector('.container').style.backgroundColor = tg.themeParams.secondary_bg_color ||
+                '#f0f0f0';
+            document.querySelector('.header').style.backgroundColor = tg.themeParams.header_bg_color ||
+                '#ffffff';
 
             const animation = lottie.loadAnimation({
                 container: document.getElementById('sticker-container'),
@@ -174,10 +177,11 @@
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
             const captchaAnswer = num1 + num2;
-            document.getElementById('captcha-question').textContent = `Quyidagi matematik amalning javobini kiriting: ${num1} + ${num2}?`;
+            document.getElementById('captcha-question').textContent =
+                `Quyidagi matematik amalning javobini kiriting: ${num1} + ${num2}?`;
 
             // Verify captcha answer
-            document.getElementById('captcha-answer').addEventListener('input', function () {
+            document.getElementById('captcha-answer').addEventListener('input', function() {
                 const userAnswer = parseInt(this.value);
                 if (userAnswer === captchaAnswer) {
                     tg.MainButton.disable();
@@ -188,8 +192,11 @@
                 }
             });
 
-            tg.MainButton.addEventListener('click', function () {
-                tg.sendData(JSON.stringify({ info: info }));
+            tg.MainButton.onClick(function() {
+                let data = {
+                    info: info
+                }
+                tg.sendData(JSON.stringify(data));
                 tg.close();
             });
         });
