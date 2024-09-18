@@ -36,8 +36,13 @@ class TelegramController extends Controller
                 exit;
             } elseif (isset($input['removed_chat_boost']) or isset($input['chat_boost'])) {
                 $chat_type = 'private';
+            } elseif (isset($input['my_chat_member'])) {
+                if (isset($input['my_chat_member']['new_chat_member']) and strtolower($input['my_chat_member']['new_chat_member']['user']['username']) == 'jasurpremiumbot' and in_array($input['my_chat_member']['new_chat_member']['status'], ['administrator', 'member'])) {
+                    $bot->leaveChat(['chat_id' => $input['my_chat_member']['chat']['id']]);
+                    return response()->json(['ok' => true], 200);
+                }
             } else {
-                exit;
+                return response()->json(['ok' => true], 200);
             }
         }
         if ($chat_type == 'private') {
