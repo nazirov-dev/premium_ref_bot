@@ -86,6 +86,24 @@
             flex: 1;
         }
 
+        .captcha {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .captcha p {
+            font-size: 18px;
+            color: var(--tg-theme-text-color, #000000);
+            background-color: var(--tg-theme-highlight-bg-color, #f0f8ff); /* Light highlight color */
+            border: 2px solid var(--tg-theme-highlight-border-color, #d0e1ff); /* Light border color */
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
         .captcha input {
             padding: 8px;
             font-size: 16px;
@@ -168,29 +186,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
-
-            // Disable key combinations for Developer Tools
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12') {
-                    e.preventDefault();
-                }
-
-                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                    e.preventDefault();
-                }
-
-                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-                    e.preventDefault();
-                }
-
-                if (e.ctrlKey && e.key === 'U') {
-                    e.preventDefault();
-                }
-            });
-
             const tg = window.Telegram.WebApp;
 
             tg.ready();
@@ -213,17 +208,20 @@
                 path: window.location.origin + '/js/lottie.json'
             });
 
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const captchaAnswer = num1 + num2;
+            document.getElementById('captcha-question').textContent =
+                `Quyidagi matematik amalning javobini kiriting: ${num1} + ${num2}?`;
+
+            // Prevent arrow keys from changing the input value
             document.getElementById('captcha-answer').addEventListener('keydown', function(e) {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     e.preventDefault();
                 }
             });
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            const captchaAnswer = num1 + num2;
-            document.getElementById('captcha-question').innerHTML =
-                `Quyidagi matematik amalning javobini kiriting:<br>${num1} + ${num2} = ?`;
 
+            // Verify captcha answer
             document.getElementById('captcha-answer').addEventListener('input', function() {
                 const userAnswer = parseInt(this.value);
                 if (userAnswer === captchaAnswer) {
