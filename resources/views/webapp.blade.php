@@ -159,7 +159,6 @@
             return info;
         }
 
-
         document.addEventListener('DOMContentLoaded', async function() {
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
