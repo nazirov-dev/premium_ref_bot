@@ -156,6 +156,7 @@
 
             tg.ready();
             tg.expand();
+            tg.MainButton.setText("Tasdiqlash ✅").show();
             tg.MainButton.disable();
             const info = await getClientInfo();
             document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
@@ -173,7 +174,6 @@
                 path: window.location.origin + '/js/lottie.json'
             });
 
-            // Generate captcha
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
             const captchaAnswer = num1 + num2;
