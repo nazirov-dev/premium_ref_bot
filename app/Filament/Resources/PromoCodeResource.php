@@ -109,6 +109,9 @@ class PromoCodeResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
+                    ->formatStateUsing(function ($record) {
+                        return $record->status;
+                    })
                     ->searchable(),
             ])
             ->filters([
