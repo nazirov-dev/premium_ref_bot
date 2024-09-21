@@ -20,7 +20,7 @@ class PromoCode extends Model
         'status'
     ];
     protected $casts = [
-        'status' => 'boolean',
+        'status' => 'string',
         'price' => 'integer',
         'expired_at' => 'datetime',
     ];
