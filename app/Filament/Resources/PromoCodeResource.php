@@ -110,9 +110,25 @@ class PromoCodeResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->formatStateUsing(function ($record) {
-                        return $record->status;
+                        $status = [
+                            'active' => 'Faol',
+                            'expired' => 'Muddati tugagan',
+                            'completed' => 'To\'lab berilgan',
+                            'canceled' => 'Rad etilgan',
+                        ];
+                        return $status[$record->status];
                     })
-                    ->searchable(),
+                    ->badge()
+                    ->color(function ($record) {
+                        return match ($record->status) {
+                            'active' => 'success',
+                            'expired' => 'warning',
+                            'completed' => 'primary',
+                            'canceled' => 'danger',
+                            default => 'secondary',
+                        };
+                    })
+                    ->searchable()
             ])
             ->filters([
                 //
