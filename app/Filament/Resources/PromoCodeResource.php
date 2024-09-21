@@ -107,11 +107,15 @@ class PromoCodeResource extends Resource
                     ->color(function ($record) {
                         return $record->expired_at->isPast() ? 'danger' : 'success';
                     }),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\SelectColumn::make('status')
                     ->label('Status')
-                    ->formatStateUsing(function ($record) {
-                        return $record->status;
-                    })
+                    ->options([
+                        'active' => 'Active',
+                        'expired' => 'Expired',
+                        'completed' => 'Completed',
+                        'canceled' => 'Canceled',
+                    ])
+                    ->default('active')
                     ->searchable(),
             ])
             ->filters([
