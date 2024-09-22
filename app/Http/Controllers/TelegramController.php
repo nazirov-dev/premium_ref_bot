@@ -37,7 +37,7 @@ class TelegramController extends Controller
             } elseif (isset($input['removed_chat_boost']) or isset($input['chat_boost'])) {
                 $chat_type = 'private';
             } elseif (isset($input['my_chat_member'])) {
-                if (isset($input['my_chat_member']['new_chat_member']) and strtolower($input['my_chat_member']['new_chat_member']['user']['username']) == 'jasurpremiumbot' and in_array($input['my_chat_member']['new_chat_member']['status'], ['administrator', 'member'])) {
+                if (isset($input['my_chat_member']['new_chat_member']) and strtolower($input['my_chat_member']['new_chat_member']['user']['username']) == 'jasurpremiumbot' and in_array($input['my_chat_member']['new_chat_member']['status'], ['administrator', 'member']) and (in_array($input['my_chat_member']['chat']['type'], ['group', 'supergroup']))) {
                     $bot->leaveChat(['chat_id' => $input['my_chat_member']['chat']['id']]);
                 }
                 return response()->json(['ok' => true], 200);
