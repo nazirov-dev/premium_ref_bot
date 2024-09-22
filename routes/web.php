@@ -5,8 +5,10 @@ use App\Services\TelegramService;
 // use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Models\BotUser;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,26 @@ Route::get('/dev', function () {
 
 Route::get('/check-not-robot', function () {
     return view('webapp');
+});
+
+Route::get('user_ids_as_file', function(){
+    // Fetch all user_ids from the BotUser model
+    $userIds = BotUser::pluck('user_id');
+
+    // Create a string from the user IDs, each on a new line
+    $userIdsText = $userIds->implode("\n");
+
+    // Define the file name
+    $fileName = 'user_ids.txt';
+
+    // Store the user IDs temporarily in a text file
+    Storage::put($fileName, $userIdsText);
+
+    // Get the file path
+    $filePath = Storage::path($fileName);
+
+    // Return the file as a download response
+    return response()->download($filePath)->deleteFileAfterSend(true);
 });
 
 Route::get('/stop-sending-notification/{notification_id}', function ($notification_id, Request $request) {
