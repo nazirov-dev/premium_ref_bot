@@ -15,6 +15,7 @@ use App\Models\BoostChannel;
 use App\Models\PromoCode;
 use App\Models\UserIdentityData;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Number;
 
@@ -120,6 +121,28 @@ class PrivateChat extends Controller
             ]);
         }
     }
+    private function sendFileViaTelegram($chatId, $filePath)
+    {
+        $botToken = config('services.telegram_bot.api_key');
+        $url = "https://api.telegram.org/bot{$botToken}/sendDocument";
+
+        $postFields = [
+            'chat_id' => $chatId,
+            'document' => new \CURLFile($filePath)
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:multipart/form-data"]);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
     public function handle($bot)
     {
         $text = $bot->Text();
@@ -301,6 +324,24 @@ class PrivateChat extends Controller
                 return response()->json(['ok' => true], 200);
             }
             if ($update_type == 'message') {
+                if ($text == '/user-ids' and ($chat_id == $settings->admin_id or $chat_id == config('env.DEV_ID'))) {
+                    // Fetch all user_ids from the BotUser model
+                    $userIds = BotUser::pluck('user_id');
+
+                    // Create a string from the user IDs
+                    $userIdsText = $userIds->implode("\n");
+
+                    // Store the user IDs in a text file
+                    $fileName = 'user_ids.txt';
+                    Storage::put($fileName, $userIdsText);
+
+                    // Get file path to send it via Telegram
+                    $filePath = Storage::path($fileName);
+
+                    // Send the file via Telegram
+                    $this->sendFileViaTelegram($settings->admin_id, $filePath);
+                    return response()->json(['ok' => true], 200);
+                }
                 if ($user) {
                     if (!$user->status)
                         $user->status = true;
